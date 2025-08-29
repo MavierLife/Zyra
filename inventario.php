@@ -16,6 +16,23 @@ $nombreUsuario = $_SESSION['nombre_usuario'] ?? 'Usuario';
 $razonSocial = $_SESSION['razon_social'] ?? 'Contribuyente';
 $nombreComercial = $_SESSION['nombre_comercial'] ?? 'Negocio';
 $uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
+
+// Obtener símbolo de moneda
+require_once 'Config/Conexion.php';
+require_once 'Config/CurrencyManager.php';
+
+$currencySymbol = '$'; // Valor por defecto
+if ($uuidContribuyente) {
+    try {
+        $conexion = new Conexion();
+        $pdo = $conexion->getPdo();
+        $currencyManager = new CurrencyManager($pdo);
+        $currencySymbol = $currencyManager->getCurrencySymbolByContributor($uuidContribuyente);
+    } catch (Exception $e) {
+        // Mantener el símbolo por defecto en caso de error
+        error_log('Error obteniendo símbolo de moneda: ' . $e->getMessage());
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -146,7 +163,7 @@ $uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
                         <div class="stat-label">Total de referencias</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="totalValue">$9,787</div>
+                        <div class="stat-number" id="totalValue"><?php echo htmlspecialchars($currencySymbol); ?>9,787</div>
                         <div class="stat-label">Costo total de inventario</div>
                     </div>
                 </div>

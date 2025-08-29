@@ -35,10 +35,12 @@ if (!isset($_SESSION['uuid_contribuyente'])) {
 }
 
 require_once '../Config/Conexion.php';
+require_once '../Config/CurrencyManager.php';
 
 try {
     $conexion = new Conexion();
     $pdo = $conexion->getPdo();
+    $currencyManager = new CurrencyManager();
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Error de conexión a la base de datos']);
@@ -54,9 +56,9 @@ $uuidContribuyente = $_SESSION['uuid_contribuyente'];
 switch ($method) {
     case 'GET':
         if ($request === 'productos') {
-            obtenerProductos($pdo, $uuidContribuyente);
+            obtenerProductos($pdo, $currencyManager, $uuidContribuyente);
         } elseif ($request === 'estadisticas') {
-            obtenerEstadisticas($pdo, $uuidContribuyente);
+            obtenerEstadisticas($pdo, $currencyManager, $uuidContribuyente);
         } elseif ($request === 'categorias') {
             obtenerCategorias($pdo, $uuidContribuyente);
         } else {
@@ -109,7 +111,7 @@ switch ($method) {
 /**
  * Obtener todos los productos del inventario
  */
-function obtenerProductos($pdo, $uuidContribuyente) {
+function obtenerProductos($pdo, $currencyManager, $uuidContribuyente) {
     try {
         $sql = "SELECT 
                     p.UUIDProducto as id,
@@ -149,9 +151,13 @@ function obtenerProductos($pdo, $uuidContribuyente) {
             $producto['categoria'] = $producto['categoria'] ?? 'Sin categoría';
         }
         
+        // Obtener símbolo de moneda
+        $currencySymbol = $currencyManager->getCurrencySymbolByContributor($uuidContribuyente);
+        
         echo json_encode([
             'success' => true,
-            'data' => $productos
+            'data' => $productos,
+            'currency_symbol' => $currencySymbol
         ]);
         
     } catch (Exception $e) {
@@ -163,7 +169,7 @@ function obtenerProductos($pdo, $uuidContribuyente) {
 /**
  * Obtener estadísticas del inventario
  */
-function obtenerEstadisticas($pdo, $uuidContribuyente) {
+function obtenerEstadisticas($pdo, $currencyManager, $uuidContribuyente) {
     try {
         $sql = "SELECT 
                     COUNT(*) as total_productos,
@@ -184,9 +190,13 @@ function obtenerEstadisticas($pdo, $uuidContribuyente) {
         $estadisticas['stock_bajo'] = (int) $estadisticas['stock_bajo'];
         $estadisticas['ganancia_total'] = (float) $estadisticas['ganancia_total'];
         
+        // Obtener símbolo de moneda
+        $currencySymbol = $currencyManager->getCurrencySymbolByContributor($uuidContribuyente);
+        
         echo json_encode([
             'success' => true,
-            'data' => $estadisticas
+            'data' => $estadisticas,
+            'currency_symbol' => $currencySymbol
         ]);
         
     } catch (Exception $e) {

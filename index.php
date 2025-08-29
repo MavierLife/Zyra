@@ -12,6 +12,24 @@ $nombreUsuario = $_SESSION['nombre_usuario'] ?? 'Usuario';
 $razonSocial = $_SESSION['razon_social'] ?? 'Contribuyente';
 $nombreComercial = $_SESSION['nombre_comercial'] ?? 'Negocio';
 $loginTime = $_SESSION['login_time'] ?? time();
+$uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
+
+// Obtener símbolo de moneda
+require_once 'Config/Conexion.php';
+require_once 'Config/CurrencyManager.php';
+
+$currencySymbol = '$'; // Valor por defecto
+if ($uuidContribuyente) {
+    try {
+        $conexion = new Conexion();
+        $pdo = $conexion->getPdo();
+        $currencyManager = new CurrencyManager($pdo);
+        $currencySymbol = $currencyManager->getCurrencySymbolByContributor($uuidContribuyente);
+    } catch (Exception $e) {
+        // Mantener el símbolo por defecto en caso de error
+        error_log('Error obteniendo símbolo de moneda: ' . $e->getMessage());
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -138,7 +156,7 @@ $loginTime = $_SESSION['login_time'] ?? time();
                         <!-- Producto de ejemplo -->
                         <div class="product-card">
                             <div class="product-brand">BenaMax</div>
-                            <div class="product-price">$10</div>
+                            <div class="product-price"><?php echo htmlspecialchars($currencySymbol); ?>10</div>
                             <div class="product-name">PLUMON ARTLINE</div>
                             <div class="product-stock">35 disponibles</div>
                         </div>
@@ -168,7 +186,7 @@ $loginTime = $_SESSION['login_time'] ?? time();
                             <div class="summary-row">
                                 <span>0</span>
                                 <span>Continuar</span>
-                                <span>$0</span>
+                                <span><?php echo htmlspecialchars($currencySymbol); ?>0</span>
                             </div>
                         </div>
                         <button class="continue-btn" disabled>

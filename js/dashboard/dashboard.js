@@ -7,6 +7,7 @@ let products = [];
 let availableCategories = [];
 let currentVendedorId = null;
 let currentContribuyente = null;
+let currencySymbol = '$'; // Símbolo de moneda dinámico
 
 // Inicialización cuando se carga el DOM
 document.addEventListener('DOMContentLoaded', function() {
@@ -215,6 +216,11 @@ async function loadProducts(categoria = 'todos') {
             availableCategories = data.data.categorias;
             currentContribuyente = data.data.contribuyente;
             
+            // Actualizar símbolo de moneda si está disponible
+            if (data.data.currency_symbol) {
+                currencySymbol = data.data.currency_symbol;
+            }
+            
             // Actualizar categorías disponibles en la UI
             updateCategoriesUI();
             
@@ -312,7 +318,7 @@ function createProductCard(product) {
     
     card.innerHTML = `
         <div class="product-name">${product.name}</div>
-        <div class="product-price">$${product.price}</div>
+        <div class="product-price">${currencySymbol}${product.price}</div>
         <div class="product-stock">${product.stock} disponibles</div>
     `;
     
@@ -361,7 +367,7 @@ function updateCartDisplay() {
             summaryRow.innerHTML = `
                 <span>0</span>
                 <span>Continuar</span>
-                <span>$0</span>
+                <span>${currencySymbol}0</span>
             `;
         }
         
@@ -388,9 +394,9 @@ function updateCartDisplay() {
                             <span class="plus-icon">+</span>
                         </button>
                     </div>
-                    <div class="price-display">$ ${item.price}</div>
+                    <div class="price-display">${currencySymbol} ${item.price}</div>
                 </div>
-                <div class="cart-item-total">Precio por ${item.quantity} unidades: $${(item.price * item.quantity).toFixed(2)}</div>
+                <div class="cart-item-total">Precio por ${item.quantity} unidades: ${currencySymbol}${(item.price * item.quantity).toFixed(2)}</div>
             </div>
         `).join('');
         
@@ -404,7 +410,7 @@ function updateCartDisplay() {
             summaryRow.innerHTML = `
                 <span>${totalItems}</span>
                 <span>Continuar</span>
-                <span>$${totalAmount.toFixed(2)}</span>
+                <span>${currencySymbol}${totalAmount.toFixed(2)}</span>
             `;
         }
         

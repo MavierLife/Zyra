@@ -3,6 +3,7 @@ let products = [];
 let categories = [];
 let filteredProducts = [];
 let currentEditingProduct = null;
+let currencySymbol = '$'; // Símbolo de moneda dinámico
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
@@ -65,6 +66,12 @@ async function loadInventoryData() {
         if (data.success) {
             products = data.data;
             filteredProducts = [...products];
+            
+            // Actualizar símbolo de moneda si está disponible
+            if (data.currency_symbol) {
+                currencySymbol = data.currency_symbol;
+            }
+            
             renderProductTable(products);
             updateInventoryStats();
             await loadCategories();
@@ -149,16 +156,16 @@ function createProductRow(product) {
     // Formatear precio especial
     let precioEspecialText = '-';
     if (preciodescuento > 0 && cantidadminima > 0) {
-        precioEspecialText = `$${preciodescuento.toFixed(2)} <span class="special-price-quantity">${cantidadminima}+</span>`;
+        precioEspecialText = `${currencySymbol}${preciodescuento.toFixed(2)} <span class="special-price-quantity">${cantidadminima}+</span>`;
     }
     
     row.innerHTML = `
         <td>${product.nombre || ''}</td>
-        <td>$${precio.toFixed(2)}</td>
+        <td>${currencySymbol}${precio.toFixed(2)}</td>
         <td>${precioEspecialText}</td>
-        <td>$${costo.toFixed(2)}</td>
+        <td>${currencySymbol}${costo.toFixed(2)}</td>
         <td>${product.cantidad || 0}</td>
-        <td>$${ganancia.toFixed(2)} <span class="profit-percentage-box">${porcentaje.toFixed(1)}%</span></td>
+        <td>${currencySymbol}${ganancia.toFixed(2)} <span class="profit-percentage-box">${porcentaje.toFixed(1)}%</span></td>
         <td>
             <div class="action-buttons">
                 <button class="btn-edit" data-product-id="${product.id}" title="Editar">
@@ -200,7 +207,7 @@ function updateInventoryStats() {
     const totalValueEl = document.getElementById('totalValue');
 
     if (totalProductsEl) totalProductsEl.textContent = totalProducts;
-    if (totalValueEl) totalValueEl.textContent = `$${totalInventoryCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    if (totalValueEl) totalValueEl.textContent = `${currencySymbol}${totalInventoryCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 // Manejar búsqueda de productos

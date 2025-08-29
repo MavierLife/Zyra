@@ -31,6 +31,7 @@ if (!isset($_SESSION['vendedor_id'])) {
 }
 
 require_once '../Config/Conexion.php';
+require_once '../Config/CurrencyManager.php';
 
 try {
     $uuidVendedor = $_SESSION['vendedor_id'];
@@ -55,6 +56,9 @@ try {
     }
     
     $uuidContribuyente = $vendedorData['UUIDContribuyente'];
+    
+    // Inicializar CurrencyManager
+    $currencyManager = new CurrencyManager($pdo);
     
     // Obtener datos del contribuyente
     $sqlContribuyente = "SELECT NombreComercial, RazonSocial FROM tblcontribuyentes WHERE UUIDContribuyente = :uuid_contribuyente";
@@ -107,11 +111,15 @@ try {
         });
     }
     
+    // Obtener símbolo de moneda
+    $currencySymbol = $currencyManager->getCurrencySymbolByContributor($uuidContribuyente);
+    
     echo json_encode([
         'success' => true,
         'data' => [
             'productos' => array_values($productos),
             'categorias' => $categorias,
+            'currency_symbol' => $currencySymbol,
             'contribuyente' => [
                  'uuid' => $uuidContribuyente,
                  'nombre_comercial' => $contribuyenteData['NombreComercial'],
