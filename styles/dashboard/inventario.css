@@ -238,23 +238,31 @@
 
 /* Columnas específicas */
 .col-product {
-    width: 35%;
+    width: 30%;
 }
 
 .col-price {
-    width: 15%;
+    width: 12%;
 }
 
 .col-cost {
-    width: 15%;
+    width: 12%;
 }
 
 .col-quantity {
-    width: 20%;
+    width: 12%;
+}
+
+.col-special-price {
+    width: 15%;
 }
 
 .col-profit {
-    width: 15%;
+    width: 14%;
+}
+
+.col-actions {
+    width: 5%;
 }
 
 /* Contenido de las celdas */
@@ -339,6 +347,20 @@
     box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
     text-align: center;
     min-width: 45px;
+}
+
+.special-price-quantity {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #0A5C3A;
+    background: #d7f4e8;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-left: 8px;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+    text-align: center;
+    min-width: 35px;
 }
 
 /* Menú desplegable */

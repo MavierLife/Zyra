@@ -158,6 +158,7 @@ $uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
                             <tr>
                                 <th class="col-product">Producto</th>
                                 <th class="col-price">Precio</th>
+                                <th class="col-special-price">Precio Especial</th>
                                 <th class="col-cost">Costo</th>
                                 <th class="col-quantity">Existencias</th>
                                 <th class="col-profit">Margen de venta</th>

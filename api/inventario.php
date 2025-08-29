@@ -118,6 +118,8 @@ function obtenerProductos($pdo, $uuidContribuyente) {
                     p.Existencias as cantidad,
                     p.PrecioVenta as precio,
                     p.CostoCompra as costo,
+                    p.PrecioDescuento as preciodescuento,
+                    p.CantidadMinima as cantidadminima,
                     p.IDCategoria,
                     c.Categoria as categoria,
                     (p.PrecioVenta - p.CostoCompra) as ganancia,
@@ -142,6 +144,8 @@ function obtenerProductos($pdo, $uuidContribuyente) {
             $producto['ganancia'] = (float) $producto['ganancia'];
             $producto['cantidad'] = (int) $producto['cantidad'];
             $producto['porcentaje'] = (int) $producto['porcentaje'];
+            $producto['preciodescuento'] = (float) ($producto['preciodescuento'] ?? 0);
+            $producto['cantidadminima'] = (int) ($producto['cantidadminima'] ?? 0);
             $producto['categoria'] = $producto['categoria'] ?? 'Sin categoría';
         }
         

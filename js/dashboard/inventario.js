@@ -143,10 +143,19 @@ function createProductRow(product) {
     const costo = parseFloat(product.costo) || 0;
     const ganancia = parseFloat(product.ganancia) || 0;
     const porcentaje = parseFloat(product.porcentaje) || 0;
+    const preciodescuento = parseFloat(product.preciodescuento) || 0;
+    const cantidadminima = parseInt(product.cantidadminima) || 0;
+    
+    // Formatear precio especial
+    let precioEspecialText = '-';
+    if (preciodescuento > 0 && cantidadminima > 0) {
+        precioEspecialText = `$${preciodescuento.toFixed(2)} <span class="special-price-quantity">${cantidadminima}+</span>`;
+    }
     
     row.innerHTML = `
         <td>${product.nombre || ''}</td>
         <td>$${precio.toFixed(2)}</td>
+        <td>${precioEspecialText}</td>
         <td>$${costo.toFixed(2)}</td>
         <td>${product.cantidad || 0}</td>
         <td>$${ganancia.toFixed(2)} <span class="profit-percentage-box">${porcentaje.toFixed(1)}%</span></td>
