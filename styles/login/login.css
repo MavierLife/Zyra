@@ -1,0 +1,284 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #fff1c2;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    margin: 0;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    text-align: center;
+    width: 100%;
+    max-width: 420px;
+    box-sizing: border-box;
+    margin: auto;
+}
+
+.info-message {
+    background-color: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.info-icon {
+    color: #1976d2;
+    font-weight: bold;
+    margin-right: 12px;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.info-message p {
+    color: #1565c0;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.header {
+    margin-bottom: 32px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    gap: 8px;
+}
+
+.logo-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    margin-right: 12px;
+    object-fit: contain;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: uppercase;
+    margin-right: 12px;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.version {
+    background-color: #e0e0e0;
+    color: #666;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.phone-section h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 24px;
+}
+
+.phone-input-container {
+    display: flex;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.country-selector {
+    background-color: #f5f5f5;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-right: 1px solid #ddd;
+    cursor: pointer;
+    min-width: 100px;
+}
+
+.flag {
+    font-size: 18px;
+}
+
+.country-code {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    color: #666;
+    margin-left: auto;
+}
+
+#phoneNumber {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: white;
+}
+
+#phoneNumber::placeholder {
+    color: #999;
+}
+
+.submit-btn {
+    width: 100%;
+    background-color: #1a2732;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 24px;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background-color: #0f1a21;
+    transform: translateY(-1px);
+}
+
+.submit-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.register-link {
+    color: #666;
+    font-size: 14px;
+}
+
+.register-link a {
+    color: #1976d2;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 24px;
+        margin: 10px;
+    }
+    
+    .login-container {
+        max-width: 100%;
+    }
+    
+    .logo-text {
+        font-size: 20px;
+    }
+    
+    .header h1 {
+        font-size: 20px;
+    }
+    
+    .phone-section h2 {
+        font-size: 16px;
+    }
+}
+
+/* Focus states */
+#phoneNumber:focus {
+    outline: 2px solid #1976d2;
+    outline-offset: -2px;
+}
+
+.country-selector:focus {
+    outline: 2px solid #1976d2;
+    outline-offset: -2px;
+}
+
+.submit-btn:focus {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+}
+
+/* Mensajes de error y éxito */
+.error-message {
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.success-message {
+    background-color: #dcfce7;
+    border: 1px solid #bbf7d0;
+    color: #16a34a;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+}
