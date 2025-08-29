@@ -140,6 +140,10 @@ body {
     object-fit: contain;
 }
 
+.btn-primary .nav-barcode-icon {
+    filter: brightness(0) invert(1);
+}
+
 .nav-text {
     font-size: 14px;
     font-weight: 500;
@@ -293,7 +297,7 @@ body {
 
 .barcode-btn {
     padding: 12px 16px;
-    background-color: #007bff;
+    background-color: #394C60;
     color: white;
     border: none;
     border-radius: 8px;
@@ -302,7 +306,7 @@ body {
 }
 
 .barcode-btn:hover {
-    background-color: #0056b3;
+    background-color: #394C60;
 }
 
 .barcode-icon {
@@ -734,10 +738,7 @@ body {
     color: #495057;
 }
 
-.empty-cart-text p {
-    font-size: 14px;
-    line-height: 1.5;
-}
+
 
 .cart-footer {
     padding: 25px;

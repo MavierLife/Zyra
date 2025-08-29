@@ -159,7 +159,6 @@ $loginTime = $_SESSION['login_time'] ?? time();
                             </div>
                             <div class="empty-cart-text">
                                 <h4>Agrega productos rápidamente usando tu lector de código de barras</h4>
-                                <p>Si no está en tu inventario, lo buscaremos en nuestra base de datos.</p>
                             </div>
                         </div>
                     </div>

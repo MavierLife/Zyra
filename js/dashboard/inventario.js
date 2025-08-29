@@ -43,15 +43,16 @@ function setupEventListeners() {
             closeBtn.addEventListener('click', closeEditModal);
         }
 
-        const saveBtn = document.getElementById('saveProductBtn');
-        if (saveBtn) {
-            saveBtn.addEventListener('click', saveProduct);
+        // Manejar submit del formulario
+        const editForm = document.getElementById('editProductForm');
+        if (editForm) {
+            editForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProduct();
+            });
         }
 
-        const cancelBtn = document.getElementById('cancelEditBtn');
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', closeEditModal);
-        }
+
     }
 }
 
@@ -137,32 +138,41 @@ function renderProductTable(productsToRender) {
 function createProductRow(product) {
     const row = document.createElement('tr');
     
-    // Calcular ganancia y porcentaje
+    // Usar los nombres de campos que devuelve la API
     const precio = parseFloat(product.precio) || 0;
     const costo = parseFloat(product.costo) || 0;
-    const ganancia = precio - costo;
-    const porcentaje = costo > 0 ? ((ganancia / costo) * 100) : 0;
+    const ganancia = parseFloat(product.ganancia) || 0;
+    const porcentaje = parseFloat(product.porcentaje) || 0;
     
     row.innerHTML = `
         <td>${product.nombre || ''}</td>
         <td>$${precio.toFixed(2)}</td>
         <td>$${costo.toFixed(2)}</td>
         <td>${product.cantidad || 0}</td>
-        <td>$${ganancia.toFixed(2)} (${porcentaje.toFixed(1)}%)</td>
+        <td>$${ganancia.toFixed(2)} <span class="profit-percentage-box">${porcentaje.toFixed(1)}%</span></td>
         <td>
             <div class="action-buttons">
-                <button class="btn-edit" onclick="editProduct('${product.id}')" title="Editar">
-                    ✏️
+                <button class="btn-edit" data-product-id="${product.id}" title="Editar">
+                    <img src="assets/icons/editar.svg" alt="Editar" width="16" height="16">
                 </button>
-                <button class="btn-duplicate" onclick="duplicateProduct('${product.id}')" title="Duplicar">
-                    📋
-                </button>
-                <button class="btn-delete" onclick="deleteProduct('${product.id}')" title="Eliminar">
-                    🗑️
+                <button class="btn-delete" data-product-id="${product.id}" title="Eliminar">
+                    <img src="assets/icons/borrar.svg" alt="Eliminar" width="16" height="16">
                 </button>
             </div>
         </td>
     `;
+    
+    // Agregar event listeners a los botones
+    const editBtn = row.querySelector('.btn-edit');
+    const deleteBtn = row.querySelector('.btn-delete');
+    
+    if (editBtn) {
+        editBtn.addEventListener('click', () => editProduct(product.id));
+    }
+    
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => deleteProduct(product.id));
+    }
     
     return row;
 }
@@ -170,8 +180,10 @@ function createProductRow(product) {
 // Actualizar estadísticas del inventario
 function updateInventoryStats() {
     const totalProducts = products.length;
-    const totalValue = products.reduce((sum, product) => {
-        return sum + (parseFloat(product.costo) * parseInt(product.cantidad));
+    const totalInventoryCost = products.reduce((sum, product) => {
+        const costo = parseFloat(product.costo) || 0;
+        const cantidad = parseInt(product.cantidad) || 0;
+        return sum + (costo * cantidad);
     }, 0);
 
     // Actualizar elementos del DOM
@@ -179,7 +191,7 @@ function updateInventoryStats() {
     const totalValueEl = document.getElementById('totalValue');
 
     if (totalProductsEl) totalProductsEl.textContent = totalProducts;
-    if (totalValueEl) totalValueEl.textContent = `$${totalValue.toLocaleString()}`;
+    if (totalValueEl) totalValueEl.textContent = `$${totalInventoryCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 // Manejar búsqueda de productos
@@ -226,17 +238,20 @@ function openAddProductModal() {
 
 // Editar producto
 function editProduct(productId) {
-    const product = products.find(p => p.IDProducto == productId);
-    if (!product) return;
+    const product = products.find(p => p.id == productId);
+    if (!product) {
+        console.error('Producto no encontrado con ID:', productId);
+        return;
+    }
 
     currentEditingProduct = product;
     
     // Llenar el modal con los datos del producto
-    document.getElementById('editProductCode').value = product.Codigo || '';
-    document.getElementById('editProductName').value = product.Nombre || '';
-    document.getElementById('editProductQuantity').value = product.Cantidad || 0;
-    document.getElementById('editProductPrice').value = product.Precio || 0;
-    document.getElementById('editProductCost').value = product.Costo || 0;
+    document.getElementById('editProductCode').value = product.codigo || '';
+    document.getElementById('editProductName').value = product.nombre || '';
+    document.getElementById('editProductStock').value = product.cantidad || 0;
+    document.getElementById('editProductPrice').value = product.precio || 0;
+    document.getElementById('editProductCost').value = product.costo || 0;
     document.getElementById('editProductCategory').value = product.IDCategoria || '';
 
     // Mostrar el modal
@@ -254,7 +269,7 @@ async function saveProduct() {
         id: currentEditingProduct.IDProducto,
         codigo: document.getElementById('editProductCode').value,
         nombre: document.getElementById('editProductName').value,
-        cantidad: parseInt(document.getElementById('editProductQuantity').value),
+        cantidad: parseInt(document.getElementById('editProductStock').value),
         precio: parseFloat(document.getElementById('editProductPrice').value),
         costo: parseFloat(document.getElementById('editProductCost').value),
         categoria: document.getElementById('editProductCategory').value
@@ -286,16 +301,16 @@ async function saveProduct() {
 
 // Duplicar producto
 function duplicateProduct(productId) {
-    const product = products.find(p => p.IDProducto == productId);
+    const product = products.find(p => p.id == productId);
     if (!product) return;
 
     const duplicatedProduct = {
-        IDProducto: product.IDProducto,
-        Codigo: product.Codigo + '_copy',
-        Nombre: product.Nombre + ' (Copia)',
-        Cantidad: product.Cantidad,
-        Precio: product.Precio,
-        Costo: product.Costo
+        id: product.id,
+        codigo: product.codigo + '_copy',
+        nombre: product.nombre + ' (Copia)',
+        cantidad: product.cantidad,
+        precio: product.precio,
+        costo: product.costo
     };
 
     // Aquí implementarías la lógica para crear el producto duplicado

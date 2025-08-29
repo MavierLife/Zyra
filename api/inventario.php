@@ -122,7 +122,7 @@ function obtenerProductos($pdo, $uuidContribuyente) {
                     c.Categoria as categoria,
                     (p.PrecioVenta - p.CostoCompra) as ganancia,
                     CASE 
-                        WHEN p.CostoCompra > 0 THEN ROUND(((p.PrecioVenta - p.CostoCompra) / p.CostoCompra) * 100, 0)
+                        WHEN p.PrecioVenta > 0 THEN ROUND(((p.PrecioVenta - p.CostoCompra) / p.PrecioVenta) * 100, 1)
                         ELSE 0
                     END as porcentaje
                 FROM tblcontribuyentesproductos p

@@ -1,7 +1,7 @@
 /* Estilos específicos para la página de inventario */
 
 /* Color global de fuente */
-* {
+*:not(.btn):not(.btn-primary):not(.btn-outline):not(.btn-save):not(.btn-delete):not(.btn-edit) {
     color: #394C60 !important;
 }
 
@@ -320,11 +320,25 @@
 
 .profit-percentage {
     font-size: 12px;
-    color: #28a745;
+    color: #0A5C3A;
     background: #d4edda;
     padding: 2px 6px;
     border-radius: 4px;
     margin-left: 8px;
+}
+
+.profit-percentage-box {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    background: #d7f4e8;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-left: 8px;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+    text-align: center;
+    min-width: 45px;
 }
 
 /* Menú desplegable */
@@ -392,7 +406,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 32px 0;
+    padding: 20px 24px;
     border-bottom: 1px solid #e1e5e9;
     margin-bottom: 0;
 }
@@ -415,86 +429,32 @@
     color: #495057;
 }
 
-/* Tabs del modal */
-.modal-tabs {
-    display: flex;
-    border-bottom: 1px solid #e1e5e9;
-    padding: 0 32px;
-}
 
-.tab-btn {
-    padding: 16px 24px;
-    border: none;
-    background: none;
-    font-size: 14px;
-    font-weight: 500;
-    color: #6c757d;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s ease;
-}
-
-.tab-btn.active {
-    color: #007bff;
-    border-bottom-color: #007bff;
-}
-
-.tab-btn:disabled {
-    color: #adb5bd;
-    cursor: not-allowed;
-}
 
 /* Formulario de edición */
 .edit-product-form {
-    padding: 32px;
+    padding: 24px;
 }
 
 .form-section {
-    margin-bottom: 32px;
+    margin-bottom: 0;
 }
 
-.form-section h4 {
-    margin: 0 0 20px 0;
-    font-size: 16px;
-    font-weight: 600;
-    color: #2c3e50;
-}
 
-.image-upload-section {
-    margin-bottom: 24px;
-}
-
-.image-upload-area {
-    border: 2px dashed #e1e5e9;
-    border-radius: 8px;
-    padding: 40px 20px;
-    text-align: center;
-    background: #f8f9fa;
-    cursor: pointer;
-    transition: border-color 0.2s ease;
-}
-
-.image-upload-area:hover {
-    border-color: #007bff;
-}
-
-.upload-icon {
-    font-size: 32px;
-    margin-bottom: 12px;
-    color: #6c757d;
-}
-
-.upload-text p {
-    margin: 0;
-    font-size: 14px;
-    color: #6c757d;
-}
 
 .form-row {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-row.two-columns {
+    grid-template-columns: 1fr 1fr;
+}
+
+.form-row.three-columns {
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 .form-group {
@@ -503,7 +463,7 @@
 }
 
 .form-group label {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-weight: 500;
     color: #495057;
     font-size: 14px;
@@ -512,7 +472,7 @@
 .form-group input,
 .form-group select,
 .form-group textarea {
-    padding: 12px 16px;
+    padding: 10px 12px;
     border: 1px solid #e1e5e9;
     border-radius: 8px;
     font-size: 14px;
@@ -533,27 +493,22 @@
 }
 
 .checkbox-group {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 12px;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
 }
 
 .checkbox-group input[type="checkbox"] {
-    margin: 0;
     width: auto;
+    margin: 0;
+    transform: scale(1.1);
 }
 
 .checkbox-group label {
     margin: 0;
-    cursor: pointer;
-    flex: 1;
-}
-
-.checkbox-group small {
-    display: block;
-    color: #6c757d;
-    font-size: 12px;
-    margin-top: 4px;
+    font-weight: 400;
+    font-size: 14px;
 }
 
 /* Acciones del formulario */
@@ -588,7 +543,7 @@
 
 .btn-save {
     padding: 12px 24px;
-    background: #007bff;
+    background: #394C60;
     color: white;
     border: none;
     border-radius: 8px;
@@ -599,7 +554,7 @@
 }
 
 .btn-save:hover {
-    background: #0056b3;
+    background: #394C60;
 }
 
 /* Botones del header */
@@ -618,14 +573,14 @@
 }
 
 .btn-primary {
-    background: #007bff;
-    color: white;
-    border-color: #007bff;
+    background: #394C60;
+    color: white !important;
+    border-color: #394C60;
 }
 
 .btn-primary:hover {
-    background: #0056b3;
-    border-color: #0056b3;
+    background: #394C60;
+    border-color: #394C60;
 }
 
 .btn-outline {
@@ -641,6 +596,42 @@
 
 .btn-icon {
     font-size: 16px;
+}
+
+/* Botones de acción en la tabla */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-edit,
+.btn-delete {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: #f8f9fa;
+    color: #6c757d;
+}
+
+.btn-edit:hover {
+    background: #394C60;
+    color: white;
+    transform: scale(1.05);
+}
+
+.btn-delete:hover {
+    background: #dc3545;
+    color: white;
+    transform: scale(1.05);
 }
 
 /* Estados responsive */

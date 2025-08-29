@@ -103,11 +103,11 @@ $uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
                 </div>
                 <div class="header-right">
                     <button class="btn btn-outline" id="categoriesBtn">
-                        <span class="btn-icon">🏷️</span>
+                        <img src="assets/icons/categorias.svg" alt="Categorías" class="nav-barcode-icon">
                         Categorías
                     </button>
                     <button class="btn btn-primary" id="createProductBtn">
-                        <span class="btn-icon">➕</span>
+                        <img src="assets/icons/agregar.svg" alt="Agregar" class="nav-barcode-icon">
                         Crear producto
                     </button>
                 </div>
@@ -128,12 +128,12 @@ $uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
                         </select>
                         
                         <button class="btn btn-outline" id="virtualCatalogBtn">
-                            <span class="btn-icon">📋</span>
+                            <img src="assets/icons/catalogovirtual.svg" alt="Catálogo" class="nav-barcode-icon">
                             Catálogo virtual
                         </button>
                         
                         <button class="btn btn-primary" id="registerPurchasesBtn">
-                            <span class="btn-icon">📝</span>
+                            <img src="assets/icons/registrarcompra.svg" alt="Registrar" class="nav-barcode-icon">
                             Registrar compras
                         </button>
                     </div>
@@ -159,8 +159,8 @@ $uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
                                 <th class="col-product">Producto</th>
                                 <th class="col-price">Precio</th>
                                 <th class="col-cost">Costo</th>
-                                <th class="col-quantity">Cantidad disponible</th>
-                                <th class="col-profit">Ganancia</th>
+                                <th class="col-quantity">Existencias</th>
+                                <th class="col-profit">Margen de venta</th>
                                 <th class="col-actions">Acciones</th>
                             </tr>
                         </thead>
@@ -176,11 +176,11 @@ $uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
     <!-- Menú desplegable para editar producto -->
     <div id="productDropdownMenu" class="dropdown-menu" style="display: none;">
         <div class="dropdown-item" data-action="edit">
-            <span class="dropdown-icon">✏️</span>
+            <img src="assets/icons/editar.svg" alt="Editar" class="dropdown-icon">
             <span class="dropdown-text">Editar producto</span>
         </div>
         <div class="dropdown-item" data-action="delete">
-            <span class="dropdown-icon">🗑️</span>
+            <img src="assets/icons/eliminar.svg" alt="Eliminar" class="dropdown-icon">
             <span class="dropdown-text">Eliminar producto</span>
         </div>
     </div>
@@ -189,33 +189,22 @@ $uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
     <div id="editProductModal" class="modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Producto básico</h3>
+                <h3>Modificar Producto</h3>
                 <span class="close-modal" id="closeEditModal">&times;</span>
-            </div>
-            
-            <div class="modal-tabs">
-                <button class="tab-btn active" data-tab="basic">Producto básico</button>
-                <button class="tab-btn" data-tab="variants" disabled>Productos con variantes</button>
-                <button class="tab-btn" data-tab="measures" disabled>Productos con medidas</button>
             </div>
             
             <form id="editProductForm" class="edit-product-form">
                 <div class="form-section">
-                    <h4>Datos del producto</h4>
-                    
-                    <div class="image-upload-section">
-                        <div class="image-upload-area">
-                            <div class="upload-icon">📷</div>
-                            <div class="upload-text">
-                                <p>Cargar imagen Recomendamos: Tamaño de 500 x 500 px, formato PNG y peso máximo 2MB.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
+                    <div class="form-row two-columns">
                         <div class="form-group">
                             <label for="editProductCode">Código</label>
                             <input type="text" id="editProductCode" name="productCode" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductCategory">Categoría</label>
+                            <select id="editProductCategory" name="productCategory">
+                                <option value="">Seleccionar categoría</option>
+                            </select>
                         </div>
                     </div>
                     
@@ -226,61 +215,37 @@ $uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
                         </div>
                     </div>
                     
-                    <div class="form-row">
+                    <div class="form-row three-columns">
                         <div class="form-group">
-                            <label for="editProductStock">Cantidad disponible</label>
+                            <label for="editProductStock">Cantidad</label>
                             <input type="number" id="editProductStock" name="productStock" min="0">
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
                         <div class="form-group">
                             <label for="editProductPrice">Precio de venta *</label>
                             <input type="number" id="editProductPrice" name="productPrice" step="0.01" min="0" required>
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
                         <div class="form-group">
                             <label for="editProductCost">Costo de compra</label>
                             <input type="number" id="editProductCost" name="productCost" step="0.01" min="0">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-section">
-                    <h4>Información adicional</h4>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editProductCategory">Categoría</label>
-                            <select id="editProductCategory" name="productCategory">
-                                <option value="">Seleccionar categoría</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group checkbox-group">
-                            <input type="checkbox" id="showInVirtualStore" name="showInVirtualStore">
-                            <label for="showInVirtualStore">Mostrar producto en tienda virtual</label>
-                            <small>Este producto será visible para tus clientes si compartes tu catálogo</small>
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="productDescription">Descripción</label>
-                            <textarea id="productDescription" name="productDescription" placeholder="Añadir una descripción ayudará a tus clientes a elegir más fácil"></textarea>
+                            <textarea id="productDescription" name="productDescription" placeholder="Descripción del producto (opcional)" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="showInVirtualStore" name="showInVirtualStore">
+                            <label for="showInVirtualStore">Mostrar en tienda virtual</label>
                         </div>
                     </div>
                 </div>
                 
                 <div class="form-actions">
-                    <button type="button" class="btn-delete" id="deleteProductBtn">
-                        <span class="btn-icon">🗑️</span>
-                        Eliminar producto
-                    </button>
                     <button type="submit" class="btn-save">
                         Guardar cambios
                     </button>
