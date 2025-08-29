@@ -233,6 +233,7 @@ body {
     }
 }
 
+.back-btn {
     border-radius: 20px;
     font-size: 14px;
     cursor: pointer;

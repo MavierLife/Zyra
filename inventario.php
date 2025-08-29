@@ -61,13 +61,13 @@ $uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" data-section="movimientos">
-                            <span class="nav-icon">📊</span>
+                            <img src="assets/icons/movimientos.svg" alt="Movimientos" class="nav-barcode-icon">
                             <span class="nav-text">Movimientos</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" data-section="estadisticas">
-                            <span class="nav-icon">📈</span>
+                            <img src="assets/icons/estadisticas.svg" alt="Estadísticas" class="nav-barcode-icon">   
                             <span class="nav-text">Estadísticas</span>
                         </a>
                     </li>
@@ -79,7 +79,7 @@ $uuidContribuyente = $_SESSION['uuid_contribuyente'] ?? null;
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" data-section="empleados">
-                            <span class="nav-icon">👥</span>
+                            <img src="assets/icons/empleados.svg" alt="Empleados" class="nav-barcode-icon">
                             <span class="nav-text">Empleados</span>
                         </a>
                     </li>

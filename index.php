@@ -56,13 +56,13 @@ $loginTime = $_SESSION['login_time'] ?? time();
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" data-section="movimientos">
-                            <span class="nav-icon">📊</span>
+                            <img src="assets/icons/movimientos.svg" alt="Movimientos" class="nav-barcode-icon">
                             <span class="nav-text">Movimientos</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" data-section="estadisticas">
-                            <span class="nav-icon">📈</span>
+                            <img src="assets/icons/estadisticas.svg" alt="Estadísticas" class="nav-barcode-icon">
                             <span class="nav-text">Estadísticas</span>
                         </a>
                     </li>
@@ -74,7 +74,7 @@ $loginTime = $_SESSION['login_time'] ?? time();
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" data-section="empleados">
-                            <span class="nav-icon">👥</span>
+                            <img src="assets/icons/empleados.svg" alt="Empleados" class="nav-barcode-icon">
                             <span class="nav-text">Empleados</span>
                         </a>
                     </li>
@@ -98,15 +98,13 @@ $loginTime = $_SESSION['login_time'] ?? time();
                 </div>
                 <div class="header-right">
                     <button class="btn btn-secondary" id="openCashBtn">
-                        <span class="btn-icon">💰</span>
+                        <img src="assets/icons/cajaregistradora.svg" alt="Abrir caja" class="nav-barcode-icon">
                         Abrir caja
                     </button>
                     <button class="btn btn-success" id="newSaleBtn">
-                        <span class="btn-icon">➕</span>
                         Nueva venta libre
                     </button>
                     <button class="btn btn-danger" id="newExpenseBtn">
-                        <span class="btn-icon">💸</span>
                         Nuevo gasto
                     </button>
                 </div>
