@@ -1,5 +1,9 @@
 <?php
-header('Content-Type: application/json');
+// Configurar codificación interna
+mb_internal_encoding('UTF-8');
+mb_http_output('UTF-8');
+
+header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');

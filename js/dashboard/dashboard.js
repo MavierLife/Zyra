@@ -105,6 +105,15 @@ function initializeEventListeners() {
 function handleNavigation(event) {
     event.preventDefault();
     
+    // Obtener la sección
+    const section = event.currentTarget.dataset.section;
+    
+    // Si es inventario, redirigir a la página específica
+    if (section === 'inventario') {
+        window.location.href = 'inventario.php';
+        return;
+    }
+    
     // Remover clase active de todos los elementos
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
@@ -114,8 +123,6 @@ function handleNavigation(event) {
     const navItem = event.currentTarget.closest('.nav-item');
     navItem.classList.add('active');
     
-    // Obtener la sección
-    const section = event.currentTarget.dataset.section;
     currentSection = section;
     
     // Actualizar título de la página

@@ -3,10 +3,22 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    color: #394C60 !important;
+}
+
+/* Fuente global Nunito Sans */
+.nunito-sans-global {
+    font-family: "Nunito Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100,
+        "YTLC" 500;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     background-color: #f8f9fa;
     color: #333;
     line-height: 1.6;
@@ -123,8 +135,8 @@ body {
 }
 
 .nav-barcode-icon {
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 30px;
     object-fit: contain;
 }
 
@@ -343,24 +355,26 @@ body {
     color: #495057;
 }
 
-/* Área de productos */
+/* Área de productos - Optimizado para escritorio */
 .products-area {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 174px);
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, 200px);
+    gap: 24px;
     justify-content: start;
+    align-items: start;
+    padding: 0;
 }
 
 .add-product-card {
     background-color: #ffffff;
     border: 2px dashed #dee2e6;
     border-radius: 12px;
-    padding: 15px;
+    padding: 20px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 174px;
-    height: 246px;
+    width: 200px;
+    height: 260px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -375,12 +389,25 @@ body {
 .add-product-icon {
     font-size: 32px;
     color: #6c757d;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.add-product-card:hover .add-product-icon {
+    color: #007bff;
+    transform: scale(1.1);
 }
 
 .add-product-text {
     color: #6c757d;
     font-weight: 500;
+    text-align: center;
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+.add-product-card:hover .add-product-text {
+    color: #007bff;
 }
 
 /* Modal para agregar producto */
@@ -569,12 +596,12 @@ body {
     background-color: #ffffff;
     border: 1px solid #e9ecef;
     border-radius: 12px;
-    padding: 15px;
+    padding: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 174px;
-    height: 246px;
+    width: 200px;
+    height: 260px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -589,27 +616,41 @@ body {
     font-size: 12px;
     color: #007bff;
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .product-price {
     font-size: 20px;
     font-weight: 700;
     color: #28a745;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    line-height: 1.2;
 }
 
 .product-name {
     font-size: 14px;
     font-weight: 600;
     color: #2c3e50;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    flex: 1;
 }
 
 .product-stock {
     font-size: 12px;
     color: #28a745;
     font-weight: 500;
+    margin-top: auto;
 }
 
 /* Panel del carrito */
@@ -727,65 +768,5 @@ body {
     cursor: not-allowed;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-    .sidebar {
-        width: 250px;
-    }
-    
-    .cart-panel {
-        width: 350px;
-    }
-}
-
-@media (max-width: 768px) {
-    .dashboard-container {
-        flex-direction: column;
-    }
-    
-    .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        overflow-x: auto;
-    }
-    
-    .sidebar-nav {
-        flex: 1;
-        padding: 10px 0;
-    }
-    
-    .nav-menu {
-        display: flex;
-        gap: 10px;
-        padding: 0 20px;
-    }
-    
-    .nav-item {
-        margin-bottom: 0;
-        white-space: nowrap;
-    }
-    
-    .sale-section {
-        flex-direction: column;
-    }
-    
-    .cart-panel {
-        width: 100%;
-        height: 300px;
-    }
-    
-    .main-header {
-        padding: 15px 20px;
-    }
-    
-    .header-right {
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    
-    .products-area {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 15px;
-    }
-}
+/* Diseño optimizado para escritorio únicamente */
+/* Sin soporte para dispositivos móviles o tablets */

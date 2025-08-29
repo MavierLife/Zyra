@@ -19,6 +19,12 @@ $loginTime = $_SESSION['login_time'] ?? time();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Zyra POS</title>
+    
+    <!-- Google Fonts - Nunito Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="styles/dashboard/dashboard.css">
     <link rel="icon" type="image/png" href="assets/logos/logo.png">
 </head>
@@ -43,7 +49,7 @@ $loginTime = $_SESSION['login_time'] ?? time();
                     <li class="nav-item active">
                         <a href="#" class="nav-link" data-section="vender">
                             <span class="nav-icon">
-                                <img src="assets/utilities/lectorbarras.webp" alt="Vender" class="nav-barcode-icon">
+                                <img src="assets/icons/vender.svg" alt="Vender" class="nav-barcode-icon">
                             </span>
                             <span class="nav-text">Vender</span>
                         </a>
@@ -62,7 +68,7 @@ $loginTime = $_SESSION['login_time'] ?? time();
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" data-section="inventario">
-                            <span class="nav-icon">📦</span>
+                            <img src="assets/icons/inventario.svg" alt="Inventario" class="nav-barcode-icon">
                             <span class="nav-text">Inventario</span>
                         </a>
                     </li>
