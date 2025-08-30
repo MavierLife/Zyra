@@ -297,7 +297,7 @@ function actualizarProducto($pdo, $uuidContribuyente, $data) {
         
         // Actualizar producto
         $sql = "UPDATE tblcontribuyentesproductos 
-                SET Descripcion = ?, Existencias = ?, PrecioVenta = ?, CostoCompra = ?, IDCategoria = ?
+                SET Descripcion = ?, Existencias = ?, PrecioVenta = ?, CostoCompra = ?, IDCategoria = ?, cantidadminima = ?, preciodescuento = ?
                 WHERE UUIDProducto = ? AND UUIDContribuyente = ?";
         
         $stmt = $pdo->prepare($sql);
@@ -307,6 +307,8 @@ function actualizarProducto($pdo, $uuidContribuyente, $data) {
             $data['precio'],
             $data['costo'],
             $data['categoria'] ?? null,
+            $data['cantidadminima'] ?? 0,
+            $data['preciodescuento'] ?? 0,
             $data['id'],
             $uuidContribuyente
         ]);

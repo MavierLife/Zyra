@@ -111,20 +111,9 @@ $pageTitle = 'Inventario';
             </div>
             
             <form id="editProductForm" class="edit-product-form">
+                <!-- Sección: Datos Generales -->
                 <div class="form-section">
-                    <div class="form-row two-columns">
-                        <div class="form-group">
-                            <label for="editProductCode">Código</label>
-                            <input type="text" id="editProductCode" name="productCode" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="editProductCategory">Categoría</label>
-                            <select id="editProductCategory" name="productCategory">
-                                <option value="">Seleccionar categoría</option>
-                            </select>
-                        </div>
-                    </div>
-                    
+                    <h4 class="section-title">Datos Generales</h4>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="editProductName">Nombre del producto *</label>
@@ -134,9 +123,26 @@ $pageTitle = 'Inventario';
                     
                     <div class="form-row three-columns">
                         <div class="form-group">
+                            <label for="editProductCode">Código de Barras</label>
+                            <input type="text" id="editProductCode" name="productCode" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductCategory">Categoría</label>
+                            <select id="editProductCategory" name="productCategory">
+                                <option value="">Seleccionar categoría</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="editProductStock">Cantidad</label>
                             <input type="number" id="editProductStock" name="productStock" min="0">
                         </div>
+                    </div>
+                </div>
+                
+                <!-- Sección: Precios -->
+                <div class="form-section">
+                    <h4 class="section-title">Precios</h4>
+                    <div class="form-row two-columns">
                         <div class="form-group">
                             <label for="editProductPrice">Precio de venta *</label>
                             <input type="number" id="editProductPrice" name="productPrice" step="0.01" min="0" required>
@@ -147,10 +153,14 @@ $pageTitle = 'Inventario';
                         </div>
                     </div>
                     
-                    <div class="form-row">
+                    <div class="form-row two-columns">
                         <div class="form-group">
-                            <label for="productDescription">Descripción</label>
-                            <textarea id="productDescription" name="productDescription" placeholder="Descripción del producto (opcional)" rows="3"></textarea>
+                            <label for="editProductMinQuantity">Cantidad mínima</label>
+                            <input type="number" id="editProductMinQuantity" name="productMinQuantity" min="0" placeholder="Cantidad mínima para precio especial">
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductDiscountPrice">Precio con descuento</label>
+                            <input type="number" id="editProductDiscountPrice" name="productDiscountPrice" step="0.01" min="0" placeholder="Precio especial por cantidad">
                         </div>
                     </div>
                     

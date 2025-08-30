@@ -80,6 +80,17 @@ function initializeEventListeners() {
     
     if (addProductForm) {
         addProductForm.addEventListener('submit', handleAddProductSubmit);
+        
+        // Limitar decimales en campos de precios
+        const priceInputs = ['productPrice', 'productCost'];
+        priceInputs.forEach(inputId => {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('input', function(e) {
+                    limitDecimals(e.target, 2);
+                });
+            }
+        });
     }
     
     // Cerrar modal al hacer clic fuera de él
@@ -487,8 +498,8 @@ function handleAddProductSubmit(event) {
     const productData = {
         name: formData.get('productName'),
         barcode: formData.get('productBarcode'),
-        price: parseFloat(formData.get('productPrice')),
-        cost: parseFloat(formData.get('productCost')),
+        price: Math.round(parseFloat(formData.get('productPrice')) * 100) / 100,
+        cost: Math.round(parseFloat(formData.get('productCost')) * 100) / 100,
         stock: parseInt(formData.get('productStock')),
         category: formData.get('productCategory')
     };
@@ -786,3 +797,16 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Función para limitar decimales en inputs
+function limitDecimals(input, maxDecimals) {
+    let value = input.value;
+    
+    // Si hay un punto decimal
+    if (value.includes('.')) {
+        const parts = value.split('.');
+        if (parts[1] && parts[1].length > maxDecimals) {
+            input.value = parts[0] + '.' + parts[1].substring(0, maxDecimals);
+        }
+    }
+}

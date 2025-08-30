@@ -1,7 +1,7 @@
 /* Estilos específicos para la página de inventario */
 
 /* Color global de fuente */
-*:not(.btn):not(.btn-primary):not(.btn-outline):not(.btn-save):not(.btn-delete):not(.btn-edit) {
+*:not(.btn):not(.btn-primary):not(.btn-outline):not(.btn-save):not(.btn-delete):not(.btn-edit):not(.modal-header h3):not(.close-modal) {
     color: #394C60 !important;
 }
 
@@ -430,6 +430,9 @@
     align-items: center;
     padding: 20px 24px;
     border-bottom: 1px solid #e1e5e9;
+    background: linear-gradient(135deg, #394C60 0%, #2c3e50 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
     margin-bottom: 0;
 }
 
@@ -437,13 +440,13 @@
     margin: 0;
     font-size: 20px;
     font-weight: 600;
-    color: #2c3e50;
+    color: white !important;
 }
 
 .close-modal {
     font-size: 24px;
     cursor: pointer;
-    color: #6c757d;
+    color: #ffffff !important;
     transition: color 0.2s ease;
 }
 
@@ -455,20 +458,35 @@
 
 /* Formulario de edición */
 .edit-product-form {
-    padding: 24px;
+    padding: 16px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #394C60;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e1e5e9;
+}
+
+.form-section {
+    margin-bottom: 20px;
+}
+
+.form-section:last-of-type {
+    margin-bottom: 0;
 }
 
 .form-section {
     margin-bottom: 0;
 }
 
-
-
 .form-row {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
+    gap: 8px;
+    margin-bottom: 8px;
 }
 
 .form-row.two-columns {
@@ -538,9 +556,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 24px;
+    padding-top: 12px;
     border-top: 1px solid #e1e5e9;
-    margin-top: 32px;
+    margin-top: 16px;
 }
 
 .btn-delete {
@@ -566,7 +584,7 @@
 .btn-save {
     padding: 12px 24px;
     background: #394C60;
-    color: white;
+    color: white !important;
     border: none;
     border-radius: 8px;
     font-size: 14px;
@@ -576,7 +594,8 @@
 }
 
 .btn-save:hover {
-    background: #394C60;
+    background: #2c3e50;
+    color: white !important;
 }
 
 /* Botones del header */
@@ -642,6 +661,7 @@
     transition: all 0.2s ease;
     background: #f8f9fa;
     color: #6c757d;
+    outline: none;
 }
 
 .btn-edit:hover {
@@ -650,10 +670,45 @@
     transform: scale(1.05);
 }
 
+.btn-edit:active,
+.btn-edit:focus {
+    background: #394C60;
+    color: white;
+    outline: none;
+    box-shadow: none;
+}
+
 .btn-delete:hover {
     background: #dc3545;
     color: white;
     transform: scale(1.05);
+}
+
+.btn-delete:active,
+.btn-delete:focus {
+    background: #dc3545;
+    color: white;
+    outline: none;
+    box-shadow: none;
+}
+
+/* Asegurar que los iconos mantengan su color */
+.btn-edit img,
+.btn-delete img {
+    filter: none;
+    opacity: 1;
+}
+
+.btn-edit:hover img,
+.btn-edit:active img,
+.btn-edit:focus img {
+    filter: brightness(0) invert(1);
+}
+
+.btn-delete:hover img,
+.btn-delete:active img,
+.btn-delete:focus img {
+    filter: brightness(0) invert(1);
 }
 
 /* Estados responsive */
