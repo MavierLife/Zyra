@@ -109,6 +109,11 @@ function handleNavigation(event) {
     // Obtener la sección
     const section = event.currentTarget.dataset.section;
     
+    // Si no hay sección definida, no hacer nada
+    if (!section) {
+        return;
+    }
+    
     // Si es inventario, redirigir a la página específica
     if (section === 'inventario') {
         window.location.href = 'inventario.php';
