@@ -414,6 +414,15 @@
     z-index: 2000;
 }
 
+/* Asegurar que SweetAlert2 aparezca por encima del modal */
+.swal2-container {
+    z-index: 10000 !important;
+}
+
+.swal2-popup {
+    z-index: 10001 !important;
+}
+
 .modal-content {
     background: white;
     border-radius: 12px;

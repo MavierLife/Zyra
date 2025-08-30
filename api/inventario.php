@@ -295,9 +295,45 @@ function actualizarProducto($pdo, $uuidContribuyente, $data) {
             return;
         }
         
-        // Actualizar producto
+        // Primero verificar si el producto existe
+        $sqlCheck = "SELECT Descripcion, Existencias, PrecioVenta, CostoCompra, IDCategoria, CantidadMinima, PrecioDescuento
+                     FROM tblcontribuyentesproductos 
+                     WHERE UUIDProducto = ? AND UUIDContribuyente = ?";
+        
+        $stmtCheck = $pdo->prepare($sqlCheck);
+        $stmtCheck->execute([$data['id'], $uuidContribuyente]);
+        $currentProduct = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$currentProduct) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Producto no encontrado']);
+            return;
+        }
+        
+        // Comparar valores actuales con los nuevos
+        $hasChanges = (
+            $currentProduct['Descripcion'] != $data['nombre'] ||
+            $currentProduct['Existencias'] != ($data['cantidad'] ?? 0) ||
+            $currentProduct['PrecioVenta'] != $data['precio'] ||
+            $currentProduct['CostoCompra'] != $data['costo'] ||
+            $currentProduct['IDCategoria'] != ($data['categoria'] ?? null) ||
+            $currentProduct['CantidadMinima'] != ($data['cantidadminima'] ?? 0) ||
+            $currentProduct['PrecioDescuento'] != ($data['preciodescuento'] ?? 0)
+        );
+        
+        // Si no hay cambios, devolver éxito sin actualizar
+        if (!$hasChanges) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Producto actualizado exitosamente',
+                'no_changes' => true
+            ]);
+            return;
+        }
+        
+        // Actualizar producto solo si hay cambios
         $sql = "UPDATE tblcontribuyentesproductos 
-                SET Descripcion = ?, Existencias = ?, PrecioVenta = ?, CostoCompra = ?, IDCategoria = ?, cantidadminima = ?, preciodescuento = ?
+                SET Descripcion = ?, Existencias = ?, PrecioVenta = ?, CostoCompra = ?, IDCategoria = ?, CantidadMinima = ?, PrecioDescuento = ?
                 WHERE UUIDProducto = ? AND UUIDContribuyente = ?";
         
         $stmt = $pdo->prepare($sql);
@@ -313,15 +349,10 @@ function actualizarProducto($pdo, $uuidContribuyente, $data) {
             $uuidContribuyente
         ]);
         
-        if ($stmt->rowCount() > 0) {
-            echo json_encode([
-                'success' => true,
-                'message' => 'Producto actualizado exitosamente'
-            ]);
-        } else {
-            http_response_code(404);
-            echo json_encode(['error' => 'Producto no encontrado']);
-        }
+        echo json_encode([
+            'success' => true,
+            'message' => 'Producto actualizado exitosamente'
+        ]);
         
     } catch (Exception $e) {
         http_response_code(500);

@@ -20,6 +20,9 @@ $pageTitle = 'Inventario';
     <link rel="stylesheet" href="styles/dashboard/dashboard.css">
     <link rel="stylesheet" href="styles/dashboard/inventario.css">
     <link rel="icon" type="image/png" href="assets/logos/logo.png">
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -58,11 +61,11 @@ $pageTitle = 'Inventario';
                 <!-- Estadísticas del inventario -->
                 <div class="inventory-stats">
                     <div class="stat-card">
-                        <div class="stat-number" id="totalProducts">501</div>
+                        <div class="stat-number" id="totalProducts">0</div>
                         <div class="stat-label">Total de referencias</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="totalValue"><?php echo htmlspecialchars($currencySymbol); ?>9,787</div>
+                        <div class="stat-number" id="totalValue"><?php echo htmlspecialchars($currencySymbol); ?>0.00</div>
                         <div class="stat-label">Costo total de inventario</div>
                     </div>
                 </div>

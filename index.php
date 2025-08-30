@@ -53,13 +53,7 @@ $pageTitle = 'Nueva venta';
                             <div class="add-product-text">Agregar producto</div>
                         </div>
                         
-                        <!-- Producto de ejemplo -->
-                        <div class="product-card">
-                            <div class="product-brand">BenaMax</div>
-                            <div class="product-price"><?php echo htmlspecialchars($currencySymbol); ?>10</div>
-                            <div class="product-name">PLUMON ARTLINE</div>
-                            <div class="product-stock">35 disponibles</div>
-                        </div>
+                        <!-- Los productos se cargarán dinámicamente -->
                     </div>
                 </div>
                 

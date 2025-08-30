@@ -5,6 +5,23 @@ let filteredProducts = [];
 let currentEditingProduct = null;
 let currencySymbol = '$'; // Símbolo de moneda dinámico
 
+// Configurar SweetAlert2 globalmente para z-index
+const MySwal = Swal.mixin({
+    zIndex: 10000
+});
+
+// Configurar z-index por defecto
+if (typeof Swal !== 'undefined') {
+    Swal.getConfig = Swal.getConfig || function() { return {}; };
+    const originalFire = Swal.fire;
+    Swal.fire = function(options) {
+        if (typeof options === 'object' && options !== null) {
+            options.zIndex = options.zIndex || 10000;
+        }
+        return originalFire.call(this, options);
+    };
+}
+
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     initializeInventory();
@@ -85,11 +102,19 @@ async function loadInventoryData() {
             updateInventoryStats();
             await loadCategories();
         } else {
-            showNotification('Error al cargar productos: ' + data.message, 'error');
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al cargar productos: ' + data.message,
+                icon: 'error'
+            });
         }
     } catch (error) {
         console.error('Error:', error);
-        showNotification('Error de conexión al cargar productos', 'error');
+        Swal.fire({
+            title: 'Error de conexión',
+            text: 'No se pudo conectar con el servidor',
+        icon: 'error'
+        });
     }
 }
 
@@ -232,8 +257,8 @@ function filterProducts(searchTerm = '', categoryId = 'all') {
     // Filtrar por término de búsqueda
     if (searchTerm) {
         filtered = filtered.filter(product => 
-            (product.Nombre && product.Nombre.toLowerCase().includes(searchTerm)) ||
-            (product.Codigo && product.Codigo.toLowerCase().includes(searchTerm))
+            (product.nombre && product.nombre.toLowerCase().includes(searchTerm)) ||
+            (product.codigo && product.codigo.toLowerCase().includes(searchTerm))
         );
     }
 
@@ -251,14 +276,18 @@ function filterProducts(searchTerm = '', categoryId = 'all') {
 // Manejar filtro de categoría
 function handleCategoryFilter(event) {
     const categoryId = event.target.value;
-    const searchTerm = document.getElementById('productSearch')?.value || '';
+    const searchTerm = document.getElementById('inventorySearch')?.value || '';
     filterProducts(searchTerm, categoryId);
 }
 
 // Abrir modal de agregar producto
 function openAddProductModal() {
     // Implementar si es necesario
-    showNotification('Funcionalidad de agregar producto pendiente', 'info');
+    Swal.fire({
+        title: 'Información',
+        text: 'Funcionalidad de agregar producto pendiente',
+        icon: 'info'
+    });
 }
 
 // Editar producto
@@ -288,12 +317,72 @@ function editProduct(productId) {
     }
 }
 
+// Verificar si hay cambios en el formulario
+function hasFormChanges() {
+    if (!currentEditingProduct) return false;
+
+    const currentValues = {
+        codigo: document.getElementById('editProductCode').value,
+        nombre: document.getElementById('editProductName').value,
+        cantidad: parseInt(document.getElementById('editProductStock').value) || 0,
+        precio: parseFloat(document.getElementById('editProductPrice').value) || 0,
+        costo: parseFloat(document.getElementById('editProductCost').value) || 0,
+        categoria: document.getElementById('editProductCategory').value,
+        cantidadminima: parseInt(document.getElementById('editProductMinQuantity').value) || 0,
+        preciodescuento: parseFloat(document.getElementById('editProductDiscountPrice').value) || 0
+    };
+
+    const originalValues = {
+        codigo: currentEditingProduct.codigo || '',
+        nombre: currentEditingProduct.nombre || '',
+        cantidad: parseInt(currentEditingProduct.cantidad) || 0,
+        precio: parseFloat(currentEditingProduct.precio) || 0,
+        costo: parseFloat(currentEditingProduct.costo) || 0,
+        categoria: currentEditingProduct.IDCategoria || '',
+        cantidadminima: parseInt(currentEditingProduct.cantidadminima) || 0,
+        preciodescuento: parseFloat(currentEditingProduct.preciodescuento) || 0
+    };
+
+    // Comparar cada campo
+    return Object.keys(currentValues).some(key => {
+        return currentValues[key] !== originalValues[key];
+    });
+}
+
 // Guardar producto editado
 async function saveProduct() {
     if (!currentEditingProduct) return;
 
+    // Verificar si hay cambios
+    if (!hasFormChanges()) {
+        Swal.fire({
+            title: 'Sin cambios',
+            text: 'No se han detectado cambios en el producto',
+            icon: 'info',
+            timer: 2000,
+            showConfirmButton: false
+        });
+        return;
+    }
+
+    // Confirmación antes de guardar
+    const result = await Swal.fire({
+        title: '¿Guardar cambios?',
+        text: 'Se actualizará la información del producto',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, guardar',
+        cancelButtonText: 'Cancelar'
+    });
+
+    if (!result.isConfirmed) {
+        return;
+    }
+
     const formData = {
-        id: currentEditingProduct.IDProducto,
+        id: currentEditingProduct.id,
         codigo: document.getElementById('editProductCode').value,
         nombre: document.getElementById('editProductName').value,
         cantidad: parseInt(document.getElementById('editProductStock').value),
@@ -305,7 +394,7 @@ async function saveProduct() {
     };
 
     try {
-        const response = await fetch('api/inventario.php', {
+        const response = await fetch('api/inventario.php?action=producto', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -316,15 +405,29 @@ async function saveProduct() {
         const data = await response.json();
 
         if (data.success) {
-            showNotification('Producto actualizado correctamente', 'success');
+            Swal.fire({
+                title: '¡Actualizado!',
+                text: 'El producto ha sido actualizado correctamente',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
             closeEditModal();
             loadInventoryData(); // Recargar datos
         } else {
-            showNotification('Error al actualizar producto: ' + data.message, 'error');
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al actualizar producto: ' + (data.message || data.error),
+        icon: 'error'
+            });
         }
     } catch (error) {
         console.error('Error:', error);
-        showNotification('Error de conexión al actualizar producto', 'error');
+        Swal.fire({
+            title: 'Error de conexión',
+            text: 'No se pudo conectar con el servidor',
+            icon: 'error'
+        });
     }
 }
 
@@ -343,31 +446,60 @@ function duplicateProduct(productId) {
     };
 
     // Aquí implementarías la lógica para crear el producto duplicado
-    showNotification('Funcionalidad de duplicar pendiente', 'info');
+    Swal.fire({
+        title: 'Información',
+        text: 'Funcionalidad de duplicar pendiente',
+        icon: 'info'
+    });
 }
 
 // Eliminar producto
 async function deleteProduct(productId) {
-    if (!confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+    const result = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esta acción no se puede deshacer',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    });
+
+    if (!result.isConfirmed) {
         return;
     }
 
     try {
-        const response = await fetch(`api/inventario.php?action=delete&id=${productId}`, {
+        const response = await fetch(`api/inventario.php?action=producto&id=${productId}`, {
             method: 'DELETE'
         });
 
         const data = await response.json();
 
         if (data.success) {
-            showNotification('Producto eliminado correctamente', 'success');
+            Swal.fire({
+                title: '¡Eliminado!',
+                text: 'El producto ha sido eliminado correctamente',
+                icon: 'success',
+                timer: 2000,
+        showConfirmButton: false
+            });
             loadInventoryData(); // Recargar datos
         } else {
-            showNotification('Error al eliminar producto: ' + data.message, 'error');
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al eliminar producto: ' + (data.message || data.error),
+        icon: 'error'
+            });
         }
     } catch (error) {
         console.error('Error:', error);
-        showNotification('Error de conexión al eliminar producto', 'error');
+        Swal.fire({
+            title: 'Error de conexión',
+            text: 'No se pudo conectar con el servidor',
+            icon: 'error'
+        });
     }
 }
 
@@ -380,53 +512,7 @@ function closeEditModal() {
     currentEditingProduct = null;
 }
 
-// Mostrar notificación
-function showNotification(message, type = 'info') {
-    // Crear elemento de notificación
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    
-    // Estilos básicos
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 20px;
-        border-radius: 5px;
-        color: white;
-        font-weight: bold;
-        z-index: 10000;
-        max-width: 300px;
-        word-wrap: break-word;
-    `;
-    
-    // Colores según el tipo
-    switch (type) {
-        case 'success':
-            notification.style.backgroundColor = '#28a745';
-            break;
-        case 'error':
-            notification.style.backgroundColor = '#dc3545';
-            break;
-        case 'warning':
-            notification.style.backgroundColor = '#ffc107';
-            notification.style.color = '#000';
-            break;
-        default:
-            notification.style.backgroundColor = '#17a2b8';
-    }
-    
-    // Agregar al DOM
-    document.body.appendChild(notification);
-    
-    // Remover después de 3 segundos
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-        }
-    }, 3000);
-}
+
 
 // Función para limitar decimales en inputs
 function limitDecimals(input, maxDecimals) {
