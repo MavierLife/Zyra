@@ -223,6 +223,9 @@ async function loadProducts(categoria = 'todos') {
         return;
     }
     
+    // Mostrar indicador de carga
+    showLoadingIndicator();
+    
     try {
         const response = await fetch(`api/productos.php?vendedor_id=${currentVendedorId}&categoria=${categoria}`);
         const data = await response.json();
@@ -255,6 +258,9 @@ async function loadProducts(categoria = 'todos') {
         showTemporaryMessage('Error de conexión al cargar productos');
         products = [];
         renderProducts([]);
+    } finally {
+        // Ocultar indicador de carga
+        hideLoadingIndicator();
     }
 }
 
@@ -302,28 +308,62 @@ function updateCategoriesUI() {
     });
 }
 
-// Renderizar productos en el grid
-function renderProducts(productsToRender) {
+// Renderizar productos en el área principal con animaciones
+function renderProducts(productsToRender = products) {
     const productsArea = document.querySelector('.products-area');
     if (!productsArea) return;
     
-    // Limpiar área de productos pero mantener el botón de agregar
+    // Obtener tarjetas existentes (excluyendo el botón de agregar)
+    const existingCards = productsArea.querySelectorAll('.product-card:not(.add-product-card)');
     const addProductCard = productsArea.querySelector('.add-product-card');
-    productsArea.innerHTML = '';
     
-    // Re-agregar el botón de agregar producto
-    if (addProductCard) {
-        productsArea.appendChild(addProductCard);
+    // Animar salida de tarjetas existentes
+    if (existingCards.length > 0) {
+        existingCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('fade-out');
+            }, index * 15); // Escalonar muy rápido
+        });
         
-        // Re-agregar event listener
-        addProductCard.addEventListener('click', handleAddProduct);
+        // Esperar a que termine la animación antes de limpiar
+        setTimeout(() => {
+            // Limpiar área de productos pero mantener el botón de agregar
+            productsArea.innerHTML = '';
+            
+            // Re-agregar el botón de agregar producto
+            if (addProductCard) {
+                productsArea.appendChild(addProductCard);
+                addProductCard.addEventListener('click', handleAddProduct);
+            }
+            
+            // Renderizar nuevos productos con animación de entrada
+            productsToRender.forEach((product, index) => {
+                setTimeout(() => {
+                    const productCard = createProductCard(product);
+                    productCard.classList.add('animate-in');
+                    productsArea.appendChild(productCard);
+                    
+                    // Remover clase de animación después de completarse
+                    setTimeout(() => {
+                        productCard.classList.remove('animate-in');
+                    }, 150);
+                }, index * 30); // Escalonar entrada muy rápido
+            });
+        }, Math.max(existingCards.length * 15, 100)); // Tiempo mínimo muy reducido
+    } else {
+        // Si no hay tarjetas existentes, renderizar directamente con animación
+        productsToRender.forEach((product, index) => {
+            setTimeout(() => {
+                const productCard = createProductCard(product);
+                productCard.classList.add('animate-in');
+                productsArea.appendChild(productCard);
+                
+                setTimeout(() => {
+                    productCard.classList.remove('animate-in');
+                }, 150);
+            }, index * 30);
+        });
     }
-    
-    // Renderizar productos
-    productsToRender.forEach(product => {
-        const productCard = createProductCard(product);
-        productsArea.appendChild(productCard);
-    });
 }
 
 // Crear tarjeta de producto
@@ -671,6 +711,74 @@ function showTemporaryMessage(message, type = 'info') {
             }
         }, 300);
     }, duration);
+}
+
+// Mostrar indicador de carga
+function showLoadingIndicator() {
+    const productsArea = document.querySelector('.products-area');
+    if (!productsArea) return;
+    
+    // Crear indicador de carga si no existe
+    let loadingIndicator = document.getElementById('loadingIndicator');
+    if (!loadingIndicator) {
+        loadingIndicator = document.createElement('div');
+        loadingIndicator.id = 'loadingIndicator';
+        loadingIndicator.innerHTML = `
+            <div style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 40px;
+                color: #6c757d;
+                font-size: 14px;
+            ">
+                <div style="
+                    width: 40px;
+                    height: 40px;
+                    border: 3px solid #e9ecef;
+                    border-top: 3px solid #007bff;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin-bottom: 16px;
+                "></div>
+                Cargando productos...
+            </div>
+        `;
+        
+        // Agregar animación CSS
+        if (!document.getElementById('loadingStyles')) {
+            const style = document.createElement('style');
+            style.id = 'loadingStyles';
+            style.textContent = `
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+    
+    // Limpiar área de productos y mostrar indicador
+    const addProductCard = productsArea.querySelector('.add-product-card');
+    productsArea.innerHTML = '';
+    
+    // Re-agregar botón de agregar producto
+    if (addProductCard) {
+        productsArea.appendChild(addProductCard);
+    }
+    
+    // Mostrar indicador de carga
+    productsArea.appendChild(loadingIndicator);
+}
+
+// Ocultar indicador de carga
+function hideLoadingIndicator() {
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    if (loadingIndicator && loadingIndicator.parentNode) {
+        loadingIndicator.parentNode.removeChild(loadingIndicator);
+    }
 }
 
 // Función de logout

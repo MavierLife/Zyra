@@ -598,13 +598,15 @@ body {
     border-radius: 12px;
     padding: 20px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 200px;
     height: 260px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    opacity: 1;
+    transform: translateY(0) scale(1);
 }
 
 .product-card:hover {
@@ -763,6 +765,50 @@ body {
 .continue-btn:disabled {
     background-color: #6c757d;
     cursor: not-allowed;
+}
+
+/* Animaciones para tarjetas de productos */
+.product-card.fade-out {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+    pointer-events: none;
+}
+
+.product-card.fade-in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.product-card.slide-out-left {
+    opacity: 0;
+    transform: translateX(-100px) scale(0.9);
+    pointer-events: none;
+}
+
+.product-card.slide-out-right {
+    opacity: 0;
+    transform: translateX(100px) scale(0.9);
+    pointer-events: none;
+}
+
+.product-card.hidden {
+    display: none;
+}
+
+/* Animación de entrada para nuevas tarjetas */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.product-card.animate-in {
+    animation: slideInUp 0.15s ease-out;
 }
 
 /* Diseño optimizado para escritorio únicamente */
