@@ -24,7 +24,11 @@
                 <img src="assets/icons/agregar.svg" alt="Agregar" class="nav-barcode-icon">
                 Crear producto
             </button>
-            
+        <?php elseif ($currentPage === 'proveedores'): ?>
+            <button class="btn btn-primary" id="createSupplierBtn" style="background-color: #394C60; color: white !important; width: 160.39px; height: 52px; font-size: 14px; padding: 10px 16px; display: flex; align-items: center; gap: 8px;">
+                <img src="assets/icons/agregar.svg" alt="Agregar" style="width: 16px; height: 16px; filter: brightness(0) invert(1);">
+                Crear proveedor
+            </button>
 
         <?php endif; ?>
     </div>

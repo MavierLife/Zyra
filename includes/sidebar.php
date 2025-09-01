@@ -47,6 +47,25 @@
                 </a>
             </li>
         </ul>
+        
+        <!-- Sección de Gestión de Contactos -->
+        <div class="nav-section contacts-section">
+            <h3 class="section-title">Contactos</h3>
+            <ul class="nav-menu contacts-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-section="clientes">
+                        <img src="assets/icons/clientes.svg" alt="Clientes" class="nav-barcode-icon">
+                        <span class="nav-text">Clientes</span>
+                    </a>
+                </li>
+                <li class="nav-item <?php echo ($currentPage === 'proveedores') ? 'active' : ''; ?>">
+                    <a href="proveedores.php" class="nav-link">
+                        <img src="assets/icons/proveedores.svg" alt="Proveedores" class="nav-barcode-icon">
+                        <span class="nav-text">Proveedores</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </nav>
     
     <div class="sidebar-footer">

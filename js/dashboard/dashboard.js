@@ -125,9 +125,14 @@ function handleNavigation(event) {
         return;
     }
     
-    // Si es inventario, redirigir a la página específica
+    // Si es inventario o proveedores, redirigir a la página específica
     if (section === 'inventario') {
         window.location.href = 'inventario.php';
+        return;
+    }
+    
+    if (section === 'proveedores') {
+        window.location.href = 'proveedores.php';
         return;
     }
     
@@ -157,7 +162,9 @@ function updatePageTitle(section) {
         'movimientos': 'Movimientos',
         'estadisticas': 'Estadísticas',
         'inventario': 'Inventario',
-        'empleados': 'Empleados'
+        'empleados': 'Empleados',
+        'clientes': 'Clientes',
+        'proveedores': 'Proveedores'
     };
     
     if (pageTitle) {
