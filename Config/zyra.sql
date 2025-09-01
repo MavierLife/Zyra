@@ -1518,10 +1518,10 @@ INSERT INTO `tbltokens_verificacion` (`IDToken`, `UUIDVendedor`, `Token`, `Fecha
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tblvendedores`
+-- Estructura de tabla para la tabla `tblcontribuyentesvendedores`
 --
 
-CREATE TABLE `tblvendedores` (
+CREATE TABLE `tblcontribuyentesvendedores` (
   `UUIDVendedor` char(36) NOT NULL,
   `UUIDContribuyente` char(36) NOT NULL,
   `NombreUsuario` varchar(100) NOT NULL,
@@ -1555,10 +1555,10 @@ CREATE TABLE `tblvendedores` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Volcado de datos para la tabla `tblvendedores`
+-- Volcado de datos para la tabla `tblcontribuyentesvendedores`
 --
 
-INSERT INTO `tblvendedores` (`UUIDVendedor`, `UUIDContribuyente`, `NombreUsuario`, `Telefono`, `Rol`, `CodPuntoVenta`, `Perm_RegistrarVentasYGastos`, `Perm_EditarEliminarVentasYGastos`, `Perm_VisualizarMovimientos`, `Perm_VerResumenMovimientos`, `Perm_AbrirCaja`, `Perm_CerrarCaja`, `Perm_ReporteCaja`, `Perm_EliminarCierreCaja`, `Perm_VerResumenCajaTurno`, `Perm_EditarCierreCaja`, `Perm_CrearItemsInventario`, `Perm_EditarEliminarItemsInventario`, `Perm_VerInventario`, `Perm_DescargarReportesInventario`, `Perm_DescargarReportesMovimientos`, `Perm_UtilizarFiltrosMovimientos`, `Perm_VerEstadisticas`, `Perm_CrearClientesProveedores`, `Perm_EditarEliminarClientesProveedores`, `Perm_VerEditarConfiguracion`, `Perm_CrearEmpleados`, `Perm_EditarEliminarEmpleados`, `FechaRegistro`, `UsuarioRegistro`) VALUES
+INSERT INTO `tblcontribuyentesvendedores` (`UUIDVendedor`, `UUIDContribuyente`, `NombreUsuario`, `Telefono`, `Rol`, `CodPuntoVenta`, `Perm_RegistrarVentasYGastos`, `Perm_EditarEliminarVentasYGastos`, `Perm_VisualizarMovimientos`, `Perm_VerResumenMovimientos`, `Perm_AbrirCaja`, `Perm_CerrarCaja`, `Perm_ReporteCaja`, `Perm_EliminarCierreCaja`, `Perm_VerResumenCajaTurno`, `Perm_EditarCierreCaja`, `Perm_CrearItemsInventario`, `Perm_EditarEliminarItemsInventario`, `Perm_VerInventario`, `Perm_DescargarReportesInventario`, `Perm_DescargarReportesMovimientos`, `Perm_UtilizarFiltrosMovimientos`, `Perm_VerEstadisticas`, `Perm_CrearClientesProveedores`, `Perm_EditarEliminarClientesProveedores`, `Perm_VerEditarConfiguracion`, `Perm_CrearEmpleados`, `Perm_EditarEliminarEmpleados`, `FechaRegistro`, `UsuarioRegistro`) VALUES
 ('721dfc2f-841e-11f0-9acd-989096a0999b', '1', 'Edwin Antonio Coto Benavides', '75399076', 'Propietario', 'P001', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2025-08-28 14:51:14', 'Antonio Hernandez');
 
 --
@@ -1618,9 +1618,9 @@ ALTER TABLE `tbltokens_verificacion`
   ADD KEY `idx_usado_expiracion` (`Usado`,`FechaExpiracion`);
 
 --
--- Indices de la tabla `tblvendedores`
+-- Indices de la tabla `tblcontribuyentesvendedores`
 --
-ALTER TABLE `tblvendedores`
+ALTER TABLE `tblcontribuyentesvendedores`
   ADD PRIMARY KEY (`UUIDVendedor`);
 
 --
@@ -1683,7 +1683,7 @@ ALTER TABLE `tbltokens_verificacion`
 -- Filtros para la tabla `tbltokens_verificacion`
 --
 ALTER TABLE `tbltokens_verificacion`
-  ADD CONSTRAINT `tbltokens_verificacion_ibfk_1` FOREIGN KEY (`UUIDVendedor`) REFERENCES `tblvendedores` (`UUIDVendedor`) ON DELETE CASCADE;
+  ADD CONSTRAINT `tbltokens_verificacion_ibfk_1` FOREIGN KEY (`UUIDVendedor`) REFERENCES `tblcontribuyentesvendedores` (`UUIDVendedor`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

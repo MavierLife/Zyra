@@ -54,7 +54,7 @@ class TokenController {
                     v.CodPuntoVenta,
                     c.RazonSocial,
                     c.NombreComercial
-                FROM tblvendedores v
+                FROM tblcontribuyentesvendedores v
                 LEFT JOIN tblcontribuyentes c ON v.UUIDContribuyente = c.UUIDContribuyente
                 WHERE v.Telefono = :telefono
             ";

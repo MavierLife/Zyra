@@ -42,7 +42,7 @@ try {
     $pdo = $conexion->getPdo();
     
     // Obtener UUIDContribuyente del vendedor logueado
-    $sqlVendedor = "SELECT UUIDContribuyente, NombreUsuario FROM tblvendedores WHERE UUIDVendedor = :uuid_vendedor";
+    $sqlVendedor = "SELECT UUIDContribuyente, NombreUsuario FROM tblcontribuyentesvendedores WHERE UUIDVendedor = :uuid_vendedor";
     $stmtVendedor = $pdo->prepare($sqlVendedor);
     $stmtVendedor->bindParam(':uuid_vendedor', $uuidVendedor);
     $stmtVendedor->execute();
@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Obtener UUID del contribuyente desde el vendedor
-    $sqlVendedor = "SELECT UUIDContribuyente FROM tblvendedores WHERE UUIDVendedor = :vendedor_id";
+    $sqlVendedor = "SELECT UUIDContribuyente FROM tblcontribuyentesvendedores WHERE UUIDVendedor = :vendedor_id";
     $stmtVendedor = $pdo->prepare($sqlVendedor);
     $stmtVendedor->bindParam(':vendedor_id', $data['vendedor_id']);
     $stmtVendedor->execute();
