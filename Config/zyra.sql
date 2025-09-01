@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-09-2025 a las 23:55:50
+-- Tiempo de generación: 02-09-2025 a las 01:00:37
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -1577,8 +1577,8 @@ CREATE TABLE `tbltokens_verificacion` (
 --
 
 INSERT INTO `tbltokens_verificacion` (`IDToken`, `UUIDVendedor`, `Token`, `FechaCreacion`, `FechaExpiracion`, `Usado`) VALUES
-(27, '0ff038f6-8745-11f0-ac94-989096a0999b', '589133', '2025-09-01 14:08:14', '2025-09-01 14:18:14', 1),
-(28, '721dfc2f-841e-11f0-9acd-989096a0999b', '285528', '2025-09-01 15:40:55', '2025-09-01 15:50:55', 1);
+(28, '721dfc2f-841e-11f0-9acd-989096a0999b', '285528', '2025-09-01 15:40:55', '2025-09-01 15:50:55', 1),
+(29, '0ff038f6-8745-11f0-ac94-989096a0999b', '102724', '2025-09-01 16:07:59', '2025-09-01 16:17:59', 1);
 
 --
 -- Índices para tablas volcadas
@@ -1698,7 +1698,7 @@ ALTER TABLE `tbltipomoneda`
 -- AUTO_INCREMENT de la tabla `tbltokens_verificacion`
 --
 ALTER TABLE `tbltokens_verificacion`
-  MODIFY `IDToken` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `IDToken` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Restricciones para tablas volcadas

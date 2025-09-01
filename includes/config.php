@@ -57,6 +57,8 @@ function getCurrentPage() {
             return 'inventario';
         case 'proveedores.php':
             return 'proveedores';
+        case 'empleados.php':
+            return 'empleados';
         default:
             return 'vender';
     }

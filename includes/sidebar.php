@@ -40,8 +40,8 @@
                     <span class="nav-text">Inventario</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" data-section="empleados">
+            <li class="nav-item <?php echo ($currentPage === 'empleados') ? 'active' : ''; ?>">
+                <a href="empleados.php" class="nav-link">
                     <img src="assets/icons/empleados.svg" alt="Empleados" class="nav-barcode-icon">
                     <span class="nav-text">Empleados</span>
                 </a>

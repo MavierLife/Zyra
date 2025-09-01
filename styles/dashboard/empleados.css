@@ -1,0 +1,505 @@
+/**
+ * Estilos para el módulo de empleados
+ * Sistema Zyra - Gestión empresarial
+ */
+
+/* Sección principal de empleados */
+.employees-section {
+    padding: 20px;
+    background: #f8f9fa;
+    min-height: calc(100vh - 80px);
+}
+
+/* Controles superiores */
+.employees-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.search-container {
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 14px;
+    background: white;
+    transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.actions-container {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+}
+
+.btn-save {
+    background: #28a745;
+    color: white;
+}
+
+.btn-save:hover {
+    background: #1e7e34;
+}
+
+.btn-icon {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Tabla de empleados */
+.employees-table-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.employees-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.employees-table th {
+    background: #f8f9fa;
+    padding: 16px;
+    text-align: left;
+    border-bottom: 2px solid #e9ecef;
+    color: #495057;
+    font-size: 14px;
+}
+
+.employees-table td {
+    padding: 16px;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 14px;
+    color: #212529;
+}
+
+.employees-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.employees-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Estados */
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Acciones de tabla */
+.table-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.action-btn-edit {
+    background: #007bff;
+    color: white;
+}
+
+.action-btn-edit:hover {
+    background: #0056b3;
+}
+
+.action-btn-permissions {
+    background: #17a2b8;
+    color: white;
+}
+
+.action-btn-permissions:hover {
+    background: #117a8b;
+}
+
+.action-btn-delete {
+    background: #dc3545;
+    color: white;
+}
+
+.action-btn-delete:hover {
+    background: #c82333;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.permissions-modal {
+    max-width: 700px;
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #212529;
+    font-size: 18px;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6c757d;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.close-modal:hover {
+    background: #f8f9fa;
+    color: #495057;
+}
+
+/* Formulario del modal */
+.modal-form {
+    padding: 24px;
+}
+
+.form-sections {
+    margin-bottom: 24px;
+}
+
+.form-section {
+    margin-bottom: 24px;
+}
+
+.form-section h4 {
+    margin: 0 0 16px 0;
+    color: #495057;
+    font-size: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #495057;
+    font-size: 14px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Permisos */
+.permissions-content {
+    padding: 24px;
+}
+
+.permissions-description {
+    margin-bottom: 24px;
+    color: #6c757d;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.permission-section {
+    margin-bottom: 16px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.section-header {
+    padding: 16px;
+    background: #f8f9fa;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.2s ease;
+    user-select: none;
+}
+
+.section-header:hover {
+    background: #e9ecef;
+}
+
+.section-checkbox {
+    margin: 0;
+    cursor: pointer;
+}
+
+.section-title {
+    flex: 1;
+    margin: 0;
+    font-size: 14px;
+    color: #495057;
+    cursor: pointer;
+}
+
+.section-toggle {
+    font-size: 12px;
+    color: #6c757d;
+    transition: transform 0.2s ease;
+}
+
+.section-content {
+    padding: 0;
+    max-height: 300px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.section-content.collapsed {
+    max-height: 0;
+}
+
+.permission-item {
+    padding: 12px 16px;
+    border-top: 1px solid #f1f3f4;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.permission-item:first-child {
+    border-top: none;
+}
+
+.permission-item input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.permission-item label {
+    flex: 1;
+    margin: 0;
+    cursor: pointer;
+    font-size: 14px;
+    color: #495057;
+    line-height: 1.4;
+}
+
+/* Estados de carga */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Mensaje de tabla vacía */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+.empty-state h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #495057;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .employees-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-container {
+        max-width: none;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        margin: 10px;
+        max-width: none;
+    }
+    
+    .modal-actions {
+        flex-direction: column;
+    }
+    
+    .employees-table-container {
+        overflow-x: auto;
+    }
+    
+    .employees-table {
+        min-width: 600px;
+    }
+}
+
+@media (max-width: 480px) {
+    .employees-section {
+        padding: 16px;
+    }
+    
+    .modal {
+        padding: 10px;
+    }
+    
+    .modal-header,
+    .modal-form,
+    .permissions-content {
+        padding: 16px;
+    }
+}

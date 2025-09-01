@@ -29,6 +29,11 @@
                 <img src="assets/icons/agregar.svg" alt="Agregar" style="width: 16px; height: 16px; filter: brightness(0) invert(1);">
                 Crear proveedor
             </button>
+        <?php elseif ($currentPage === 'empleados'): ?>
+            <button class="btn btn-primary" id="createEmployeeBtn" style="background-color: #394C60; color: white !important; width: 160.39px; height: 52px; font-size: 14px; padding: 10px 16px; display: flex; align-items: center; gap: 8px;">
+                <img src="assets/icons/agregar.svg" alt="Agregar" style="width: 16px; height: 16px; filter: brightness(0) invert(1);">
+                Crear empleado
+            </button>
 
         <?php endif; ?>
     </div>
