@@ -130,7 +130,7 @@ function obtenerProductos($pdo, $currencyManager, $uuidContribuyente) {
                         ELSE 0
                     END as porcentaje
                 FROM tblcontribuyentesproductos p
-                LEFT JOIN tblcategorias c ON p.IDCategoria = c.IDCategoria AND c.UUIDContribuyente = ?
+                LEFT JOIN tblcontribuyentescategorias c ON p.IDCategoria = c.IDCategoria AND c.UUIDContribuyente = ?
                 WHERE p.UUIDContribuyente = ?
                 ORDER BY p.Descripcion ASC";
         
@@ -211,7 +211,7 @@ function obtenerEstadisticas($pdo, $currencyManager, $uuidContribuyente) {
 function obtenerCategorias($pdo, $uuidContribuyente) {
     try {
         $sql = "SELECT IDCategoria as id, Categoria as name
-                FROM tblcategorias
+                FROM tblcontribuyentescategorias
                 WHERE UUIDContribuyente = ?
                 ORDER BY Categoria ASC";
         

@@ -72,7 +72,7 @@ try {
     $sql = "SELECT p.UUIDProducto as id, p.Descripcion as name, p.PrecioVenta as price, 
                    p.CodigoDeBarras as codigo, p.Existencias as stock, p.IDCategoria, c.Categoria
             FROM tblcontribuyentesproductos p
-            LEFT JOIN tblcategorias c ON p.IDCategoria = c.IDCategoria AND c.UUIDContribuyente = ?
+            LEFT JOIN tblcontribuyentescategorias c ON p.IDCategoria = c.IDCategoria AND c.UUIDContribuyente = ?
             WHERE p.UUIDContribuyente = ?";
     
     $stmt = $pdo->prepare($sql);
@@ -91,7 +91,7 @@ try {
     }
     
     // Obtener categorías disponibles del contribuyente
-    $sqlCategorias = "SELECT Categoria FROM tblcategorias WHERE UUIDContribuyente = :contribuyente";
+    $sqlCategorias = "SELECT Categoria FROM tblcontribuyentescategorias WHERE UUIDContribuyente = :contribuyente";
     $stmtCategorias = $pdo->prepare($sqlCategorias);
     $stmtCategorias->bindParam(':contribuyente', $uuidContribuyente);
     $stmtCategorias->execute();
@@ -219,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sqlNewProduct = "SELECT p.UUIDProducto as id, p.Descripcion as name, p.PrecioVenta as price, 
                                 p.CodigoDeBarras as codigo, p.Existencias as stock, p.IDCategoria, c.Categoria
                          FROM tblcontribuyentesproductos p
-                         LEFT JOIN tblcategorias c ON p.IDCategoria = c.IDCategoria AND c.UUIDContribuyente = ?
+                         LEFT JOIN tblcontribuyentescategorias c ON p.IDCategoria = c.IDCategoria AND c.UUIDContribuyente = ?
                          WHERE p.UUIDProducto = ?";
         
         $stmtNewProduct = $pdo->prepare($sqlNewProduct);

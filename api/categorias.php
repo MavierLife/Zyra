@@ -88,7 +88,7 @@ try {
 function obtenerCategorias($pdo, $uuidContribuyente) {
     try {
         $sql = "SELECT IDCategoria, Categoria 
-                FROM tblcategorias 
+                FROM tblcontribuyentescategorias 
                 WHERE UUIDContribuyente = ? 
                 ORDER BY Categoria ASC";
         
@@ -122,7 +122,7 @@ function crearCategoria($pdo, $uuidContribuyente) {
         $nombreCategoria = trim($input['nombre']);
         
         // Verificar que la categoría no exista ya
-        $sqlCheck = "SELECT COUNT(*) FROM tblcategorias 
+        $sqlCheck = "SELECT COUNT(*) FROM tblcontribuyentescategorias 
                      WHERE UUIDContribuyente = ? AND Categoria = ?";
         $stmtCheck = $pdo->prepare($sqlCheck);
         $stmtCheck->execute([$uuidContribuyente, $nombreCategoria]);
@@ -132,7 +132,7 @@ function crearCategoria($pdo, $uuidContribuyente) {
         }
         
         // Insertar nueva categoría
-        $sql = "INSERT INTO tblcategorias (UUIDContribuyente, Categoria) 
+        $sql = "INSERT INTO tblcontribuyentescategorias (UUIDContribuyente, Categoria) 
                 VALUES (?, ?)";
         
         $stmt = $pdo->prepare($sql);
@@ -174,7 +174,7 @@ function actualizarCategoria($pdo, $uuidContribuyente) {
         }
         
         // Verificar que la categoría pertenece al contribuyente
-        $sqlCheck = "SELECT COUNT(*) FROM tblcategorias 
+        $sqlCheck = "SELECT COUNT(*) FROM tblcontribuyentescategorias 
                      WHERE IDCategoria = ? AND UUIDContribuyente = ?";
         $stmtCheck = $pdo->prepare($sqlCheck);
         $stmtCheck->execute([$idCategoria, $uuidContribuyente]);
@@ -184,7 +184,7 @@ function actualizarCategoria($pdo, $uuidContribuyente) {
         }
         
         // Verificar que no exista otra categoría con el mismo nombre
-        $sqlDuplicate = "SELECT COUNT(*) FROM tblcategorias 
+        $sqlDuplicate = "SELECT COUNT(*) FROM tblcontribuyentescategorias 
                          WHERE UUIDContribuyente = ? AND Categoria = ? AND IDCategoria != ?";
         $stmtDuplicate = $pdo->prepare($sqlDuplicate);
         $stmtDuplicate->execute([$uuidContribuyente, $nombreCategoria, $idCategoria]);
@@ -194,7 +194,7 @@ function actualizarCategoria($pdo, $uuidContribuyente) {
         }
         
         // Actualizar categoría
-        $sql = "UPDATE tblcategorias 
+        $sql = "UPDATE tblcontribuyentescategorias 
                 SET Categoria = ? 
                 WHERE IDCategoria = ? AND UUIDContribuyente = ?";
         
@@ -228,7 +228,7 @@ function eliminarCategoria($pdo, $uuidContribuyente) {
         }
         
         // Verificar que la categoría pertenece al contribuyente
-        $sqlCheck = "SELECT COUNT(*) FROM tblcategorias 
+        $sqlCheck = "SELECT COUNT(*) FROM tblcontribuyentescategorias 
                      WHERE IDCategoria = ? AND UUIDContribuyente = ?";
         $stmtCheck = $pdo->prepare($sqlCheck);
         $stmtCheck->execute([$idCategoria, $uuidContribuyente]);
@@ -248,7 +248,7 @@ function eliminarCategoria($pdo, $uuidContribuyente) {
         }
         
         // Eliminar categoría
-        $sql = "DELETE FROM tblcategorias 
+        $sql = "DELETE FROM tblcontribuyentescategorias 
                 WHERE IDCategoria = ? AND UUIDContribuyente = ?";
         
         $stmt = $pdo->prepare($sql);
