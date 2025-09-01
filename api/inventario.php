@@ -257,8 +257,8 @@ function crearProducto($pdo, $uuidContribuyente, $data) {
         
         // Insertar producto
         $sql = "INSERT INTO tblcontribuyentesproductos 
-                (UUIDContribuyente, CodigoDeBarras, Descripcion, Existencias, PrecioVenta, CostoCompra, IDCategoria)
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
+                (UUIDContribuyente, CodigoDeBarras, Descripcion, Existencias, PrecioVenta, CostoCompra, IDCategoria, CantidadMinima, PrecioDescuento, VentaFracciones)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
@@ -268,7 +268,10 @@ function crearProducto($pdo, $uuidContribuyente, $data) {
             $data['cantidad'] ?? 0,
             $data['precio'],
             $data['costo'],
-            $data['categoria'] ?? null
+            $data['categoria'] ?? null,
+            $data['cantidadminima'] ?? 0,
+            $data['preciodescuento'] ?? 0,
+            $data['ventafracciones'] ?? 0
         ]);
         
         echo json_encode([

@@ -167,10 +167,14 @@ $pageTitle = 'Inventario';
                         </div>
                     </div>
                     
-                    <div class="form-row">
+                    <div class="form-row two-columns">
                         <div class="form-group checkbox-group">
                             <input type="checkbox" id="showInVirtualStore" name="showInVirtualStore">
                             <label for="showInVirtualStore">Mostrar en tienda virtual</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="editProductFractionalSale" name="productFractionalSale">
+                            <label for="editProductFractionalSale">Venta por fracciones</label>
                         </div>
                     </div>
                 </div>

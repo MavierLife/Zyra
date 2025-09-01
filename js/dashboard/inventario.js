@@ -282,12 +282,40 @@ function handleCategoryFilter(event) {
 
 // Abrir modal de agregar producto
 function openAddProductModal() {
-    // Implementar si es necesario
-    Swal.fire({
-        title: 'Información',
-        text: 'Funcionalidad de agregar producto pendiente',
-        icon: 'info'
-    });
+    // Limpiar el producto actual en edición
+    currentEditingProduct = null;
+    
+    // Cambiar el título del modal
+    const modalTitle = document.querySelector('#editProductModal .modal-header h3');
+    if (modalTitle) {
+        modalTitle.textContent = 'Crear Producto';
+    }
+    
+    // Limpiar todos los campos del formulario
+    document.getElementById('editProductCode').value = '';
+    document.getElementById('editProductName').value = '';
+    document.getElementById('editProductStock').value = '0';
+    document.getElementById('editProductPrice').value = '';
+    document.getElementById('editProductCost').value = '';
+    document.getElementById('editProductCategory').value = '';
+    document.getElementById('editProductMinQuantity').value = '0';
+    document.getElementById('editProductDiscountPrice').value = '';
+    document.getElementById('editProductFractionalSale').checked = false;
+    
+    // Habilitar el campo código de barras para creación
+    document.getElementById('editProductCode').readOnly = false;
+    
+    // Cambiar el texto del botón de guardar
+    const saveButton = document.querySelector('#editProductForm .btn-save');
+    if (saveButton) {
+        saveButton.textContent = 'Crear Producto';
+    }
+    
+    // Mostrar el modal
+    const modal = document.getElementById('editProductModal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
 }
 
 // Editar producto
@@ -300,6 +328,12 @@ function editProduct(productId) {
 
     currentEditingProduct = product;
     
+    // Cambiar el título del modal para edición
+    const modalTitle = document.querySelector('#editProductModal .modal-header h3');
+    if (modalTitle) {
+        modalTitle.textContent = 'Modificar Producto';
+    }
+    
     // Llenar el modal con los datos del producto
     document.getElementById('editProductCode').value = product.codigo || '';
     document.getElementById('editProductName').value = product.nombre || '';
@@ -309,6 +343,16 @@ function editProduct(productId) {
     document.getElementById('editProductCategory').value = product.IDCategoria || '';
     document.getElementById('editProductMinQuantity').value = product.cantidadminima || 0;
     document.getElementById('editProductDiscountPrice').value = product.preciodescuento || 0;
+    document.getElementById('editProductFractionalSale').checked = product.ventafracciones == 1;
+
+    // Deshabilitar el campo código de barras para edición
+    document.getElementById('editProductCode').readOnly = true;
+    
+    // Cambiar el texto del botón de guardar
+    const saveButton = document.querySelector('#editProductForm .btn-save');
+    if (saveButton) {
+        saveButton.textContent = 'Guardar cambios';
+    }
 
     // Mostrar el modal
     const modal = document.getElementById('editProductModal');
@@ -351,10 +395,10 @@ function hasFormChanges() {
 
 // Guardar producto editado
 async function saveProduct() {
-    if (!currentEditingProduct) return;
-
-    // Verificar si hay cambios
-    if (!hasFormChanges()) {
+    const isCreating = !currentEditingProduct;
+    
+    // Si estamos editando, verificar si hay cambios
+    if (!isCreating && !hasFormChanges()) {
         Swal.fire({
             title: 'Sin cambios',
             text: 'No se han detectado cambios en el producto',
@@ -364,16 +408,83 @@ async function saveProduct() {
         });
         return;
     }
+    
+    // Validar campos requeridos
+    const codigo = document.getElementById('editProductCode').value.trim();
+    const nombre = document.getElementById('editProductName').value.trim();
+    const precio = parseFloat(document.getElementById('editProductPrice').value);
+    const costo = parseFloat(document.getElementById('editProductCost').value);
+    
+    // Validaciones específicas
+    if (!nombre) {
+        Swal.fire({
+            title: 'Campo requerido',
+            text: 'El nombre del producto es obligatorio',
+            icon: 'warning'
+        });
+        document.getElementById('editProductName').focus();
+        return;
+    }
+    
+    if (isCreating && !codigo) {
+        Swal.fire({
+            title: 'Campo requerido',
+            text: 'El código de barras es obligatorio para crear un producto',
+            icon: 'warning'
+        });
+        document.getElementById('editProductCode').focus();
+        return;
+    }
+    
+    if (!precio || precio <= 0) {
+        Swal.fire({
+            title: 'Precio inválido',
+            text: 'El precio de venta debe ser mayor a 0',
+            icon: 'warning'
+        });
+        document.getElementById('editProductPrice').focus();
+        return;
+    }
+    
+    if (!costo || costo < 0) {
+        Swal.fire({
+            title: 'Costo inválido',
+            text: 'El costo de compra debe ser mayor o igual a 0',
+            icon: 'warning'
+        });
+        document.getElementById('editProductCost').focus();
+        return;
+    }
+    
+    // Validar que el precio sea mayor al costo
+    if (precio <= costo) {
+        const result = await Swal.fire({
+            title: 'Advertencia de rentabilidad',
+            text: 'El precio de venta es menor o igual al costo. ¿Desea continuar?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, continuar',
+            cancelButtonText: 'Cancelar'
+        });
+        
+        if (!result.isConfirmed) {
+            return;
+        }
+    }
 
     // Confirmación antes de guardar
+    const confirmTitle = isCreating ? '¿Crear producto?' : '¿Guardar cambios?';
+    const confirmText = isCreating ? 'Se creará un nuevo producto' : 'Se actualizará la información del producto';
+    const confirmButton = isCreating ? 'Sí, crear' : 'Sí, guardar';
+    
     const result = await Swal.fire({
-        title: '¿Guardar cambios?',
-        text: 'Se actualizará la información del producto',
+        title: confirmTitle,
+        text: confirmText,
         icon: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Sí, guardar',
+        confirmButtonText: confirmButton,
         cancelButtonText: 'Cancelar'
     });
 
@@ -382,20 +493,26 @@ async function saveProduct() {
     }
 
     const formData = {
-        id: currentEditingProduct.id,
-        codigo: document.getElementById('editProductCode').value,
-        nombre: document.getElementById('editProductName').value,
-        cantidad: parseInt(document.getElementById('editProductStock').value),
+        codigo: document.getElementById('editProductCode').value.trim(),
+        nombre: document.getElementById('editProductName').value.trim(),
+        cantidad: parseInt(document.getElementById('editProductStock').value) || 0,
         precio: Math.round(parseFloat(document.getElementById('editProductPrice').value) * 100) / 100,
         costo: Math.round(parseFloat(document.getElementById('editProductCost').value) * 100) / 100,
-        categoria: document.getElementById('editProductCategory').value,
+        categoria: document.getElementById('editProductCategory').value || null,
         cantidadminima: parseInt(document.getElementById('editProductMinQuantity').value) || 0,
-        preciodescuento: Math.round(parseFloat(document.getElementById('editProductDiscountPrice').value || 0) * 100) / 100
+        preciodescuento: Math.round(parseFloat(document.getElementById('editProductDiscountPrice').value || 0) * 100) / 100,
+        ventafracciones: document.getElementById('editProductFractionalSale').checked ? 1 : 0
     };
+    
+    // Agregar ID solo si estamos editando
+    if (!isCreating) {
+        formData.id = currentEditingProduct.id;
+    }
 
     try {
+        const method = isCreating ? 'POST' : 'PUT';
         const response = await fetch('api/inventario.php?action=producto', {
-            method: 'PUT',
+            method: method,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -405,9 +522,12 @@ async function saveProduct() {
         const data = await response.json();
 
         if (data.success) {
+            const successTitle = isCreating ? '¡Producto creado!' : '¡Actualizado!';
+            const successText = isCreating ? 'El producto ha sido creado correctamente' : 'El producto ha sido actualizado correctamente';
+            
             Swal.fire({
-                title: '¡Actualizado!',
-                text: 'El producto ha sido actualizado correctamente',
+                title: successTitle,
+                text: successText,
                 icon: 'success',
                 timer: 2000,
                 showConfirmButton: false
@@ -415,10 +535,11 @@ async function saveProduct() {
             closeEditModal();
             loadInventoryData(); // Recargar datos
         } else {
+            const errorAction = isCreating ? 'crear' : 'actualizar';
             Swal.fire({
                 title: 'Error',
-                text: 'Error al actualizar producto: ' + (data.message || data.error),
-        icon: 'error'
+                text: `Error al ${errorAction} producto: ` + (data.message || data.error),
+                icon: 'error'
             });
         }
     } catch (error) {
