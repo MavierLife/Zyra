@@ -24,6 +24,28 @@
                 <img src="assets/icons/agregar.svg" alt="Agregar" class="nav-barcode-icon">
                 Crear producto
             </button>
+            
+
         <?php endif; ?>
     </div>
 </header>
+
+<!-- Menú lateral desplegable de categorías -->
+<?php if ($currentPage === 'inventario'): ?>
+<div id="categoriesSidebar" class="categories-sidebar">
+    <div class="categories-sidebar-header">
+        <h3>Categorías</h3>
+        <button class="btn-close" id="closeCategoriesBtn">&times;</button>
+    </div>
+    <div class="categories-sidebar-content">
+        <button class="btn btn-outline btn-full-width" id="addCategoryBtn">
+            <img src="assets/icons/agregar.svg" alt="Agregar" class="nav-barcode-icon">
+            Crear Nueva Categoría
+        </button>
+        <div class="categories-list" id="categoriesList">
+            <!-- Las categorías se cargarán aquí dinámicamente -->
+        </div>
+    </div>
+</div>
+<div id="categoriesOverlay" class="sidebar-overlay"></div>
+<?php endif; ?>

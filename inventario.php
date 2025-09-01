@@ -195,6 +195,7 @@ $pageTitle = 'Inventario';
         const nombreComercial = '<?php echo htmlspecialchars($nombreComercial, ENT_QUOTES, 'UTF-8'); ?>';
         const uuidContribuyente = '<?php echo htmlspecialchars($uuidContribuyente, ENT_QUOTES, 'UTF-8'); ?>';
     </script>
+    <script src="js/dashboard/categorias.js"></script>
     <script src="js/dashboard/inventario.js"></script>
 </body>
 </html>

@@ -22,6 +22,22 @@ if (typeof Swal !== 'undefined') {
     };
 }
 
+// Función para mostrar notificaciones consistentes
+function showMessage(message, type = 'info') {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            text: message,
+            icon: type === 'error' ? 'error' : type === 'success' ? 'success' : 'info',
+            timer: 3000,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-end'
+        });
+    } else {
+        alert(message);
+    }
+}
+
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     initializeInventory();
@@ -102,19 +118,11 @@ async function loadInventoryData() {
             updateInventoryStats();
             await loadCategories();
         } else {
-            Swal.fire({
-                title: 'Error',
-                text: 'Error al cargar productos: ' + data.message,
-                icon: 'error'
-            });
+            showMessage('Error al cargar productos: ' + data.message, 'error');
         }
     } catch (error) {
         console.error('Error:', error);
-        Swal.fire({
-            title: 'Error de conexión',
-            text: 'No se pudo conectar con el servidor',
-        icon: 'error'
-        });
+        showMessage('Error de conexión: No se pudo conectar con el servidor', 'error');
     }
 }
 
@@ -522,33 +530,17 @@ async function saveProduct() {
         const data = await response.json();
 
         if (data.success) {
-            const successTitle = isCreating ? '¡Producto creado!' : '¡Actualizado!';
-            const successText = isCreating ? 'El producto ha sido creado correctamente' : 'El producto ha sido actualizado correctamente';
-            
-            Swal.fire({
-                title: successTitle,
-                text: successText,
-                icon: 'success',
-                timer: 2000,
-                showConfirmButton: false
-            });
+            const successMessage = isCreating ? 'Producto creado exitosamente' : 'Producto actualizado exitosamente';
+            showMessage(successMessage, 'success');
             closeEditModal();
             loadInventoryData(); // Recargar datos
         } else {
             const errorAction = isCreating ? 'crear' : 'actualizar';
-            Swal.fire({
-                title: 'Error',
-                text: `Error al ${errorAction} producto: ` + (data.message || data.error),
-                icon: 'error'
-            });
+            showMessage(`Error al ${errorAction} producto: ` + (data.message || data.error), 'error');
         }
     } catch (error) {
         console.error('Error:', error);
-        Swal.fire({
-            title: 'Error de conexión',
-            text: 'No se pudo conectar con el servidor',
-            icon: 'error'
-        });
+        showMessage('Error de conexión: No se pudo conectar con el servidor', 'error');
     }
 }
 
@@ -599,28 +591,14 @@ async function deleteProduct(productId) {
         const data = await response.json();
 
         if (data.success) {
-            Swal.fire({
-                title: '¡Eliminado!',
-                text: 'El producto ha sido eliminado correctamente',
-                icon: 'success',
-                timer: 2000,
-        showConfirmButton: false
-            });
+            showMessage('Producto eliminado exitosamente', 'success');
             loadInventoryData(); // Recargar datos
         } else {
-            Swal.fire({
-                title: 'Error',
-                text: 'Error al eliminar producto: ' + (data.message || data.error),
-        icon: 'error'
-            });
+            showMessage('Error al eliminar producto: ' + (data.message || data.error), 'error');
         }
     } catch (error) {
         console.error('Error:', error);
-        Swal.fire({
-            title: 'Error de conexión',
-            text: 'No se pudo conectar con el servidor',
-            icon: 'error'
-        });
+        showMessage('Error de conexión: No se pudo conectar con el servidor', 'error');
     }
 }
 
