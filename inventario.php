@@ -19,6 +19,7 @@ $pageTitle = 'Inventario';
     
     <link rel="stylesheet" href="styles/dashboard/dashboard.css">
     <link rel="stylesheet" href="styles/dashboard/inventario.css">
+    <link rel="stylesheet" href="styles/dashboard/permisos.css">
     <link rel="icon" type="image/png" href="assets/logos/logo.png">
     
     <!-- SweetAlert2 -->
@@ -194,7 +195,11 @@ $pageTitle = 'Inventario';
         const nombreUsuario = '<?php echo htmlspecialchars($nombreUsuario, ENT_QUOTES, 'UTF-8'); ?>';
         const nombreComercial = '<?php echo htmlspecialchars($nombreComercial, ENT_QUOTES, 'UTF-8'); ?>';
         const uuidContribuyente = '<?php echo htmlspecialchars($uuidContribuyente, ENT_QUOTES, 'UTF-8'); ?>';
+        
+        // Permisos del usuario
+        window.canViewInventory = <?php echo tienePermiso('Perm_VerInventario') ? 'true' : 'false'; ?>;
     </script>
+    <script src="js/dashboard/permisos.js"></script>
     <script src="js/dashboard/categorias.js"></script>
     <script src="js/dashboard/inventario.js"></script>
 </body>

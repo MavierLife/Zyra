@@ -22,6 +22,10 @@ if (!isset($_SESSION['vendedor_id']) || !isset($_SESSION['authenticated']) || $_
     exit();
 }
 
+// Cargar permisos del usuario
+require_once __DIR__ . '/permisos.php';
+inicializarPermisos();
+
 // Variables de sesión
 $vendedorId = $_SESSION['vendedor_id'];
 $nombreUsuario = $_SESSION['nombre_usuario'] ?? 'Usuario';

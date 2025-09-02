@@ -26,6 +26,8 @@ $pageTitle = 'Empleados';
     <!-- Estilos -->
     <link rel="stylesheet" href="styles/dashboard/dashboard.css">
     <link rel="stylesheet" href="styles/dashboard/empleados.css">
+    <link rel="stylesheet" href="styles/dashboard/permisos.css">
+    <link rel="icon" type="image/png" href="assets/logos/logo.png">
     
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -293,6 +295,7 @@ $pageTitle = 'Empleados';
     </div>
     
     <!-- Scripts -->
+    <script src="js/dashboard/permisos.js"></script>
     <script src="js/dashboard/empleados.js"></script>
     
     <!-- Variables globales para JavaScript -->

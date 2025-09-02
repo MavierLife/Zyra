@@ -26,6 +26,8 @@ $pageTitle = 'Proveedores';
     <!-- Estilos -->
     <link rel="stylesheet" href="styles/dashboard/dashboard.css">
     <link rel="stylesheet" href="styles/dashboard/proveedores.css">
+    <link rel="stylesheet" href="styles/dashboard/permisos.css">
+    <link rel="icon" type="image/png" href="assets/logos/logo.png">
     
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -117,6 +119,7 @@ $pageTitle = 'Proveedores';
     </div>
     
     <!-- Scripts -->
+    <script src="js/dashboard/permisos.js"></script>
     <script src="js/dashboard/proveedores.js"></script>
     
     <!-- Variables globales para JavaScript -->
