@@ -102,12 +102,9 @@ function checkSuppliersPermissions() {
  * Verificar permisos específicos para empleados
  */
 function checkEmployeesPermissions() {
-    // Verificar permisos de creación y edición
-    if (typeof window.canCreate !== 'undefined' && typeof window.canEdit !== 'undefined') {
-        if (!window.canCreate && !window.canEdit) {
-            applyPermissionRestriction(false, 'la gestión de empleados');
-        }
-    }
+    // No aplicar restricción completa para empleados
+    // El usuario ya pasó la validación de Perm_VerEmpleados en el backend
+    // Las restricciones específicas se manejan a nivel de botones individuales
 }
 
 /**

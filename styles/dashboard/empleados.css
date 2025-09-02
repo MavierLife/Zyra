@@ -114,11 +114,19 @@
     font-size: 14px;
 }
 
+.employees-table th:last-child {
+    text-align: center;
+}
+
 .employees-table td {
     padding: 16px;
     border-bottom: 1px solid #e9ecef;
     font-size: 14px;
     color: #212529;
+}
+
+.employees-table td:last-child {
+    text-align: center;
 }
 
 .employees-table tbody tr:hover {
