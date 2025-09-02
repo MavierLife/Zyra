@@ -598,13 +598,14 @@ function validateProductData(data) {
 
 // Guardar nuevo producto
 async function saveNewProduct(productData) {
-    const submitBtn = document.querySelector('.btn-save');
-    const originalText = submitBtn.textContent;
+    const submitBtn = document.querySelector('#addProductForm .btn-save') || document.querySelector('.add-product-form .btn-save') || document.querySelector('.btn-save');
+    const originalText = submitBtn ? submitBtn.textContent : '';
     
     try {
-        // Deshabilitar botón y mostrar loading
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Guardando...';
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Guardando...';
+        }
         
         const response = await fetch('api/productos.php', {
             method: 'POST',
@@ -623,7 +624,6 @@ async function saveNewProduct(productData) {
             showTemporaryMessage('Producto agregado exitosamente', 'success');
             closeAddProductModal();
             
-            // Recargar productos
             const activeTab = document.querySelector('.tab.active');
             const categoria = activeTab ? activeTab.dataset.tab : 'todos';
             loadProducts(categoria);
@@ -634,9 +634,10 @@ async function saveNewProduct(productData) {
         console.error('Error al guardar producto:', error);
         showTemporaryMessage('Error de conexión al guardar producto', 'error');
     } finally {
-        // Restaurar botón
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
     }
 }
 

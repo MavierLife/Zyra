@@ -18,8 +18,12 @@ function showMessage(message, type = 'info') {
     });
 }
 
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', initializeSuppliers);
+// Inicializar cuando el DOM esté listo (robusto si el script se carga al final)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeSuppliers);
+} else {
+    initializeSuppliers();
+}
 
 // Inicializar módulo
 function initializeSuppliers() {
@@ -47,6 +51,15 @@ function setupEventListeners() {
     }
     
     if (elements.form) elements.form.onsubmit = (e) => { e.preventDefault(); saveSupplier(); };
+
+    // Respaldo: manejar clic en el botón Guardar explícitamente por si el submit no se engancha
+    const saveBtn = document.querySelector('#editSupplierForm .btn-save');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            saveSupplier();
+        });
+    }
     
     // Cerrar modal con Escape
     document.onkeydown = (e) => {
