@@ -449,6 +449,8 @@ function updateCartDisplay() {
                 </div>
             </div>
         `;
+        cartContent.style.alignItems = 'center';
+        cartContent.style.justifyContent = 'center';
         
         if (summaryRow) {
             summaryRow.innerHTML = `
@@ -488,6 +490,8 @@ function updateCartDisplay() {
         `).join('');
         
         cartContent.innerHTML = `<div class="cart-items">${cartItems}</div>`;
+        cartContent.style.alignItems = 'flex-start';
+        cartContent.style.justifyContent = 'flex-start';
         
         // Calcular totales
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
