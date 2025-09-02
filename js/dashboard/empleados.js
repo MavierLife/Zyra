@@ -175,13 +175,20 @@ function renderEmployeesTable(employeesToRender = employees) {
             <td>
                 <div class="action-buttons">
                     ${window.canEdit ? `
-                        <button class="btn-edit" onclick="editEmployee('${employee.uuid}')" title="Editar">
+                        <button type="button" class="btn-edit" onclick="editEmployee('${employee.uuid}')" title="Editar">
                             <img src="assets/icons/editar.svg" alt="Editar" width="16" height="16">
                         </button>
-                        <button class="btn-delete" onclick="deleteEmployee('${employee.uuid}')" title="Eliminar">
+                        <button type="button" class="btn-delete" onclick="deleteEmployee('${employee.uuid}')" title="Eliminar">
                             <img src="assets/icons/borrar.svg" alt="Eliminar" width="16" height="16">
                         </button>
-                    ` : ``}
+                    ` : `
+                        <button type="button" class="btn-edit btn--disabled" disabled aria-disabled="true" tabindex="-1" data-tooltip="No tienes acceso a esta acción. Pídele al propietario que dé permisos.">
+                            <img src="assets/icons/editar.svg" alt="Editar" width="16" height="16">
+                        </button>
+                        <button type="button" class="btn-delete btn--disabled" disabled aria-disabled="true" tabindex="-1" data-tooltip="No tienes acceso a esta acción. Pídele al propietario que dé permisos.">
+                            <img src="assets/icons/borrar.svg" alt="Eliminar" width="16" height="16">
+                        </button>
+                    `}
                 </div>
             </td>
         </tr>

@@ -362,6 +362,13 @@ function handlePut($pdo, $uuidContribuyente) {
         echo json_encode(['error' => 'UUID requerido']);
         return;
     }
+
+    // Validar permiso para editar/eliminar empleados
+    if (!function_exists('tienePermiso') || !tienePermiso('Perm_EditarEliminarEmpleados')) {
+        http_response_code(403);
+        echo json_encode(['error' => 'PERMISO_DENEGADO', 'permiso' => 'Perm_EditarEliminarEmpleados']);
+        return;
+    }
     
     $uuidVendedor = $input['uuid'];
     
@@ -514,6 +521,13 @@ function handleDelete($pdo, $uuidContribuyente) {
     if (!isset($_GET['uuid'])) {
         http_response_code(400);
         echo json_encode(['error' => 'UUID requerido']);
+        return;
+    }
+
+    // Validar permiso para editar/eliminar empleados
+    if (!function_exists('tienePermiso') || !tienePermiso('Perm_EditarEliminarEmpleados')) {
+        http_response_code(403);
+        echo json_encode(['error' => 'PERMISO_DENEGADO', 'permiso' => 'Perm_EditarEliminarEmpleados']);
         return;
     }
     
