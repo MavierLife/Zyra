@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-09-2025 a las 20:59:24
+-- Tiempo de generación: 02-09-2025 a las 23:18:47
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -865,6 +865,27 @@ INSERT INTO `tblcontribuyentes` (`UUIDContribuyente`, `IDActividad`, `CodEstable
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tblcontribuyentesaparturacajas`
+--
+
+CREATE TABLE `tblcontribuyentesaparturacajas` (
+  `UUIDApertura` varchar(200) NOT NULL,
+  `FechaRegistro` datetime NOT NULL DEFAULT current_timestamp(),
+  `UsuarioApertura` varchar(200) DEFAULT NULL,
+  `UsuarioCierre` varchar(200) DEFAULT NULL,
+  `UUIDContribuyente` varchar(200) DEFAULT NULL,
+  `UUIDTerminal` varchar(200) DEFAULT NULL,
+  `EfectivoApertura` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `HoraApertura` time DEFAULT NULL,
+  `HoraCierre` time DEFAULT NULL,
+  `Estado` int(11) NOT NULL DEFAULT 1,
+  `UsuarioUpdate` varchar(200) DEFAULT NULL,
+  `FechaUpdate` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tblcontribuyentescategorias`
 --
 
@@ -1222,7 +1243,7 @@ CREATE TABLE `tblcontribuyentesvendedores` (
 INSERT INTO `tblcontribuyentesvendedores` (`UUIDVendedor`, `UUIDContribuyente`, `NombreUsuario`, `Telefono`, `Rol`, `CodPuntoVenta`, `Perm_RegistrarVentasYGastos`, `Perm_EditarEliminarVentasYGastos`, `Perm_VisualizarMovimientos`, `Perm_VerResumenMovimientos`, `Perm_AbrirCaja`, `Perm_CerrarCaja`, `Perm_ReporteCaja`, `Perm_EliminarCierreCaja`, `Perm_VerResumenCajaTurno`, `Perm_EditarCierreCaja`, `Perm_CrearItemsInventario`, `Perm_EditarEliminarItemsInventario`, `Perm_VerInventario`, `Perm_DescargarReportesInventario`, `Perm_DescargarReportesMovimientos`, `Perm_UtilizarFiltrosMovimientos`, `Perm_VerEstadisticas`, `Perm_CrearClientesProveedores`, `Perm_EditarEliminarClientesProveedores`, `Perm_VerEditarConfiguracion`, `Perm_CrearEmpleados`, `Perm_EditarEliminarEmpleados`, `FechaRegistro`, `UsuarioRegistro`, `Perm_VerEmpleados`) VALUES
 ('0ff038f6-8745-11f0-ac94-989096a0999b', '2', 'Laura Rivera', '', 'Propietario', 'P001', 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2025-09-01 15:05:13', NULL, 0),
 ('721dfc2f-841e-11f0-9acd-989096a0999b', '1', 'Edwin Antonio Coto Benavides', '75399076', 'Propietario', 'P001', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2025-08-28 14:51:14', 'Antonio Hernandez', 1),
-('ef6143aa-0df0-47b2-ab27-2ef32ee238b1', '1', 'Jose Antonio Hernandez Guzman', '74854585', 'Vendedor', 'PV02', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2025-09-02 18:57:51', 'Edwin Antonio Coto Benavides', 0);
+('ef6143aa-0df0-47b2-ab27-2ef32ee238b1', '1', 'Jose Antonio Hernandez Guzman', '74854585', 'Vendedor', 'PV02', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2025-09-02 18:57:51', 'Edwin Antonio Coto Benavides', 1);
 
 -- --------------------------------------------------------
 
@@ -1538,6 +1559,172 @@ INSERT INTO `tbldistritos` (`UUIDDistrito`, `UUIDMunicipio`, `UUIDDepartamento`,
 (1417, 26, 14, 'YAYANTIQUE'),
 (1418, 26, 14, 'YUCUAIQUÍN'),
 (1419, 0, 0, 'Otros (Extranjeros)');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tblnotasdeentrega`
+--
+
+CREATE TABLE `tblnotasdeentrega` (
+  `UUIDVenta` varchar(40) NOT NULL,
+  `CodigoVEN` varchar(40) DEFAULT NULL,
+  `FechaRegistro` datetime DEFAULT current_timestamp(),
+  `UsuarioRegistro` varchar(30) DEFAULT NULL,
+  `FechaFacturacion` date DEFAULT NULL,
+  `FechaEnvio` datetime DEFAULT NULL,
+  `FechaEntrega` datetime DEFAULT NULL,
+  `NoAnualCorrelativo` int(11) NOT NULL DEFAULT 0,
+  `FechaHoraGeneracion` datetime DEFAULT NULL,
+  `Ambiente` varchar(4) DEFAULT NULL,
+  `TipoContingencia` varchar(2) DEFAULT NULL,
+  `MotivoContingencia` text DEFAULT NULL,
+  `TipoMoneda` varchar(5) DEFAULT NULL,
+  `CodDocumento` varchar(4) NOT NULL DEFAULT '01',
+  `NoCorrelativo` int(11) NOT NULL DEFAULT 0,
+  `VersionDTE` int(11) NOT NULL DEFAULT 1,
+  `CodigoDeGeneracion` varchar(200) DEFAULT NULL,
+  `NumeroDeControl` varchar(200) DEFAULT NULL,
+  `SelloDeRecepcion` varchar(200) DEFAULT NULL,
+  `ModeloDeFacturacion` int(11) NOT NULL DEFAULT 1,
+  `TipoDeTransmision` int(11) NOT NULL DEFAULT 1,
+  `UUIDNegocio` int(11) NOT NULL DEFAULT 0,
+  `UUIDSucursal` varchar(100) DEFAULT NULL,
+  `UUIDCaja` varchar(100) DEFAULT NULL,
+  `UUIDOperador` varchar(10) DEFAULT NULL,
+  `Operador` varchar(200) DEFAULT NULL,
+  `UUIDVendedor` varchar(10) DEFAULT NULL,
+  `CodEstablecimiento` varchar(10) DEFAULT NULL,
+  `CodEstablecimientoMH` varchar(10) DEFAULT NULL,
+  `CodPuntoVenta` varchar(10) DEFAULT NULL,
+  `CodPuntoVentaMH` varchar(10) DEFAULT NULL,
+  `TipoDespacho` int(11) NOT NULL DEFAULT 1,
+  `Repartidor` int(11) DEFAULT 0,
+  `Carga` int(11) DEFAULT 0,
+  `Condicion` int(11) DEFAULT 1,
+  `Plazo` int(11) DEFAULT 0,
+  `FechaVencimiento` date DEFAULT NULL,
+  `SaldoActual` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `Abonos` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `CodigoCLI` varchar(100) DEFAULT NULL,
+  `NombreDeCliente` varchar(200) DEFAULT NULL,
+  `NombreComercial` varchar(200) DEFAULT NULL,
+  `CodigoActividad` varchar(100) DEFAULT NULL,
+  `Actividad` varchar(200) DEFAULT NULL,
+  `Direccion` varchar(200) DEFAULT NULL,
+  `IDDepartamento` varchar(10) DEFAULT NULL,
+  `Departamento` varchar(100) DEFAULT NULL,
+  `IDMunicipio` varchar(10) DEFAULT NULL,
+  `Municipio` varchar(100) DEFAULT NULL,
+  `IDDistrito` varchar(10) DEFAULT NULL,
+  `Distrito` varchar(100) DEFAULT NULL,
+  `DUI` varchar(20) DEFAULT NULL,
+  `NRC` varchar(20) DEFAULT NULL,
+  `NIT` varchar(20) DEFAULT NULL,
+  `TelMovilWhatsApp` varchar(20) DEFAULT NULL,
+  `CorreoElectronico` varchar(200) DEFAULT NULL,
+  `TipoDocumentoReceptor` varchar(10) DEFAULT NULL,
+  `NumeroDocumentoReceptor` varchar(20) DEFAULT NULL,
+  `TelefonoReceptor` varchar(20) DEFAULT NULL,
+  `CodActividadReceptor` varchar(200) DEFAULT NULL,
+  `DocumentoRelacionado` text DEFAULT NULL,
+  `Notas` text DEFAULT NULL,
+  `TotalCosto` decimal(10,2) DEFAULT 0.00,
+  `TotalImporte` decimal(10,2) DEFAULT 0.00,
+  `PagoTarjeta` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `PagoCheque` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `PagoElectronico` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `PagoVale` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `PagoGiftCard` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `PagoEfectivo` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `PagoRecibido` decimal(10,2) DEFAULT 0.00,
+  `Cambio` decimal(10,2) DEFAULT 0.00,
+  `PagoContado` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `NumeroComprobante` varchar(50) DEFAULT NULL,
+  `Estado` int(11) DEFAULT 1,
+  `Para` varchar(200) DEFAULT NULL,
+  `DireccionEnvio` text DEFAULT NULL,
+  `Contacto` varchar(200) DEFAULT NULL,
+  `Cancelada` int(11) DEFAULT 0,
+  `DescuentosNoSujetas` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `DescuentosExentas` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `DescuentosGravadas` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `NumPagoElectronico` varchar(200) DEFAULT NULL,
+  `PorcentajeDescuento` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `SaldoFavor` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `TotalDescuentos` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `TotalNoSujetas` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `TotalExentas` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `TotalGravadas` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `SubTotal` decimal(10,2) DEFAULT 0.00,
+  `TotalIVA` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `SubTotalVentas` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `IVAPercibido` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `IVARetencion` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `RetencionRenta` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `TotalLetras` varchar(500) DEFAULT NULL,
+  `Tributos` text DEFAULT NULL,
+  `TotalNoGravado` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `TotalOperacion` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `descuSE` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `TotalPagar` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `Anulada` int(11) DEFAULT 0,
+  `NotasDespacho` text DEFAULT NULL,
+  `Mensaje` mediumtext DEFAULT NULL,
+  `FechaUpdate` date DEFAULT NULL,
+  `UsuarioUpdate` varchar(200) DEFAULT NULL,
+  `Token` text DEFAULT NULL,
+  `JSONGenerado` text DEFAULT NULL,
+  `JSONFirmado` text DEFAULT NULL,
+  `RespuestaMH` text DEFAULT NULL,
+  `Entregado` int(11) NOT NULL DEFAULT 0,
+  `RespuestaMHAnulacion` text DEFAULT NULL,
+  `RespuestaCORREO` text DEFAULT NULL,
+  `MensajePublicitario` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tblnotasdeentregadetalle`
+--
+
+CREATE TABLE `tblnotasdeentregadetalle` (
+  `UUIDDetalleVenta` varchar(200) NOT NULL,
+  `UUIDVenta` varchar(200) DEFAULT NULL,
+  `FechaRegistro` datetime DEFAULT current_timestamp(),
+  `UsuarioRegistro` varchar(200) DEFAULT NULL,
+  `NumeroDocumento` varchar(200) DEFAULT NULL,
+  `NoItem` int(11) NOT NULL DEFAULT 0,
+  `TipoDeItem` int(11) DEFAULT 1,
+  `CodigoPROD` varchar(200) DEFAULT NULL,
+  `CodigoBarra` varchar(200) DEFAULT NULL,
+  `Concepto` text DEFAULT NULL,
+  `TV` int(11) NOT NULL DEFAULT 1,
+  `UnidadDeMedida` int(11) NOT NULL DEFAULT 99,
+  `Cantidad` decimal(10,4) DEFAULT 0.0000,
+  `UnidadesVendidas` int(11) NOT NULL DEFAULT 0,
+  `PrecioVenta` decimal(10,4) DEFAULT 0.0000,
+  `PrecioVentaSinImpuesto` decimal(10,4) NOT NULL DEFAULT 0.0000,
+  `PrecioNormal` decimal(10,2) DEFAULT 0.00,
+  `PrecioSugeridoVenta` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `Descuento` decimal(10,2) DEFAULT 0.00,
+  `VentaNoSujeta` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `VentaExenta` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `VentaGravada` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `VentaGravadaSinImpuesto` decimal(10,4) NOT NULL DEFAULT 0.0000,
+  `TotalImporte` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `TotalOperacion` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `IVAItem` decimal(10,4) NOT NULL DEFAULT 0.0000,
+  `PrecioCosto` decimal(10,4) DEFAULT 0.0000,
+  `TotalCosto` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `PagaImpuesto` int(11) NOT NULL DEFAULT 1,
+  `PorcentajeImpuesto` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `CodigoTributo` varchar(10) DEFAULT NULL,
+  `Tributo` varchar(10) DEFAULT NULL,
+  `FechaUpdate` datetime DEFAULT NULL,
+  `UsuarioUpdate` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 -- --------------------------------------------------------
 
