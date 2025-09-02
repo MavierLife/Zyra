@@ -217,6 +217,13 @@ function getEmployeeStats($pdo, $uuidContribuyente) {
  * Crear nuevo empleado
  */
 function handlePost($pdo, $uuidContribuyente) {
+    // Validar permiso para crear empleados
+    if (!function_exists('tienePermiso') || !tienePermiso('Perm_CrearEmpleados')) {
+        http_response_code(403);
+        echo json_encode(['error' => 'PERMISO_DENEGADO']);
+        return;
+    }
+    
     $input = json_decode(file_get_contents('php://input'), true);
     
     if (!$input) {

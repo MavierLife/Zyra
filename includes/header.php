@@ -30,10 +30,20 @@
                 Crear proveedor
             </button>
         <?php elseif ($currentPage === 'empleados'): ?>
-            <button class="btn btn-primary" id="createEmployeeBtn" style="background-color: #394C60; color: white !important; width: 160.39px; height: 52px; font-size: 14px; padding: 10px 16px; display: flex; align-items: center; gap: 8px;">
-                <img src="assets/icons/agregar.svg" alt="Agregar" style="width: 16px; height: 16px; filter: brightness(0) invert(1);">
-                Crear empleado
-            </button>
+            <?php $canCreateEmployees = function_exists('tienePermiso') ? tienePermiso('Perm_CrearEmpleados') : false; ?>
+            <?php if ($canCreateEmployees): ?>
+                <button class="btn btn-primary" id="createEmployeeBtn" style="background-color: #394C60; color: white !important; width: 160.39px; height: 52px; font-size: 14px; padding: 10px 16px; display: flex; align-items: center; gap: 8px;">
+                    <img src="assets/icons/agregar.svg" alt="Agregar" style="width: 16px; height: 16px; filter: brightness(0) invert(1);">
+                    Crear empleado
+                </button>
+            <?php else: ?>
+                <button class="btn btn-primary btn--disabled" id="createEmployeeBtn" style="background-color: #394C60; color: white !important; width: 160.39px; height: 52px; font-size: 14px; padding: 10px 16px; display: flex; align-items: center; gap: 8px;"
+                        disabled aria-disabled="true" tabindex="-1"
+                        data-tooltip="No tienes acceso a esta acción. Pídele al propietario que dé permisos.">
+                    <img src="assets/icons/agregar.svg" alt="Agregar" style="width: 16px; height: 16px; filter: brightness(0) invert(1);">
+                    Crear empleado
+                </button>
+            <?php endif; ?>
 
         <?php endif; ?>
     </div>
