@@ -150,6 +150,8 @@ $pageTitle = 'Nueva venta';
         const nombreUsuario = '<?php echo htmlspecialchars($nombreUsuario, ENT_QUOTES, 'UTF-8'); ?>';
         const nombreComercial = '<?php echo htmlspecialchars($nombreComercial, ENT_QUOTES, 'UTF-8'); ?>';
     </script>
+    <link rel="stylesheet" href="styles/dashboard/apertura_caja.css">
     <script src="js/dashboard/dashboard.js"></script>
+    <script src="js/dashboard/apertura_caja.js"></script>
 </body>
 </html>
