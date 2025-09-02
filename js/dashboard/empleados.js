@@ -173,22 +173,15 @@ function renderEmployeesTable(employeesToRender = employees) {
                 <span class="status-badge status-active nunito-sans-medium">${employee.estado}</span>
             </td>
             <td>
-                <div class="table-actions">
+                <div class="action-buttons">
                     ${window.canEdit ? `
-                        <button class="action-btn action-btn-edit nunito-sans-medium" onclick="editEmployee('${employee.uuid}')">
-                            ✏️ Editar
+                        <button class="btn-edit" onclick="editEmployee('${employee.uuid}')" title="Editar">
+                            <img src="assets/icons/editar.svg" alt="Editar" width="16" height="16">
                         </button>
-                        <button class="action-btn action-btn-permissions nunito-sans-medium" onclick="manageEmployeePermissions('${employee.uuid}')">
-                            🔐 Permisos
+                        <button class="btn-delete" onclick="deleteEmployee('${employee.uuid}')" title="Eliminar">
+                            <img src="assets/icons/borrar.svg" alt="Eliminar" width="16" height="16">
                         </button>
-                        <button class="action-btn action-btn-delete nunito-sans-medium" onclick="deleteEmployee('${employee.uuid}')">
-                            🗑️ Eliminar
-                        </button>
-                    ` : `
-                        <button class="action-btn action-btn-permissions nunito-sans-medium" onclick="viewEmployeePermissions('${employee.uuid}')">
-                            👁️ Ver Permisos
-                        </button>
-                    `}
+                    ` : ``}
                 </div>
             </td>
         </tr>

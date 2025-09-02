@@ -169,31 +169,76 @@
     gap: 4px;
 }
 
-.action-btn-edit {
-    background: #007bff;
+/* Botones de acción en la tabla */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-edit,
+.btn-delete {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: #f8f9fa;
+    color: #6c757d;
+    outline: none;
+}
+
+.btn-edit:hover {
+    background: #394C60;
     color: white;
+    transform: scale(1.05);
 }
 
-.action-btn-edit:hover {
-    background: #0056b3;
-}
-
-.action-btn-permissions {
-    background: #17a2b8;
+.btn-edit:active,
+.btn-edit:focus {
+    background: #394C60;
     color: white;
+    outline: none;
+    box-shadow: none;
 }
 
-.action-btn-permissions:hover {
-    background: #117a8b;
-}
-
-.action-btn-delete {
+.btn-delete:hover {
     background: #dc3545;
     color: white;
+    transform: scale(1.05);
 }
 
-.action-btn-delete:hover {
-    background: #c82333;
+.btn-delete:active,
+.btn-delete:focus {
+    background: #dc3545;
+    color: white;
+    outline: none;
+    box-shadow: none;
+}
+
+/* Asegurar que los iconos mantengan su color */
+.btn-edit img,
+.btn-delete img {
+    filter: none;
+    opacity: 1;
+}
+
+.btn-edit:hover img,
+.btn-edit:active img,
+.btn-edit:focus img {
+    filter: brightness(0) invert(1);
+}
+
+.btn-delete:hover img,
+.btn-delete:active img,
+.btn-delete:focus img {
+    filter: brightness(0) invert(1);
 }
 
 /* Modal */
