@@ -455,7 +455,7 @@ function updateCartDisplay() {
         if (summaryRow) {
             summaryRow.innerHTML = `
                 <span>0</span>
-                <span>Continuar</span>
+                <span></span>
                 <span>${currencySymbol}0</span>
             `;
         }
@@ -500,7 +500,7 @@ function updateCartDisplay() {
         if (summaryRow) {
             summaryRow.innerHTML = `
                 <span>${totalItems}</span>
-                <span>Continuar</span>
+                <span></span>
                 <span>${currencySymbol}${totalAmount.toFixed(2)}</span>
             `;
         }

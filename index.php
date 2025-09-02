@@ -79,7 +79,7 @@ $pageTitle = 'Nueva venta';
                         <div class="cart-summary">
                             <div class="summary-row">
                                 <span>0</span>
-                                <span>Continuar</span>
+                                <span></span>
                                 <span><?php echo htmlspecialchars($currencySymbol); ?>0</span>
                             </div>
                         </div>

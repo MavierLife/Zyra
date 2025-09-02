@@ -5,7 +5,8 @@ function checkCashStatus() {
     fetch('api/apertura_caja.php')
         .then(response => response.json())
         .then(data => {
-            if (data.success && data.caja_del_dia) {
+            // Usar caja_abierta para determinar si mostrar "Caja Abierta"
+            if (data.success && data.caja_abierta) {
                 updateCashButton(true, data.data);
             } else {
                 updateCashButton(false);

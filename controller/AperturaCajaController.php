@@ -50,7 +50,22 @@ class AperturaCajaController {
         // Obtener datos de la sesión
         $usuarioApertura = $_SESSION['nombre_usuario'];
         $uuidContribuyente = $_SESSION['uuid_contribuyente'];
-        $uuidTerminal = $_SESSION['vendedor_id'];
+        $uuidVendedor = $_SESSION['vendedor_id'];
+        
+        // Obtener el CodPuntoVenta del vendedor para usarlo como UUIDTerminal
+        $stmtVendedor = $this->pdo->prepare("
+            SELECT CodPuntoVenta 
+            FROM tblcontribuyentesvendedores 
+            WHERE UUIDVendedor = ?
+        ");
+        $stmtVendedor->execute([$uuidVendedor]);
+        $vendedor = $stmtVendedor->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$vendedor) {
+            throw new Exception('No se encontró información del vendedor');
+        }
+        
+        $uuidTerminal = $vendedor['CodPuntoVenta'];
         
         // Verificar si ya hay una caja abierta para este terminal
         if ($this->existeCajaAbierta($uuidTerminal)) {
@@ -66,8 +81,9 @@ class AperturaCajaController {
                 UUIDTerminal, 
                 EfectivoApertura, 
                 HoraApertura,
-                Estado
-            ) VALUES (?, ?, ?, ?, ?, CURTIME(), 1)
+                Estado,
+                UUIDVendedor
+            ) VALUES (?, ?, ?, ?, ?, CURTIME(), 1, ?)
         ");
         
         $stmt->execute([
@@ -75,7 +91,8 @@ class AperturaCajaController {
             $usuarioApertura,
             $uuidContribuyente,
             $uuidTerminal,
-            $efectivoApertura
+            $efectivoApertura,
+            $uuidVendedor
         ]);
         
         if ($stmt->rowCount() === 0) {
@@ -98,10 +115,25 @@ class AperturaCajaController {
     public function verificarEstadoCaja() {
         $this->validarAutenticacion();
         
-        $uuidTerminal = $_SESSION['vendedor_id'];
+        $uuidVendedor = $_SESSION['vendedor_id'];
         $usuarioLogueado = $_SESSION['nombre_usuario'];
         $uuidContribuyente = $_SESSION['uuid_contribuyente'];
         $fechaActual = date('Y-m-d');
+        
+        // Obtener el CodPuntoVenta del vendedor
+        $stmtVendedor = $this->pdo->prepare("
+            SELECT CodPuntoVenta 
+            FROM tblcontribuyentesvendedores 
+            WHERE UUIDVendedor = ?
+        ");
+        $stmtVendedor->execute([$uuidVendedor]);
+        $vendedor = $stmtVendedor->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$vendedor) {
+            throw new Exception('No se encontró información del vendedor');
+        }
+        
+        $uuidTerminal = $vendedor['CodPuntoVenta'];
         
         // Verificar si hay apertura del día actual
         $cajaDelDia = $this->obtenerCajaDelDia($uuidTerminal, $usuarioLogueado, $uuidContribuyente, $fechaActual);
