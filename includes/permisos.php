@@ -36,6 +36,7 @@ function cargarPermisosVendedor($vendedorId) {
                     Perm_CrearClientesProveedores,
                     Perm_EditarEliminarClientesProveedores,
                     Perm_VerEditarConfiguracion,
+                    Perm_VerEmpleados,
                     Perm_CrearEmpleados,
                     Perm_EditarEliminarEmpleados
                 FROM tblcontribuyentesvendedores 

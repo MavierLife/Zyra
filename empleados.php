@@ -7,6 +7,13 @@
 // Incluir configuración común
 require_once 'includes/config.php';
 
+// Guardia de permiso: solo permitir acceso a quienes tienen Perm_VerEmpleados
+if (!function_exists('tienePermiso') || !tienePermiso('Perm_VerEmpleados')) {
+    http_response_code(403);
+    echo 'PERMISO_DENEGADO';
+    exit();
+}
+
 // Definir título de página específico
 $pageTitle = 'Empleados';
 ?>

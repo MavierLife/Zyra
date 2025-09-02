@@ -1,4 +1,5 @@
 <?php $canViewInventory = function_exists('tienePermiso') ? tienePermiso('Perm_VerInventario') : false; ?>
+<?php $canViewEmployees = function_exists('tienePermiso') ? tienePermiso('Perm_VerEmpleados') : false; ?>
 <!-- Barra lateral izquierda -->
 <aside class="sidebar">
     <div class="sidebar-header">
@@ -52,10 +53,20 @@
                 <?php endif; ?>
             </li>
             <li class="nav-item <?php echo ($currentPage === 'empleados') ? 'active' : ''; ?>">
-                <a href="empleados.php" class="nav-link">
-                    <img src="assets/icons/empleados.svg" alt="Empleados" class="nav-barcode-icon">
-                    <span class="nav-text">Empleados</span>
-                </a>
+                <?php if ($canViewEmployees): ?>
+                    <a href="empleados.php" class="nav-link" data-section="empleados">
+                        <img src="assets/icons/empleados.svg" alt="Empleados" class="nav-barcode-icon">
+                        <span class="nav-text">Empleados</span>
+                    </a>
+                <?php else: ?>
+                    <a class="nav-link disabled" data-section="empleados"
+                       aria-disabled="true" tabindex="-1"
+                       data-tooltip="No tienes acceso a esta sección. Pídele al propietario que dé permisos."
+                       onclick="event.preventDefault(); return false;">
+                        <img src="assets/icons/empleados.svg" alt="Empleados" class="nav-barcode-icon">
+                        <span class="nav-text">Empleados</span>
+                    </a>
+                <?php endif; ?>
             </li>
         </ul>
         

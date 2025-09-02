@@ -152,6 +152,12 @@ function handleNavigation(event) {
         window.location.href = 'proveedores.php';
         return;
     }
+
+    // NUEVO: Redirigir a empleados.php cuando corresponda
+    if (section === 'empleados') {
+        window.location.href = 'empleados.php';
+        return;
+    }
     
     // Remover clase active de todos los elementos
     document.querySelectorAll('.nav-item').forEach(item => {
