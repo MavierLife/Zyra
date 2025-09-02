@@ -115,15 +115,16 @@ function initializeEventListeners() {
 
 // Manejar navegación de la barra lateral
 function handleNavigation(event) {
-    event.preventDefault();
-    
     // Obtener la sección
     const section = event.currentTarget.dataset.section;
     
-    // Si no hay sección definida, no hacer nada
+    // Si no hay sección definida, permitir navegación por defecto (href)
     if (!section) {
         return;
     }
+    
+    // Evitar la navegación por defecto sólo cuando gestionamos la sección vía JS
+    event.preventDefault();
     
     // Si es inventario o proveedores, redirigir a la página específica
     if (section === 'inventario') {
