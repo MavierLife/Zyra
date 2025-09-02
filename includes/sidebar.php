@@ -96,4 +96,15 @@
             <span class="nav-text">Cerrar sesión</span>
         </button>
     </div>
+
+    <script>
+        // Fallback: asegurar que logout() exista en todas las páginas
+        if (typeof window.logout !== 'function') {
+            window.logout = function () {
+                if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                    window.location.href = 'logout.php';
+                }
+            };
+        }
+    </script>
 </aside>

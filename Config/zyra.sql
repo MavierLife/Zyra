@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-09-2025 a las 01:00:37
+-- Tiempo de generación: 02-09-2025 a las 20:59:24
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -1168,6 +1168,13 @@ CREATE TABLE `tblcontribuyentesproveedores` (
   `Direccion` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `tblcontribuyentesproveedores`
+--
+
+INSERT INTO `tblcontribuyentesproveedores` (`UUIDProveedor`, `UUIDContribuyente`, `RazonSocial`, `Celular`, `Documento`, `CorrecoElectronico`, `Direccion`) VALUES
+('df383dcc-4d70-426d-824c-181f99218f67', '1', 'edwin coto', '', '06603072', '', '');
+
 -- --------------------------------------------------------
 
 --
@@ -1204,16 +1211,18 @@ CREATE TABLE `tblcontribuyentesvendedores` (
   `Perm_CrearEmpleados` tinyint(1) DEFAULT 0,
   `Perm_EditarEliminarEmpleados` tinyint(1) DEFAULT 0,
   `FechaRegistro` timestamp NOT NULL DEFAULT current_timestamp(),
-  `UsuarioRegistro` varchar(100) DEFAULT NULL
+  `UsuarioRegistro` varchar(100) DEFAULT NULL,
+  `Perm_VerEmpleados` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Volcado de datos para la tabla `tblcontribuyentesvendedores`
 --
 
-INSERT INTO `tblcontribuyentesvendedores` (`UUIDVendedor`, `UUIDContribuyente`, `NombreUsuario`, `Telefono`, `Rol`, `CodPuntoVenta`, `Perm_RegistrarVentasYGastos`, `Perm_EditarEliminarVentasYGastos`, `Perm_VisualizarMovimientos`, `Perm_VerResumenMovimientos`, `Perm_AbrirCaja`, `Perm_CerrarCaja`, `Perm_ReporteCaja`, `Perm_EliminarCierreCaja`, `Perm_VerResumenCajaTurno`, `Perm_EditarCierreCaja`, `Perm_CrearItemsInventario`, `Perm_EditarEliminarItemsInventario`, `Perm_VerInventario`, `Perm_DescargarReportesInventario`, `Perm_DescargarReportesMovimientos`, `Perm_UtilizarFiltrosMovimientos`, `Perm_VerEstadisticas`, `Perm_CrearClientesProveedores`, `Perm_EditarEliminarClientesProveedores`, `Perm_VerEditarConfiguracion`, `Perm_CrearEmpleados`, `Perm_EditarEliminarEmpleados`, `FechaRegistro`, `UsuarioRegistro`) VALUES
-('0ff038f6-8745-11f0-ac94-989096a0999b', '2', 'Laura Rivera', '75399076', 'Propietario', 'P001', 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2025-09-01 15:05:13', NULL),
-('721dfc2f-841e-11f0-9acd-989096a0999b', '1', 'Edwin Antonio Coto Benavides', '73968235', 'Propietario', 'P001', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2025-08-28 14:51:14', 'Antonio Hernandez');
+INSERT INTO `tblcontribuyentesvendedores` (`UUIDVendedor`, `UUIDContribuyente`, `NombreUsuario`, `Telefono`, `Rol`, `CodPuntoVenta`, `Perm_RegistrarVentasYGastos`, `Perm_EditarEliminarVentasYGastos`, `Perm_VisualizarMovimientos`, `Perm_VerResumenMovimientos`, `Perm_AbrirCaja`, `Perm_CerrarCaja`, `Perm_ReporteCaja`, `Perm_EliminarCierreCaja`, `Perm_VerResumenCajaTurno`, `Perm_EditarCierreCaja`, `Perm_CrearItemsInventario`, `Perm_EditarEliminarItemsInventario`, `Perm_VerInventario`, `Perm_DescargarReportesInventario`, `Perm_DescargarReportesMovimientos`, `Perm_UtilizarFiltrosMovimientos`, `Perm_VerEstadisticas`, `Perm_CrearClientesProveedores`, `Perm_EditarEliminarClientesProveedores`, `Perm_VerEditarConfiguracion`, `Perm_CrearEmpleados`, `Perm_EditarEliminarEmpleados`, `FechaRegistro`, `UsuarioRegistro`, `Perm_VerEmpleados`) VALUES
+('0ff038f6-8745-11f0-ac94-989096a0999b', '2', 'Laura Rivera', '', 'Propietario', 'P001', 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2025-09-01 15:05:13', NULL, 0),
+('721dfc2f-841e-11f0-9acd-989096a0999b', '1', 'Edwin Antonio Coto Benavides', '75399076', 'Propietario', 'P001', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2025-08-28 14:51:14', 'Antonio Hernandez', 1),
+('ef6143aa-0df0-47b2-ab27-2ef32ee238b1', '1', 'Jose Antonio Hernandez Guzman', '74854585', 'Vendedor', 'PV02', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '2025-09-02 18:57:51', 'Edwin Antonio Coto Benavides', 0);
 
 -- --------------------------------------------------------
 
@@ -1577,8 +1586,8 @@ CREATE TABLE `tbltokens_verificacion` (
 --
 
 INSERT INTO `tbltokens_verificacion` (`IDToken`, `UUIDVendedor`, `Token`, `FechaCreacion`, `FechaExpiracion`, `Usado`) VALUES
-(28, '721dfc2f-841e-11f0-9acd-989096a0999b', '285528', '2025-09-01 15:40:55', '2025-09-01 15:50:55', 1),
-(29, '0ff038f6-8745-11f0-ac94-989096a0999b', '102724', '2025-09-01 16:07:59', '2025-09-01 16:17:59', 1);
+(32, '0ff038f6-8745-11f0-ac94-989096a0999b', '433466', '2025-09-02 07:59:14', '2025-09-02 08:09:14', 1),
+(45, '721dfc2f-841e-11f0-9acd-989096a0999b', '862374', '2025-09-02 12:56:54', '2025-09-02 13:06:54', 1);
 
 --
 -- Índices para tablas volcadas
@@ -1674,7 +1683,7 @@ ALTER TABLE `tblcontribuyentescategorias`
 -- AUTO_INCREMENT de la tabla `tblcontribuyentesproductos`
 --
 ALTER TABLE `tblcontribuyentesproductos`
-  MODIFY `UUIDProducto` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=232;
+  MODIFY `UUIDProducto` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=235;
 
 --
 -- AUTO_INCREMENT de la tabla `tbldepartamentos`
@@ -1698,7 +1707,7 @@ ALTER TABLE `tbltipomoneda`
 -- AUTO_INCREMENT de la tabla `tbltokens_verificacion`
 --
 ALTER TABLE `tbltokens_verificacion`
-  MODIFY `IDToken` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `IDToken` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- Restricciones para tablas volcadas

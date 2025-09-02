@@ -117,6 +117,7 @@ function getAllEmployees($pdo, $uuidContribuyente) {
                 Perm_EditarEliminarClientesProveedores,
                 -- Permisos de administración
                 Perm_VerEditarConfiguracion,
+                Perm_VerEmpleados,
                 Perm_CrearEmpleados,
                 Perm_EditarEliminarEmpleados
             FROM tblcontribuyentesvendedores 
@@ -166,6 +167,7 @@ function getAllEmployees($pdo, $uuidContribuyente) {
                 'Perm_EditarEliminarClientesProveedores' => (int)$employee['Perm_EditarEliminarClientesProveedores'],
                 // Administración
                 'Perm_VerEditarConfiguracion' => (int)$employee['Perm_VerEditarConfiguracion'],
+                'Perm_VerEmpleados' => (int)$employee['Perm_VerEmpleados'],
                 'Perm_CrearEmpleados' => (int)$employee['Perm_CrearEmpleados'],
                 'Perm_EditarEliminarEmpleados' => (int)$employee['Perm_EditarEliminarEmpleados']
             ]
@@ -279,6 +281,7 @@ function handlePost($pdo, $uuidContribuyente) {
         'Perm_CrearClientesProveedores' => 0,
         'Perm_EditarEliminarClientesProveedores' => 0,
         'Perm_VerEditarConfiguracion' => 0,
+        'Perm_VerEmpleados' => 0,
         'Perm_CrearEmpleados' => 0,
         'Perm_EditarEliminarEmpleados' => 0
     ];
@@ -300,10 +303,10 @@ function handlePost($pdo, $uuidContribuyente) {
                 Perm_CrearItemsInventario, Perm_EditarEliminarItemsInventario, Perm_VerInventario, Perm_DescargarReportesInventario,
                 Perm_DescargarReportesMovimientos, Perm_UtilizarFiltrosMovimientos, Perm_VerEstadisticas,
                 Perm_CrearClientesProveedores, Perm_EditarEliminarClientesProveedores,
-                Perm_VerEditarConfiguracion, Perm_CrearEmpleados, Perm_EditarEliminarEmpleados
+                Perm_VerEditarConfiguracion, Perm_VerEmpleados, Perm_CrearEmpleados, Perm_EditarEliminarEmpleados
             ) VALUES (
                 ?, ?, ?, ?, ?, ?, NOW(), ?,
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )";
     
     $stmt = $pdo->prepare($sql);
@@ -335,6 +338,7 @@ function handlePost($pdo, $uuidContribuyente) {
         $permisos['Perm_CrearClientesProveedores'],
         $permisos['Perm_EditarEliminarClientesProveedores'],
         $permisos['Perm_VerEditarConfiguracion'],
+        $permisos['Perm_VerEmpleados'],
         $permisos['Perm_CrearEmpleados'],
         $permisos['Perm_EditarEliminarEmpleados']
     ]);
@@ -475,7 +479,7 @@ function updateEmployeePermissions($pdo, $uuidContribuyente, $uuidVendedor, $per
         'Perm_CrearItemsInventario', 'Perm_EditarEliminarItemsInventario', 'Perm_VerInventario', 'Perm_DescargarReportesInventario',
         'Perm_DescargarReportesMovimientos', 'Perm_UtilizarFiltrosMovimientos', 'Perm_VerEstadisticas',
         'Perm_CrearClientesProveedores', 'Perm_EditarEliminarClientesProveedores',
-        'Perm_VerEditarConfiguracion', 'Perm_CrearEmpleados', 'Perm_EditarEliminarEmpleados'
+        'Perm_VerEditarConfiguracion', 'Perm_VerEmpleados', 'Perm_CrearEmpleados', 'Perm_EditarEliminarEmpleados'
     ];
     
     $updateFields = [];

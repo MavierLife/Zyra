@@ -283,6 +283,10 @@ $pageTitle = 'Empleados';
                                 <label for="perm_configuracion" class="nunito-sans-regular">Ver y editar configuración</label>
                             </div>
                             <div class="permission-item">
+                                <input type="checkbox" id="perm_ver_empleados" name="Perm_VerEmpleados">
+                                <label for="perm_ver_empleados" class="nunito-sans-regular">Ver empleados</label>
+                            </div>
+                            <div class="permission-item">
                                 <input type="checkbox" id="perm_crear_empleados" name="Perm_CrearEmpleados">
                                 <label for="perm_crear_empleados" class="nunito-sans-regular">Crear empleados</label>
                             </div>
