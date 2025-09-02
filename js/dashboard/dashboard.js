@@ -847,6 +847,7 @@ style.textContent = `
         display: flex;
         flex-direction: column;
         gap: 15px;
+        width: 100%;
     }
     
     .cart-item {
@@ -855,6 +856,8 @@ style.textContent = `
         border-radius: 8px;
         border: 1px solid #e9ecef;
         margin-bottom: 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .cart-item-header {
