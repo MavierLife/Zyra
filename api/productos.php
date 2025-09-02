@@ -70,7 +70,8 @@ try {
     
     // Consultar productos del contribuyente con su categoría
     $sql = "SELECT p.UUIDProducto as id, p.Descripcion as name, p.PrecioVenta as price, 
-                   p.CodigoDeBarras as codigo, p.Existencias as stock, p.IDCategoria, c.Categoria
+                   p.CodigoDeBarras as codigo, p.Existencias as stock, p.IDCategoria, c.Categoria,
+                   p.cantidadminima, p.preciodescuento
             FROM tblcontribuyentesproductos p
             LEFT JOIN tblcontribuyentescategorias c ON p.IDCategoria = c.IDCategoria AND c.UUIDContribuyente = ?
             WHERE p.UUIDContribuyente = ?";

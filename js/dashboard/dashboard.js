@@ -414,17 +414,40 @@ function createProductCard(product) {
     return card;
 }
 
+// Calcular precio con descuento basado en cantidad
+function calculateDiscountPrice(product, quantity) {
+    const originalPrice = parseFloat(product.price);
+    
+    // Si no hay cantidad mínima definida o es 0, usar precio normal
+    if (!product.cantidadminima || parseInt(product.cantidadminima) === 0) {
+        return originalPrice;
+    }
+    
+    // Si la cantidad alcanza la cantidad mínima y hay precio de descuento
+    if (quantity >= parseInt(product.cantidadminima) && product.preciodescuento && parseFloat(product.preciodescuento) > 0) {
+        return parseFloat(product.preciodescuento);
+    }
+    
+    // Usar precio normal
+    return originalPrice;
+}
+
 // Agregar producto al carrito
 function addToCart(product) {
     const existingItem = cart.find(item => item.id === product.id);
     
     if (existingItem) {
         existingItem.quantity += 1;
+        // Recalcular precio basado en la nueva cantidad
+        existingItem.currentPrice = calculateDiscountPrice(product, existingItem.quantity);
     } else {
-        cart.unshift({
+        const newItem = {
             ...product,
-            quantity: 1
-        });
+            quantity: 1,
+            originalPrice: parseFloat(product.price),
+            currentPrice: calculateDiscountPrice(product, 1)
+        };
+        cart.unshift(newItem);
     }
     
     updateCartDisplay();
@@ -483,9 +506,13 @@ function updateCartDisplay() {
                             <span class="plus-icon">+</span>
                         </button>
                     </div>
-                    <div class="cart-item-total">${currencySymbol}${(item.price * item.quantity).toFixed(2)}</div>
+                    <div class="cart-item-total">${currencySymbol}${(item.currentPrice * item.quantity).toFixed(2)}</div>
                 </div>
-                <div class="cart-item-unit-price">Precio Unitario: ${currencySymbol}${item.price}</div>
+                <div class="cart-item-unit-price">Precio Unitario: ${currencySymbol}${item.currentPrice.toFixed(2)}</div>
+                ${item.currentPrice < item.originalPrice ? `
+                    <div class="discount-indicator">¡Descuento aplicado!</div>
+                    <div class="item-savings">Ahorras: ${currencySymbol}${((item.originalPrice - item.currentPrice) * item.quantity).toFixed(2)}</div>
+                ` : ''}
             </div>
         `).join('');
         
@@ -495,14 +522,27 @@ function updateCartDisplay() {
         
         // Calcular totales
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const totalAmount = cart.reduce((sum, item) => sum + (item.currentPrice * item.quantity), 0);
+        const totalOriginalAmount = cart.reduce((sum, item) => sum + (item.originalPrice * item.quantity), 0);
+        const totalSavings = totalOriginalAmount - totalAmount;
         
         if (summaryRow) {
-            summaryRow.innerHTML = `
+            let summaryHTML = `
                 <span>${totalItems}</span>
                 <span></span>
                 <span>${currencySymbol}${totalAmount.toFixed(2)}</span>
             `;
+            
+            // Agregar línea de ahorro si hay descuentos aplicados
+            if (totalSavings > 0) {
+                summaryHTML += `
+                    <div class="savings-row">
+                        <span>Ahorro total: ${currencySymbol}${totalSavings.toFixed(2)}</span>
+                    </div>
+                `;
+            }
+            
+            summaryRow.innerHTML = summaryHTML;
         }
         
         if (continueBtn) {
@@ -671,6 +711,8 @@ function increaseQuantity(productId) {
     const item = cart.find(item => item.id === productId);
     if (item) {
         item.quantity += 1;
+        // Recalcular precio con descuento basado en la nueva cantidad
+        item.currentPrice = calculateDiscountPrice(item, item.quantity);
         updateCartDisplay();
     }
 }
@@ -679,6 +721,8 @@ function decreaseQuantity(productId) {
     const item = cart.find(item => item.id === productId);
     if (item && item.quantity > 1) {
         item.quantity -= 1;
+        // Recalcular precio con descuento basado en la nueva cantidad
+        item.currentPrice = calculateDiscountPrice(item, item.quantity);
         updateCartDisplay();
     } else if (item && item.quantity === 1) {
         removeFromCart(productId);
