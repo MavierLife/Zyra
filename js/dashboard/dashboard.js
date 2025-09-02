@@ -9,6 +9,34 @@ let currentVendedorId = null;
 let currentContribuyente = null;
 let currencySymbol = '$'; // Símbolo de moneda dinámico
 
+// Ajustes de búsqueda
+const DEBUG_SEARCH = false;
+const MIN_SEARCH_LENGTH = 2; // No filtrar hasta que hayan al menos 2 caracteres
+
+// Utilidades de texto para búsqueda
+function normalizeText(text) {
+    return (text || '')
+        .toString()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Quitar acentos
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+// Debounce simple (similar al usado en empleados.js)
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func.apply(this, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // Inicialización cuando se carga el DOM
 document.addEventListener('DOMContentLoaded', function() {
     initializeVendedorData();
@@ -37,7 +65,8 @@ function initializeEventListeners() {
     // Búsqueda de productos
     const searchInput = document.getElementById('productSearch');
     if (searchInput) {
-        searchInput.addEventListener('input', handleProductSearch);
+        // Aplicar debounce para mejorar el rendimiento
+        searchInput.addEventListener('input', debounce(handleProductSearch, 300));
     }
     
     // Botón de código de barras
@@ -198,17 +227,31 @@ function updatePageTitle(section) {
 
 // Manejar búsqueda de productos
 function handleProductSearch(event) {
-    const searchTerm = event.target.value.toLowerCase();
-    filterProducts(searchTerm);
+    const rawValue = event.target.value;
+    if (DEBUG_SEARCH) {
+        console.log('handleProductSearch - Valor original:', rawValue);
+    }
+    filterProducts(rawValue);
 }
 
-// Filtrar productos por término de búsqueda
+// Filtrar productos por término de búsqueda (solo por descripción)
 function filterProducts(searchTerm) {
-    const filteredProducts = products.filter(product => 
-        product.name.toLowerCase().includes(searchTerm) ||
-        product.brand.toLowerCase().includes(searchTerm)
-    );
+    const term = normalizeText(searchTerm);
+
+    // Si no hay término o menos del mínimo requerido, mostrar todo
+    if (!term || term.length < MIN_SEARCH_LENGTH) {
+        renderProducts(products);
+        return;
+    }
     
+    const filteredProducts = products.filter(product => {
+        const nameNorm = product._nameNorm || normalizeText(product.name || '');
+        return nameNorm.includes(term); // Coincidencia por inclusión en la descripción normalizada
+    });
+    
+    if (DEBUG_SEARCH) {
+        console.log('Productos filtrados:', filteredProducts.length);
+    }
     renderProducts(filteredProducts);
 }
 
@@ -262,7 +305,11 @@ async function loadProducts(categoria = 'todos') {
         const data = await response.json();
         
         if (data.success && data.data) {
-            products = data.data.productos;
+            // Normalizar y preparar campo de búsqueda una sola vez por producto
+            products = (data.data.productos || []).map(p => ({
+                ...p,
+                _nameNorm: normalizeText(p.name || '')
+            }));
             availableCategories = data.data.categorias;
             currentContribuyente = data.data.contribuyente;
             
@@ -277,7 +324,9 @@ async function loadProducts(categoria = 'todos') {
             // Renderizar productos
             renderProducts(products);
             
-            console.log(`Productos cargados para contribuyente: ${currentContribuyente.nombre_comercial}`);
+            if (DEBUG_SEARCH && currentContribuyente) {
+                console.log(`Productos cargados para contribuyente: ${currentContribuyente.nombre_comercial}`);
+            }
         } else {
             console.error('Error al cargar productos:', data.error);
             showTemporaryMessage('Error al cargar productos: ' + data.error);
