@@ -421,7 +421,7 @@ function addToCart(product) {
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
-        cart.push({
+        cart.unshift({
             ...product,
             quantity: 1
         });
@@ -481,9 +481,9 @@ function updateCartDisplay() {
                             <span class="plus-icon">+</span>
                         </button>
                     </div>
-                    <div class="price-display">${currencySymbol} ${item.price}</div>
+                    <div class="cart-item-total">${currencySymbol}${(item.price * item.quantity).toFixed(2)}</div>
                 </div>
-                <div class="cart-item-total">Precio por ${item.quantity} unidades: ${currencySymbol}${(item.price * item.quantity).toFixed(2)}</div>
+                <div class="cart-item-unit-price">Precio Unitario: ${currencySymbol}${item.price}</div>
             </div>
         `).join('');
         
@@ -925,16 +925,19 @@ style.textContent = `
         text-align: center;
     }
 
-    .price-display {
-        font-weight: 600;
+    .cart-item-total {
+        font-weight: 700;
         color: #28a745;
-        font-size: 16px;
+        font-size: 24px;
+        text-align: center;
+        margin-bottom: 5px;
     }
 
-    .cart-item-total {
-        font-size: 14px;
+    .cart-item-unit-price {
+        font-size: 12px;
         color: #6c757d;
         text-align: center;
+        font-weight: 500;
     }
 `;
 
