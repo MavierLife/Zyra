@@ -2,6 +2,14 @@
 // Incluir configuración común
 require_once 'includes/config.php';
 
+// Bloqueo de acceso si no tiene permiso para ver inventario
+if (!tienePermiso('Perm_VerInventario')) {
+    http_response_code(403);
+    header('Content-Type: text/plain; charset=utf-8');
+    echo 'PERMISO_DENEGADO';
+    exit();
+}
+
 // Definir título de página específico
 $pageTitle = 'Inventario';
 ?>

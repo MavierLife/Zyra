@@ -22,6 +22,14 @@ function initializeEventListeners() {
     // Navegación de la barra lateral
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
+        // Si el link está deshabilitado, bloquear cualquier navegación y no enlazar el handler
+        if (link.classList.contains('disabled') || link.getAttribute('aria-disabled') === 'true') {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            return; // No enlazar handleNavigation para elementos deshabilitados
+        }
         link.addEventListener('click', handleNavigation);
     });
     
@@ -115,8 +123,16 @@ function initializeEventListeners() {
 
 // Manejar navegación de la barra lateral
 function handleNavigation(event) {
+    const target = event.currentTarget;
+    // Ignorar elementos de navegación deshabilitados
+    if (target.classList.contains('disabled') || target.getAttribute('aria-disabled') === 'true') {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+    }
+
     // Obtener la sección
-    const section = event.currentTarget.dataset.section;
+    const section = target.dataset.section;
     
     // Si no hay sección definida, permitir navegación por defecto (href)
     if (!section) {
