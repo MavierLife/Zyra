@@ -92,19 +92,19 @@ $pageTitle = 'Proveedores';
                             </div>
                             
                             <div class="form-group">
-                                <label for="editSupplierDocument" class="nunito-sans-medium">Documento</label>
-                                <input type="text" id="editSupplierDocument" name="documento" class="form-input nunito-sans-regular">
+                                <label for="editSupplierDocument" class="nunito-sans-medium">Documento *</label>
+                                <input type="text" id="editSupplierDocument" name="documento" class="form-input nunito-sans-regular" required>
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="editSupplierEmail" class="nunito-sans-medium">Correo Electrónico *</label>
-                            <input type="email" id="editSupplierEmail" name="correoElectronico" class="form-input nunito-sans-regular" required>
+                            <label for="editSupplierEmail" class="nunito-sans-medium">Correo Electrónico</label>
+                            <input type="email" id="editSupplierEmail" name="correoElectronico" class="form-input nunito-sans-regular">
                         </div>
                         
                         <div class="form-group">
-                            <label for="editSupplierAddress" class="nunito-sans-medium">Dirección *</label>
-                            <textarea id="editSupplierAddress" name="direccion" class="form-input nunito-sans-regular" rows="3" required></textarea>
+                            <label for="editSupplierAddress" class="nunito-sans-medium">Dirección</label>
+                            <textarea id="editSupplierAddress" name="direccion" class="form-input nunito-sans-regular" rows="3"></textarea>
                         </div>
                     </div>
                 </div>

@@ -196,6 +196,25 @@ function openAddSupplierModal() {
     
     document.getElementById('modalTitle').textContent = 'Crear Proveedor';
     if (form) form.reset();
+
+    // Reglas de requerido para CREAR (solo Razón Social y Documento)
+    const nameLabel = form.querySelector('label[for="editSupplierName"]');
+    const docLabel = form.querySelector('label[for="editSupplierDocument"]');
+    const emailLabel = form.querySelector('label[for="editSupplierEmail"]');
+    const addrLabel = form.querySelector('label[for="editSupplierAddress"]');
+
+    const emailInput = form.elements['correoElectronico'];
+    const addrInput = form.elements['direccion'];
+    const docInput = form.elements['documento'];
+
+    if (nameLabel) nameLabel.textContent = 'Razón Social *';
+    if (docLabel) docLabel.textContent = 'Documento *';
+    if (emailLabel) emailLabel.textContent = 'Correo Electrónico';
+    if (addrLabel) addrLabel.textContent = 'Dirección';
+
+    if (emailInput) emailInput.required = false;
+    if (addrInput) addrInput.required = false;
+    if (docInput) docInput.required = true;
     
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -212,6 +231,25 @@ function editSupplier(supplierId) {
     const form = document.getElementById('editSupplierForm');
     
     document.getElementById('modalTitle').textContent = 'Editar Proveedor';
+
+    // Reglas de requerido para EDITAR
+    const nameLabel = form.querySelector('label[for="editSupplierName"]');
+    const docLabel = form.querySelector('label[for="editSupplierDocument"]');
+    const emailLabel = form.querySelector('label[for="editSupplierEmail"]');
+    const addrLabel = form.querySelector('label[for="editSupplierAddress"]');
+
+    const emailInput = form.elements['correoElectronico'];
+    const addrInput = form.elements['direccion'];
+    const docInput = form.elements['documento'];
+
+    if (nameLabel) nameLabel.textContent = 'Razón Social *';
+    if (docLabel) docLabel.textContent = 'Documento *';
+    if (emailLabel) emailLabel.textContent = 'Correo Electrónico';
+    if (addrLabel) addrLabel.textContent = 'Dirección';
+
+    if (emailInput) emailInput.required = false;
+    if (addrInput) addrInput.required = false;
+    if (docInput) docInput.required = true;
     
     // Llenar formulario
     ['razonSocial', 'celular', 'documento', 'correoElectronico', 'direccion'].forEach(field => {
@@ -244,18 +282,28 @@ async function saveSupplier() {
         direccion: formData.get('direccion').trim()
     };
     
-    // Validaciones
+    const isEditing = currentEditingSupplier !== null;
+
+    // Validaciones condicionales
     if (!data.razonSocial) return showMessage('La razón social es requerida', 'error');
-    if (!data.correoElectronico) return showMessage('El correo electrónico es requerido', 'error');
-    if (!data.direccion) return showMessage('La dirección es requerida', 'error');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.correoElectronico)) {
-        return showMessage('Formato de correo inválido', 'error');
+
+    if (isEditing) {
+        if (!data.documento) return showMessage('El documento es requerido', 'error');
+        if (data.correoElectronico && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.correoElectronico)) {
+            return showMessage('Formato de correo inválido', 'error');
+        }
+    } else {
+        // Crear: documento obligatorio; correo y dirección opcionales
+        if (!data.documento) return showMessage('El documento es requerido', 'error');
+        if (data.correoElectronico && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.correoElectronico)) {
+            return showMessage('Formato de correo inválido', 'error');
+        }
+        // Dirección opcional: no validar vacío
     }
     
     try {
         showLoading(true);
         
-        const isEditing = currentEditingSupplier !== null;
         if (isEditing) data.id = currentEditingSupplier.id;
         
         const response = await fetch('api/proveedores.php?action=proveedor', {
@@ -271,11 +319,11 @@ async function saveSupplier() {
             closeEditModal();
             await loadSuppliersData();
         } else {
-            throw new Error(result.error);
+            showMessage(result.error || 'Error al guardar el proveedor', 'error');
         }
-        
     } catch (error) {
-        showMessage('Error al guardar: ' + error.message, 'error');
+        console.error('Error al guardar proveedor:', error);
+        showMessage('Ocurrió un error al guardar', 'error');
     } finally {
         showLoading(false);
     }

@@ -191,7 +191,7 @@ function obtenerEstadisticas($pdo, $uuidContribuyente) {
 function crearProveedor($pdo, $uuidContribuyente, $data) {
     try {
         // Validar datos requeridos
-        if (empty($data['razonSocial']) || empty($data['correoElectronico']) || empty($data['direccion'])) {
+        if (empty($data['razonSocial']) || empty($data['documento'])) {
             http_response_code(400);
             echo json_encode(['error' => 'Faltan campos requeridos']);
             return;
@@ -210,8 +210,10 @@ function crearProveedor($pdo, $uuidContribuyente, $data) {
         $stmt->bindParam(':razon_social', $data['razonSocial'], PDO::PARAM_STR);
         $stmt->bindParam(':celular', $data['celular'], PDO::PARAM_STR);
         $stmt->bindParam(':documento', $data['documento'], PDO::PARAM_STR);
-        $stmt->bindParam(':correo', $data['correoElectronico'], PDO::PARAM_STR);
-        $stmt->bindParam(':direccion', $data['direccion'], PDO::PARAM_STR);
+        $correo = isset($data['correoElectronico']) ? $data['correoElectronico'] : '';
+        $direccion = isset($data['direccion']) ? $data['direccion'] : '';
+        $stmt->bindParam(':correo', $correo, PDO::PARAM_STR);
+        $stmt->bindParam(':direccion', $direccion, PDO::PARAM_STR);
         
         if ($stmt->execute()) {
             echo json_encode([
@@ -237,7 +239,7 @@ function crearProveedor($pdo, $uuidContribuyente, $data) {
 function actualizarProveedor($pdo, $uuidContribuyente, $data) {
     try {
         // Validar datos requeridos
-        if (empty($data['id']) || empty($data['razonSocial']) || empty($data['correoElectronico']) || empty($data['direccion'])) {
+        if (empty($data['id']) || empty($data['razonSocial']) || empty($data['documento'])) {
             http_response_code(400);
             echo json_encode(['error' => 'Faltan campos requeridos']);
             return;
