@@ -557,25 +557,25 @@ async function handleSaveClient() {
     
     const formData = new FormData(clientForm);
     const clientData = {
-        nombreCliente: formData.get('nombreCliente'),
+        nombreCliente: formData.get('nombreDeCliente'),
         nombreComercial: formData.get('nombreComercial'),
         telefono: formData.get('telefono'),
         correoElectronico: formData.get('correoElectronico'),
         direccion: formData.get('direccion'),
-        departamento: formData.get('editClientDepartment'),
-        municipio: formData.get('editClientMunicipality'),
-        distrito: formData.get('editClientDistrict'),
+        departamento: formData.get('departamento'),
+        municipio: formData.get('municipio'),
+        distrito: formData.get('distrito'),
         dui: formData.get('dui'),
         nit: formData.get('nit'),
         nrc: formData.get('nrc'),
-        tipoPersona: formData.get('tipoPersona'),
+        tipoPersona: formData.get('tipoPersona') || 'Natural',
         codActividad: formData.get('codActividad'),
-        giro: formData.get('giro'),
+        giro: formData.get('giroComercial'),
         otroDocumento: formData.get('otroDocumento'),
         percibirIVA: formData.get('percibirIVA') === 'on' ? 1 : 0,
         retenerIVA: formData.get('retenerIVA') === 'on' ? 1 : 0,
         retenerRenta: formData.get('retenerRenta') === 'on' ? 1 : 0,
-        estado: formData.get('estado'),
+        estado: formData.get('estado') || 'Activo',
         descuentoGeneral: formData.get('descuentoGeneral') || '0',
         limiteCredito: formData.get('limiteCredito') || '0',
         diasCredito: formData.get('diasCredito') || '0',
@@ -583,8 +583,11 @@ async function handleSaveClient() {
         observaciones: formData.get('observaciones')
     };
     
+    // Debug: Log de datos que se envían
+    console.log('Datos del cliente a enviar:', clientData);
+    
     // Validaciones básicas
-    if (!clientData.nombreCliente.trim()) {
+    if (!clientData.nombreCliente || !clientData.nombreCliente.trim()) {
         showMessage('El nombre del cliente es requerido', 'error');
         return;
     }

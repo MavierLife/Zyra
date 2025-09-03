@@ -151,7 +151,7 @@ function getSingleClient($id) {
                 NIT,
                 NRC,
                 Contribuyente,
-                CASE WHEN Contribuyente = 1 THEN 'Jurídica' ELSE 'Natural' END AS TipoDePersona,
+                CASE WHEN Contribuyente = 1 THEN 'Jurídica' ELSE 'Natural' END AS TipoPersona,
                 CodActividad,
                 GiroComercial AS Giro,
                 OtroDocumento,
@@ -317,11 +317,14 @@ function handlePost() {
     
     $input = json_decode(file_get_contents('php://input'), true);
     
+    // Debug: Log de datos recibidos
+    error_log('Datos recibidos en API clientes: ' . json_encode($input));
+    
     if (!$input) {
         http_response_code(400);
         echo json_encode([
             'success' => false,
-            'message' => 'Datos inválidos'
+            'message' => 'Datos inválidos - JSON no válido'
         ]);
         return;
     }
@@ -329,6 +332,7 @@ function handlePost() {
     // Validaciones
     $errors = validateClientData($input);
     if (!empty($errors)) {
+        error_log('Errores de validación: ' . json_encode($errors));
         http_response_code(400);
         echo json_encode([
             'success' => false,
@@ -643,8 +647,11 @@ function validateClientData($data, $excludeId = null) {
     }
     
     // Validar DUI si se proporciona
-    if (!empty($data['dui']) && !preg_match('/^\d{8}-\d$/', $data['dui'])) {
-        $errors[] = 'El formato del DUI no es válido (debe ser: 12345678-9)';
+    if (!empty($data['dui'])) {
+        // Permitir formato con o sin guión
+        if (!preg_match('/^\d{8}-\d$/', $data['dui']) && !preg_match('/^\d{8,9}$/', $data['dui'])) {
+            $errors[] = 'El formato del DUI no es válido (debe ser: 12345678-9 o 123456789)';
+        }
     }
     
     // Validar NIT si se proporciona
