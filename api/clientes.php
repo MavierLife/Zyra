@@ -279,8 +279,38 @@ function handlePost() {
         $tipoDeClienteVal = isset($input['tipoPersona']) ? (is_numeric($input['tipoPersona']) ? intval($input['tipoPersona']) : (($input['tipoPersona'] === 'Jurídica') ? 2 : 1)) : 1; // 1=Natural, 2=Jurídica
         $contribuyenteVal = ($tipoDeClienteVal === 2) ? 1 : ((isset($input['esContribuyente']) && (int)$input['esContribuyente'] === 1) ? 1 : 0); // Contribuyente derivado
         $estadoVal = (($input['estado'] ?? 'Activo') === 'Activo') ? 1 : 0; // Estado tinyint
-        $usuarioRegistro = $_SESSION['vendedor_id'] ?? null;
+        $usuarioRegistro = $_SESSION['nombre_usuario'] ?? null;
         $uuidContribuyenteVal = $_SESSION['uuid_contribuyente'] ?? null;
+        
+        // Corregir mapeo de IDs de ubicación - convertir strings a enteros
+        $idDepartamentoVal = isset($input['idDepartamento']) && is_numeric($input['idDepartamento']) ? intval($input['idDepartamento']) : 0;
+        $idMunicipioVal = isset($input['idMunicipio']) && is_numeric($input['idMunicipio']) ? intval($input['idMunicipio']) : 0;
+        $idDistritoVal = isset($input['idDistrito']) && is_numeric($input['idDistrito']) ? intval($input['idDistrito']) : 0;
+        
+        // Mapear FacturarCon a códigos numéricos
+        $facturarConMap = [
+            'DUI' => '13',
+            'NIT' => '36', 
+            'Carnet de Residente' => '02',
+            'Pasaporte' => '03',
+            'Otro' => '37'
+        ];
+        $facturarConVal = isset($input['facturarCon']) && isset($facturarConMap[$input['facturarCon']]) ? $facturarConMap[$input['facturarCon']] : '13';
+        
+        // Obtener descripción de actividad si existe código
+        $giroComercialVal = null;
+        if (!empty($input['codActividad'])) {
+            $stmtActividad = $pdo->prepare("SELECT DescripcionActividad FROM tblcatalogodeactividades WHERE CodigoActividad = ?");
+            $stmtActividad->execute([$input['codActividad']]);
+            $actividad = $stmtActividad->fetch(PDO::FETCH_ASSOC);
+            if ($actividad) {
+                $giroComercialVal = $actividad['DescripcionActividad'] . ' (' . $input['codActividad'] . ')';
+            } else {
+                $giroComercialVal = $input['giro'] ?? null;
+            }
+        } else {
+            $giroComercialVal = $input['giro'] ?? null;
+        }
         
         $stmt = $pdo->prepare("
             INSERT INTO tblcontribuyentesclientes (
@@ -302,20 +332,20 @@ function handlePost() {
             $input['telefono'] ?? null,
             $input['correoElectronico'] ?? null,
             $input['direccion'] ?? null,
-            $input['idDepartamento'] ?? null,
+            $idDepartamentoVal,
             $input['departamento'] ?? null,
-            $input['idMunicipio'] ?? null,
+            $idMunicipioVal,
             $input['municipio'] ?? null,
-            $input['idDistrito'] ?? null,
+            $idDistritoVal,
             $input['distrito'] ?? null,
             $input['dui'] ?? null,
             $input['nit'] ?? null,
             $input['nrc'] ?? null,
-            $input['facturarCon'] ?? null,
+            $facturarConVal,
             $tipoDeClienteVal,
             $contribuyenteVal,
             $input['codActividad'] ?? null,
-            $input['giro'] ?? null,
+            $giroComercialVal,
             $input['otroDocumento'] ?? null,
             $input['percibirIVA'] ? 1 : 0,
             $input['retenerIVA'] ? 1 : 0,
