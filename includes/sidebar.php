@@ -74,8 +74,8 @@
         <div class="nav-section contacts-section">
             <h3 class="section-title">Contactos</h3>
             <ul class="nav-menu contacts-menu">
-                <li class="nav-item">
-                    <a href="#" class="nav-link" data-section="clientes">
+                <li class="nav-item <?php echo ($currentPage === 'clientes') ? 'active' : ''; ?>">
+                    <a href="clientes.php" class="nav-link" data-section="clientes">
                         <img src="assets/icons/clientes.svg" alt="Clientes" class="nav-barcode-icon">
                         <span class="nav-text">Clientes</span>
                     </a>

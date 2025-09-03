@@ -45,6 +45,22 @@
                 </button>
             <?php endif; ?>
 
+        <?php elseif ($currentPage === 'clientes'): ?>
+            <?php $canCreateClients = function_exists('tienePermiso') ? tienePermiso('Perm_CrearClientesProveedores') : false; ?>
+            <?php if ($canCreateClients): ?>
+                <button class="btn btn-primary" id="createClientBtn" style="background-color: #394C60; color: white !important; width: 160.39px; height: 52px; font-size: 14px; padding: 10px 16px; display: flex; align-items: center; gap: 8px;">
+                    <img src="assets/icons/agregar.svg" alt="Agregar" style="width: 16px; height: 16px; filter: brightness(0) invert(1);">
+                    Crear cliente
+                </button>
+            <?php else: ?>
+                <button class="btn btn-primary btn--disabled" id="createClientBtn" style="background-color: #394C60; color: white !important; width: 160.39px; height: 52px; font-size: 14px; padding: 10px 16px; display: flex; align-items: center; gap: 8px;"
+                        disabled aria-disabled="true" tabindex="-1"
+                        data-tooltip="No tienes acceso a esta acción. Pídele al propietario que dé permisos.">
+                    <img src="assets/icons/agregar.svg" alt="Agregar" style="width: 16px; height: 16px; filter: brightness(0) invert(1);">
+                    Crear cliente
+                </button>
+            <?php endif; ?>
+
         <?php endif; ?>
     </div>
 </header>

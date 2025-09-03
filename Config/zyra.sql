@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-09-2025 a las 00:32:30
+-- Tiempo de generación: 03-09-2025 a las 18:40:29
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -889,7 +889,7 @@ CREATE TABLE `tblcontribuyentesaparturacajas` (
 --
 
 INSERT INTO `tblcontribuyentesaparturacajas` (`UUIDApertura`, `FechaRegistro`, `UsuarioApertura`, `UsuarioCierre`, `UUIDContribuyente`, `UUIDTerminal`, `EfectivoApertura`, `HoraApertura`, `HoraCierre`, `Estado`, `UsuarioUpdate`, `FechaUpdate`, `UUIDVendedor`) VALUES
-('APT_68b76f8f546938.35442684_1756852111', '2025-09-02 16:28:31', 'Edwin Antonio Coto Benavides', NULL, '1', '721dfc2f-841e-11f0-9acd-989096a0999b', 10.00, '16:28:31', NULL, 1, NULL, NULL, '');
+('APT_68b7715ecdf6f2.91671242_1756852574', '2025-09-02 16:36:14', 'Edwin Antonio Coto Benavides', NULL, '1', 'P001', 15.50, '16:36:14', NULL, 1, NULL, NULL, '721dfc2f-841e-11f0-9acd-989096a0999b');
 
 -- --------------------------------------------------------
 
@@ -924,6 +924,52 @@ INSERT INTO `tblcontribuyentescategorias` (`IDCategoria`, `UUIDContribuyente`, `
 (30, '1', 'Papeler?¡a'),
 (28, '1', 'Ropa'),
 (1, '2', 'Bebidas');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tblcontribuyentesclientes`
+--
+
+CREATE TABLE `tblcontribuyentesclientes` (
+  `UUIDCliente` varchar(200) NOT NULL,
+  `FechaRegistro` datetime NOT NULL DEFAULT current_timestamp(),
+  `UsuarioRegistro` varchar(200) DEFAULT NULL,
+  `UUIDContribuyente` varchar(200) DEFAULT NULL,
+  `TipoDeCliente` int(11) DEFAULT NULL,
+  `TipoCliente` int(11) NOT NULL DEFAULT 0,
+  `NombreDeCliente` varchar(200) DEFAULT NULL,
+  `NombreComercial` varchar(200) DEFAULT NULL,
+  `Direccion` varchar(200) DEFAULT NULL,
+  `IDZona` int(11) NOT NULL DEFAULT 0,
+  `IDDepartamento` int(11) DEFAULT NULL,
+  `Departamento` varchar(200) DEFAULT NULL,
+  `IDMunicipio` int(11) DEFAULT NULL,
+  `Municipio` varchar(200) DEFAULT NULL,
+  `IDDistrito` int(11) DEFAULT NULL,
+  `Distrito` varchar(200) DEFAULT NULL,
+  `FacturarCon` varchar(10) DEFAULT NULL,
+  `Telefono` varchar(20) DEFAULT NULL,
+  `DUI` varchar(50) DEFAULT NULL,
+  `NIT` varchar(50) DEFAULT NULL,
+  `OtroDocumento` varchar(100) DEFAULT NULL,
+  `CorreoElectronico` varchar(200) DEFAULT NULL,
+  `Contribuyente` int(11) NOT NULL DEFAULT 0,
+  `NRC` varchar(50) DEFAULT NULL,
+  `CodActividad` varchar(20) DEFAULT NULL,
+  `GiroComercial` varchar(250) DEFAULT NULL,
+  `PercibirIVA` tinyint(1) NOT NULL DEFAULT 0,
+  `RetenerIVA` tinyint(1) NOT NULL DEFAULT 0,
+  `RetenerRenta` tinyint(1) NOT NULL DEFAULT 0,
+  `Estado` tinyint(1) NOT NULL DEFAULT 1,
+  `Observaciones` text DEFAULT NULL,
+  `DocumentoEstablecido` varchar(4) NOT NULL DEFAULT '01',
+  `CondicionEstablecida` int(11) NOT NULL DEFAULT 1,
+  `MontoMaximoEstablecido` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `PlazoEstablecido` int(11) NOT NULL DEFAULT 0,
+  `FechaUpdate` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `UsuarioUpdate` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
 -- --------------------------------------------------------
 
@@ -1075,7 +1121,7 @@ INSERT INTO `tblcontribuyentesproductos` (`UUIDProducto`, `UUIDContribuyente`, `
 (124, '1', '7478145845863', 'CAF?ë INSTANT?üNEO 200G', '40', 5.50, 3.25, 1, 0, '0', 0),
 (125, '1', '7478145845864', 'ARROZ BLANCO 1 LIBRA', '80', 1.50, 0.85, 18, 0, '0', 0),
 (126, '1', '7478145845865', 'FRIJOLES ROJOS 1 LIBRA', '60', 2.00, 1.20, 18, 0, '0', 0),
-(127, '1', '7478145845866', 'ACEITE VEGETAL 1 LITRO1', '35', 3.25, 2.00, 18, 6, '2.98', 0),
+(127, '1', '7478145845866', 'ACEITE VEGETAL 1 LITRO1', '35', 3.25, 2.00, 28, 6, '2.98', 0),
 (128, '1', '7478145845867', 'AZ?ÜCAR BLANCA 1 LIBRA', '70', 1.25, 0.75, 18, 0, '0', 0),
 (129, '1', '7478145845868', 'SAL DE MESA 1 LIBRA', '90', 0.75, 0.40, 18, 0, '0', 0),
 (130, '1', '7478145845869', 'PASTA ESPAGUETI 1 LIBRA', '45', 1.75, 1.00, 18, 0, '0', 0),
@@ -1782,7 +1828,7 @@ CREATE TABLE `tbltokens_verificacion` (
 
 INSERT INTO `tbltokens_verificacion` (`IDToken`, `UUIDVendedor`, `Token`, `FechaCreacion`, `FechaExpiracion`, `Usado`) VALUES
 (32, '0ff038f6-8745-11f0-ac94-989096a0999b', '433466', '2025-09-02 07:59:14', '2025-09-02 08:09:14', 1),
-(45, '721dfc2f-841e-11f0-9acd-989096a0999b', '862374', '2025-09-02 12:56:54', '2025-09-02 13:06:54', 1);
+(49, '721dfc2f-841e-11f0-9acd-989096a0999b', '295938', '2025-09-03 08:41:36', '2025-09-03 08:51:36', 1);
 
 --
 -- Índices para tablas volcadas
@@ -1812,6 +1858,17 @@ ALTER TABLE `tblcontribuyentesaparturacajas`
 ALTER TABLE `tblcontribuyentescategorias`
   ADD PRIMARY KEY (`IDCategoria`),
   ADD UNIQUE KEY `ux_categoria_unica` (`UUIDContribuyente`,`Categoria`);
+
+--
+-- Indices de la tabla `tblcontribuyentesclientes`
+--
+ALTER TABLE `tblcontribuyentesclientes`
+  ADD PRIMARY KEY (`UUIDCliente`),
+  ADD KEY `idx_uuid_contribuyente` (`UUIDContribuyente`),
+  ADD KEY `idx_dui` (`DUI`),
+  ADD KEY `idx_nit` (`NIT`),
+  ADD KEY `idx_correo` (`CorreoElectronico`),
+  ADD KEY `idx_estado` (`Estado`);
 
 --
 -- Indices de la tabla `tblcontribuyentesproductos`
@@ -1908,7 +1965,7 @@ ALTER TABLE `tbltipomoneda`
 -- AUTO_INCREMENT de la tabla `tbltokens_verificacion`
 --
 ALTER TABLE `tbltokens_verificacion`
-  MODIFY `IDToken` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `IDToken` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- Restricciones para tablas volcadas
