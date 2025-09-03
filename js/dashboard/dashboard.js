@@ -8,6 +8,7 @@ let availableCategories = [];
 let currentVendedorId = null;
 let currentContribuyente = null;
 let currencySymbol = '$'; // Símbolo de moneda dinámico
+let currentRenderToken = 0; // Token para invalidar renderizados viejos
 
 // Ajustes de búsqueda
 const DEBUG_SEARCH = false;
@@ -65,8 +66,14 @@ function initializeEventListeners() {
     // Búsqueda de productos
     const searchInput = document.getElementById('productSearch');
     if (searchInput) {
-        // Aplicar debounce para mejorar el rendimiento
-        searchInput.addEventListener('input', debounce(handleProductSearch, 300));
+        // Búsqueda solo al presionar Enter
+        searchInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                event.stopPropagation();
+                handleProductSearch(event);
+            }
+        });
     }
     
     // Botón de código de barras
@@ -321,8 +328,15 @@ async function loadProducts(categoria = 'todos') {
             // Actualizar categorías disponibles en la UI
             updateCategoriesUI();
             
-            // Renderizar productos
-            renderProducts(products);
+            // Si hay un término de búsqueda activo, aplicar filtro en lugar de renderizar todo
+            const searchInputEl = document.getElementById('productSearch');
+            const activeTerm = normalizeText(searchInputEl ? searchInputEl.value : '');
+            if (activeTerm && activeTerm.length >= MIN_SEARCH_LENGTH) {
+                filterProducts(searchInputEl.value);
+            } else {
+                // Renderizar productos completos
+                renderProducts(products);
+            }
             
             if (DEBUG_SEARCH && currentContribuyente) {
                 console.log(`Productos cargados para contribuyente: ${currentContribuyente.nombre_comercial}`);
@@ -393,6 +407,8 @@ function renderProducts(productsToRender = products) {
     const productsArea = document.querySelector('.products-area');
     if (!productsArea) return;
     
+    const renderToken = ++currentRenderToken; // Incrementa token; este render será el vigente
+    
     // Obtener tarjetas existentes (excluyendo el botón de agregar)
     const existingCards = productsArea.querySelectorAll('.product-card:not(.add-product-card)');
     const addProductCard = productsArea.querySelector('.add-product-card');
@@ -401,12 +417,14 @@ function renderProducts(productsToRender = products) {
     if (existingCards.length > 0) {
         existingCards.forEach((card, index) => {
             setTimeout(() => {
+                if (renderToken !== currentRenderToken) return; // Render obsoleto
                 card.classList.add('fade-out');
-            }, index * 15); // Escalonar muy rápido
+            }, index * 15);
         });
         
         // Esperar a que termine la animación antes de limpiar
         setTimeout(() => {
+            if (renderToken !== currentRenderToken) return; // Evitar limpiar si hay un render más nuevo
             // Limpiar área de productos pero mantener el botón de agregar
             productsArea.innerHTML = '';
             
@@ -419,26 +437,30 @@ function renderProducts(productsToRender = products) {
             // Renderizar nuevos productos con animación de entrada
             productsToRender.forEach((product, index) => {
                 setTimeout(() => {
+                    if (renderToken !== currentRenderToken) return; // Render obsoleto
                     const productCard = createProductCard(product);
                     productCard.classList.add('animate-in');
                     productsArea.appendChild(productCard);
                     
                     // Remover clase de animación después de completarse
                     setTimeout(() => {
+                        if (renderToken !== currentRenderToken) return;
                         productCard.classList.remove('animate-in');
                     }, 150);
-                }, index * 30); // Escalonar entrada muy rápido
+                }, index * 30);
             });
-        }, Math.max(existingCards.length * 15, 100)); // Tiempo mínimo muy reducido
+        }, Math.max(existingCards.length * 15, 100));
     } else {
         // Si no hay tarjetas existentes, renderizar directamente con animación
         productsToRender.forEach((product, index) => {
             setTimeout(() => {
+                if (renderToken !== currentRenderToken) return; // Render obsoleto
                 const productCard = createProductCard(product);
                 productCard.classList.add('animate-in');
                 productsArea.appendChild(productCard);
                 
                 setTimeout(() => {
+                    if (renderToken !== currentRenderToken) return;
                     productCard.classList.remove('animate-in');
                 }, 150);
             }, index * 30);
