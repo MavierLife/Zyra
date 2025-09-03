@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-09-2025 a las 18:40:29
+-- Tiempo de generación: 03-09-2025 a las 20:27:08
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -1617,6 +1617,70 @@ INSERT INTO `tbldistritos` (`UUIDDistrito`, `UUIDMunicipio`, `UUIDDepartamento`,
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tblmunicipios`
+--
+
+CREATE TABLE `tblmunicipios` (
+  `UUIDDepartamento` int(11) DEFAULT NULL,
+  `UUIDMunicipio` int(11) NOT NULL,
+  `CodigoMH` varchar(100) DEFAULT NULL,
+  `Municipio` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `tblmunicipios`
+--
+
+INSERT INTO `tblmunicipios` (`UUIDDepartamento`, `UUIDMunicipio`, `CodigoMH`, `Municipio`) VALUES
+(0, 0, '00', 'Otros (Extranjeros)'),
+(1, 1, '13', 'AHUACHAPAN NORTE'),
+(1, 2, '14', 'AHUACHAPAN CENTRO'),
+(1, 3, '15', 'AHUACHAPAN SUR'),
+(6, 4, '20', 'SAN SALVADOR NORTE'),
+(6, 5, '21', 'SAN SALVADOR OESTE'),
+(6, 6, '22', 'SAN SALVADOR ESTE'),
+(6, 7, '23', 'SAN SALVADOR CENTRO'),
+(6, 8, '24', 'SAN SALVADOR SUR'),
+(5, 9, '23', 'LA LIBERTAD NORTE'),
+(5, 10, '24', 'LA LIBERTAD CENTRO'),
+(5, 11, '25', 'LA LIBERTAD OESTE'),
+(5, 12, '26', 'LA LIBERTAD ESTE'),
+(5, 13, '27', 'LA LIBERTAD COSTA'),
+(5, 14, '28', 'LA LIBERTAD SUR'),
+(4, 15, '34', 'CHALATENANGO NORTE'),
+(4, 16, '35', 'CHALATENANGO CENTRO'),
+(4, 17, '36', 'CHALATENANGO SUR'),
+(7, 18, '17', 'CUSCATLAN NORTE'),
+(7, 19, '18', 'CUSCATLAN SUR'),
+(9, 20, '11', 'CABAÑAS ESTE'),
+(9, 21, '10', 'CABAÑAS OESTE'),
+(8, 22, '23', 'LA PAZ OESTE'),
+(8, 23, '24', 'LA PAZ CENTRO'),
+(8, 24, '25', 'LA PAZ ESTE'),
+(14, 25, '19', 'LA UNION NORTE'),
+(14, 26, '20', 'LA UNION SUR'),
+(11, 27, '24', 'USULUTAN NORTE'),
+(11, 28, '25', 'USULUTAN ESTE'),
+(11, 29, '26', 'USULUTAN OESTE'),
+(3, 30, '17', 'SONSONATE NORTE'),
+(3, 31, '18', 'SONSONATE CENTRO'),
+(3, 32, '19', 'SONSONATE ESTE'),
+(3, 33, '20', 'SONSONATE OESTE'),
+(2, 34, '14', 'SANTA ANA NORTE'),
+(2, 35, '15', 'SANTA ANA CENTRO'),
+(2, 36, '16', 'SANTA ANA ESTE'),
+(2, 37, '17', 'SANTA ANA OESTE'),
+(10, 38, '14', 'SAN VICENTE NORTE'),
+(10, 39, '15', 'SAN VICENTE SUR'),
+(12, 40, '21', 'SAN MIGUEL NORTE'),
+(12, 41, '22', 'SAN MIGUEL CENTRO'),
+(12, 42, '23', 'SAN MIGUEL OESTE'),
+(13, 43, '27', 'MORAZAN NORTE'),
+(13, 44, '28', 'MORAZAN SUR');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tblnotasdeentrega`
 --
 
@@ -1901,6 +1965,12 @@ ALTER TABLE `tbldistritos`
   ADD PRIMARY KEY (`UUIDDistrito`);
 
 --
+-- Indices de la tabla `tblmunicipios`
+--
+ALTER TABLE `tblmunicipios`
+  ADD PRIMARY KEY (`UUIDMunicipio`);
+
+--
 -- Indices de la tabla `tbltipomoneda`
 --
 ALTER TABLE `tbltipomoneda`
@@ -1954,6 +2024,12 @@ ALTER TABLE `tbldepartamentos`
 --
 ALTER TABLE `tbldistritos`
   MODIFY `UUIDDistrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1420;
+
+--
+-- AUTO_INCREMENT de la tabla `tblmunicipios`
+--
+ALTER TABLE `tblmunicipios`
+  MODIFY `UUIDMunicipio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT de la tabla `tbltipomoneda`

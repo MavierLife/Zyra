@@ -140,12 +140,40 @@ $currentPage = 'clientes';
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="editClientDepartment" class="nunito-sans-medium">Departamento</label>
-                                <input type="text" id="editClientDepartment" name="departamento" class="form-input nunito-sans-regular">
+                                <select id="editClientDepartment" name="departamento" class="form-input nunito-sans-regular">
+                                    <option value="">Seleccionar departamento</option>
+                                    <?php
+                                    try {
+                                        require_once 'Config/Conexion.php';
+                                        $conexion = new Conexion();
+                                        $pdo = $conexion->getPdo();
+                                        
+                                        $stmt = $pdo->prepare("SELECT UUIDDepartamento, Departamento FROM tbldepartamentos WHERE UUIDDepartamento > 0 ORDER BY Departamento");
+                                        $stmt->execute();
+                                        $departamentos = $stmt->fetchAll();
+                                        
+                                        foreach ($departamentos as $depto) {
+                                            echo '<option value="' . htmlspecialchars($depto['UUIDDepartamento']) . '">' . htmlspecialchars($depto['Departamento']) . '</option>';
+                                        }
+                                    } catch (Exception $e) {
+                                        error_log("Error al cargar departamentos: " . $e->getMessage());
+                                    }
+                                    ?>
+                                </select>
                             </div>
                             
                             <div class="form-group">
                                 <label for="editClientMunicipality" class="nunito-sans-medium">Municipio</label>
-                                <input type="text" id="editClientMunicipality" name="municipio" class="form-input nunito-sans-regular">
+                                <select id="editClientMunicipality" name="municipio" class="form-input nunito-sans-regular" disabled>
+                                    <option value="">Seleccionar municipio</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="editClientDistrict" class="nunito-sans-medium">Distrito</label>
+                                <select id="editClientDistrict" name="distrito" class="form-input nunito-sans-regular" disabled>
+                                    <option value="">Seleccionar distrito</option>
+                                </select>
                             </div>
                         </div>
                     </div>
