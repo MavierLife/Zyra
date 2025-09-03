@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-09-2025 a las 20:27:08
+-- Tiempo de generación: 04-09-2025 a las 00:14:50
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -937,7 +937,6 @@ CREATE TABLE `tblcontribuyentesclientes` (
   `UsuarioRegistro` varchar(200) DEFAULT NULL,
   `UUIDContribuyente` varchar(200) DEFAULT NULL,
   `TipoDeCliente` int(11) DEFAULT NULL,
-  `TipoCliente` int(11) NOT NULL DEFAULT 0,
   `NombreDeCliente` varchar(200) DEFAULT NULL,
   `NombreComercial` varchar(200) DEFAULT NULL,
   `Direccion` varchar(200) DEFAULT NULL,
@@ -965,7 +964,6 @@ CREATE TABLE `tblcontribuyentesclientes` (
   `Observaciones` text DEFAULT NULL,
   `DocumentoEstablecido` varchar(4) NOT NULL DEFAULT '01',
   `CondicionEstablecida` int(11) NOT NULL DEFAULT 1,
-  `MontoMaximoEstablecido` decimal(10,2) NOT NULL DEFAULT 0.00,
   `PlazoEstablecido` int(11) NOT NULL DEFAULT 0,
   `FechaUpdate` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `UsuarioUpdate` varchar(200) DEFAULT NULL

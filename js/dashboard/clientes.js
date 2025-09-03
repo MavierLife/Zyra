@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
     loadClients();
     setupPermissions();
+    initializeTabs();
 });
 
 // Event Listeners
@@ -224,7 +225,7 @@ function handleClientTypeChange() {
     
     const selectedType = clientTypeSelect.value;
     
-    if (selectedType === '1') { // Persona Jurídica
+    if (selectedType === '2') { // Persona Jurídica
         // Marcar automáticamente como contribuyente
         contribuyenteSelect.value = '1';
         // Deshabilitar el campo para evitar modificaciones
@@ -365,6 +366,21 @@ function openCreateModal() {
             municipalitySelect.disabled = true;
         }
         
+        // Limpiar campos de actividad económica
+        const activityInput = document.getElementById('editClientActivity');
+        const activityCodeInput = document.getElementById('editClientActivityCode');
+        const suggestionsDiv = document.getElementById('activitySuggestions');
+        
+        if (activityInput) {
+            activityInput.value = '';
+        }
+        if (activityCodeInput) {
+            activityCodeInput.value = '';
+        }
+        if (suggestionsDiv) {
+            suggestionsDiv.style.display = 'none';
+        }
+        
         // Ejecutar la lógica de tipo de cliente para configurar el estado inicial
         handleClientTypeChange();
     }
@@ -418,7 +434,8 @@ function populateForm(client) {
         'editClientDUI': 'DUI',
         'editClientNIT': 'NIT',
         'editClientNRC': 'NRC',
-        'editClientActivity': 'CodActividad',
+        'editClientFacturarCon': 'FacturarCon',
+        // 'editClientActivity': 'CodActividad', // Se maneja por separado para autocompletado
         'editClientCommercialTurn': 'GiroComercial',
         'editClientOtherDoc': 'OtroDocumento',
         'editClientObservations': 'Observaciones'
@@ -433,20 +450,23 @@ function populateForm(client) {
         }
     });
     
-    // Manejar tipo de cliente (Contribuyente -> TipoDePersona)
+    // Manejar tipo de cliente (TipoDeCliente 1=Natural, 2=Jurídica)
     const clientTypeSelect = document.getElementById('editClientType');
-    if (clientTypeSelect && client.Contribuyente !== undefined) {
-        clientTypeSelect.value = client.Contribuyente.toString();
+    if (clientTypeSelect) {
+        if (client.TipoDeCliente !== undefined && client.TipoDeCliente !== null) {
+            clientTypeSelect.value = String(client.TipoDeCliente);
+        } else if (client.Contribuyente !== undefined && client.Contribuyente !== null) {
+            // Compatibilidad: Contribuyente 1 -> Jurídica(2), 0 -> Natural(1)
+            clientTypeSelect.value = client.Contribuyente == 1 ? '2' : '1';
+        }
     }
     
     // Manejar contribuyente (siempre 1 para personas jurídicas)
     const contribuyenteSelect = document.getElementById('editClientContribuyente');
     if (contribuyenteSelect) {
-        // Para personas jurídicas, siempre es contribuyente
-        if (client.Contribuyente === 1) {
+        if (client.Contribuyente === 1 || clientTypeSelect?.value === '2') {
             contribuyenteSelect.value = '1';
         } else {
-            // Para personas naturales, usar el valor real del cliente
             contribuyenteSelect.value = client.EsContribuyente ? '1' : '0';
         }
     }
@@ -465,6 +485,20 @@ function populateForm(client) {
     const retainRentaCheckbox = document.getElementById('editClientRetainRenta');
     if (retainRentaCheckbox) {
         retainRentaCheckbox.checked = !!client.RetenerRenta;
+    }
+    
+    // Manejar actividad económica para autocompletado
+    const activityInput = document.getElementById('editClientActivity');
+    const activityCodeInput = document.getElementById('editClientActivityCode');
+    if (activityInput && activityCodeInput && client.CodActividad) {
+        const activity = window.actividades ? window.actividades.find(a => a.CodigoActividad === client.CodActividad) : null;
+        if (activity) {
+            activityInput.value = `${activity.CodigoActividad} - ${activity.DescripcionActividad}`;
+            activityCodeInput.value = activity.CodigoActividad;
+        } else {
+            activityInput.value = client.CodActividad;
+            activityCodeInput.value = client.CodActividad;
+        }
     }
     
     // Manejar campos de ubicación jerárquica
@@ -556,30 +590,37 @@ async function handleSaveClient() {
     if (!clientForm) return;
     
     const formData = new FormData(clientForm);
+    // Obtener elementos de ubicación
+    const departmentSelect = document.getElementById('editClientDepartment');
+    const municipalitySelect = document.getElementById('editClientMunicipality');
+    const districtSelect = document.getElementById('editClientDistrict');
+    
     const clientData = {
         nombreCliente: formData.get('nombreDeCliente'),
         nombreComercial: formData.get('nombreComercial'),
         telefono: formData.get('telefono'),
         correoElectronico: formData.get('correoElectronico'),
         direccion: formData.get('direccion'),
-        departamento: formData.get('departamento'),
-        municipio: formData.get('municipio'),
-        distrito: formData.get('distrito'),
+        // IDs numéricos para la base de datos
+        idDepartamento: departmentSelect ? departmentSelect.value : null,
+        idMunicipio: municipalitySelect ? municipalitySelect.value : null,
+        idDistrito: districtSelect ? districtSelect.value : null,
+        // Nombres descriptivos para la base de datos
+        departamento: departmentSelect ? departmentSelect.options[departmentSelect.selectedIndex]?.text : null,
+        municipio: municipalitySelect ? municipalitySelect.options[municipalitySelect.selectedIndex]?.text : null,
+        distrito: districtSelect ? districtSelect.options[districtSelect.selectedIndex]?.text : null,
         dui: formData.get('dui'),
         nit: formData.get('nit'),
         nrc: formData.get('nrc'),
-        tipoPersona: formData.get('tipoPersona') || 'Natural',
-        codActividad: formData.get('codActividad'),
+        // Enviar valor numérico: 1=Natural, 2=Jurídica
+        tipoPersona: (() => { const v = formData.get('tipoCliente'); return v === '2' ? 2 : 1; })(),
+        facturarCon: formData.get('facturarCon'),
+        codActividad: formData.get('codActividadValue') || formData.get('codActividad'),
         giro: formData.get('giroComercial'),
         otroDocumento: formData.get('otroDocumento'),
         percibirIVA: formData.get('percibirIVA') === 'on' ? 1 : 0,
         retenerIVA: formData.get('retenerIVA') === 'on' ? 1 : 0,
         retenerRenta: formData.get('retenerRenta') === 'on' ? 1 : 0,
-        estado: formData.get('estado') || 'Activo',
-        descuentoGeneral: formData.get('descuentoGeneral') || '0',
-        limiteCredito: formData.get('limiteCredito') || '0',
-        diasCredito: formData.get('diasCredito') || '0',
-        vendedorAsignado: formData.get('vendedorAsignado'),
         observaciones: formData.get('observaciones')
     };
     
@@ -594,10 +635,8 @@ async function handleSaveClient() {
     
     try {
         showLoading();
-        
         const url = 'api/clientes.php' + (isEditing ? `?id=${currentClient.UUIDCliente}` : '');
         const method = isEditing ? 'PUT' : 'POST';
-        
         const response = await fetch(url, {
             method: method,
             headers: {
@@ -605,13 +644,10 @@ async function handleSaveClient() {
             },
             body: JSON.stringify(clientData)
         });
-        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
         const data = await response.json();
-        
         if (data.success) {
             showMessage(
                 isEditing ? 'Cliente actualizado exitosamente' : 'Cliente creado exitosamente',
@@ -620,11 +656,11 @@ async function handleSaveClient() {
             closeModal();
             await loadClients();
         } else {
-            showMessage('Error al guardar el cliente: ' + (data.message || 'Error desconocido'), 'error');
+            showMessage(data.message || 'No se pudo guardar el cliente', 'error');
         }
     } catch (error) {
         console.error('Error saving client:', error);
-        showMessage('Error al guardar el cliente. Por favor, intente nuevamente.', 'error');
+        showMessage(`Error guardando cliente: ${error.message}`, 'error');
     } finally {
         hideLoading();
     }
@@ -772,6 +808,45 @@ function setupPermissions() {
     // Los botones de editar y eliminar se manejan dinámicamente en renderClients() usando userPermissions
 }
 
+// Funciones para manejo de pestañas
+function initializeTabs() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Activar la primera pestaña por defecto
+    if (tabButtons.length > 0 && tabContents.length > 0) {
+        tabButtons[0].classList.add('active');
+        tabContents[0].classList.add('active');
+    }
+    
+    // Agregar event listeners a los botones de pestañas
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+            switchTab(targetTab);
+        });
+    });
+}
+
+function switchTab(targetTab) {
+    // Remover clase active de todos los botones y contenidos
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabButtons.forEach(button => button.classList.remove('active'));
+    tabContents.forEach(content => content.classList.remove('active'));
+    
+    // Activar el botón y contenido seleccionado
+    const activeButton = document.querySelector(`[data-tab="${targetTab}"]`);
+    const activeContent = document.getElementById(targetTab);
+    
+    if (activeButton && activeContent) {
+        activeButton.classList.add('active');
+        activeContent.classList.add('active');
+    }
+}
+
 // Exponer funciones globalmente para uso en HTML
 window.openEditModal = openEditModal;
 window.deleteClient = deleteClient;
+window.switchTab = switchTab;

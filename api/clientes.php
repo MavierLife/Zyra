@@ -109,7 +109,7 @@ function getClientStats() {
     global $pdo;
     
     try {
-        $stmt = $pdo->prepare("\n            SELECT \n                COUNT(*) as total,\n                SUM(CASE WHEN Estado = 1 THEN 1 ELSE 0 END) as activos,\n                SUM(CASE WHEN Estado = 0 THEN 1 ELSE 0 END) as inactivos,\n                SUM(CASE WHEN Contribuyente = 0 THEN 1 ELSE 0 END) as naturales,\n                SUM(CASE WHEN Contribuyente = 1 THEN 1 ELSE 0 END) as juridicas\n            FROM tblcontribuyentesclientes\n        ");
+        $stmt = $pdo->prepare("\n            SELECT \n                COUNT(*) as total,\n                SUM(CASE WHEN Estado = 1 THEN 1 ELSE 0 END) as activos,\n                SUM(CASE WHEN Estado = 0 THEN 1 ELSE 0 END) as inactivos,\n                SUM(CASE WHEN TipoDeCliente = 1 THEN 1 ELSE 0 END) as naturales,\n                SUM(CASE WHEN TipoDeCliente = 2 THEN 1 ELSE 0 END) as juridicas\n            FROM tblcontribuyentesclientes\n        ");
         
         $stmt->execute();
         $stats = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -135,38 +135,7 @@ function getSingleClient($id) {
     global $pdo;
     
     try {
-        $stmt = $pdo->prepare("
-            SELECT 
-                UUIDCliente,
-                FechaRegistro,
-                NombreDeCliente,
-                NombreComercial,
-                Telefono,
-                CorreoElectronico,
-                Direccion,
-                Departamento AS DepartamentoUUID,
-                Municipio AS MunicipioUUID,
-                Distrito AS DistritoUUID,
-                DUI,
-                NIT,
-                NRC,
-                Contribuyente,
-                CASE WHEN Contribuyente = 1 THEN 'Jurídica' ELSE 'Natural' END AS TipoPersona,
-                CodActividad,
-                GiroComercial AS Giro,
-                OtroDocumento,
-                PercibirIVA,
-                RetenerIVA,
-                RetenerRenta,
-                CASE WHEN Estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS Estado,
-                0 AS DescuentoGeneral,
-                MontoMaximoEstablecido AS LimiteDeCredito,
-                PlazoEstablecido AS DiasDeCredito,
-                NULL AS VendedorAsignado,
-                Observaciones
-            FROM tblcontribuyentesclientes 
-            WHERE UUIDCliente = ?
-        ");
+        $stmt = $pdo->prepare("\n            SELECT \n                UUIDCliente,\n                FechaRegistro,\n                NombreDeCliente,\n                NombreComercial,\n                Telefono,\n                CorreoElectronico,\n                Direccion,\n                IDDepartamento AS DepartamentoUUID,\n                IDMunicipio AS MunicipioUUID,\n                IDDistrito AS DistritoUUID,\n                DUI,\n                NIT,\n                NRC,\n                TipoDeCliente,\n                Contribuyente,\n                CASE WHEN TipoDeCliente = 2 THEN 'Jurídica' ELSE 'Natural' END AS TipoPersona,\n                CodActividad,\n                GiroComercial AS Giro,\n                FacturarCon,\n                OtroDocumento,\n                PercibirIVA,\n                RetenerIVA,\n                RetenerRenta,\n                CASE WHEN Estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS Estado,\n                0 AS DescuentoGeneral,\n                PlazoEstablecido AS DiasDeCredito,\n                NULL AS VendedorAsignado,\n                Observaciones\n            FROM tblcontribuyentesclientes \n            WHERE UUIDCliente = ?\n        ");
         
         $stmt->execute([$id]);
         $client = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -212,13 +181,7 @@ function getAllClients() {
         $params = [];
         
         if (!empty($search)) {
-            $whereConditions[] = "(
-                NombreDeCliente LIKE ? OR 
-                Telefono LIKE ? OR 
-                CorreoElectronico LIKE ? OR 
-                DUI LIKE ? OR 
-                NIT LIKE ?
-            )";
+            $whereConditions[] = "(\n                NombreDeCliente LIKE ? OR \n                Telefono LIKE ? OR \n                CorreoElectronico LIKE ? OR \n                DUI LIKE ? OR \n                NIT LIKE ?\n            )";
             $searchParam = '%' . $search . '%';
             $params = array_merge($params, [$searchParam, $searchParam, $searchParam, $searchParam, $searchParam]);
         }
@@ -241,40 +204,7 @@ function getAllClients() {
         $total = $countStmt->fetchColumn();
         
         // Obtener clientes paginados
-        $stmt = $pdo->prepare("
-            SELECT 
-                UUIDCliente,
-                FechaRegistro,
-                NombreDeCliente,
-                NombreComercial,
-                Telefono,
-                CorreoElectronico,
-                Direccion,
-                Departamento AS DepartamentoUUID,
-                Municipio AS MunicipioUUID,
-                Distrito AS DistritoUUID,
-                DUI,
-                NIT,
-                NRC,
-                Contribuyente,
-                CASE WHEN Contribuyente = 1 THEN 'Jurídica' ELSE 'Natural' END AS TipoDePersona,
-                CodActividad,
-                GiroComercial AS Giro,
-                OtroDocumento,
-                PercibirIVA,
-                RetenerIVA,
-                RetenerRenta,
-                CASE WHEN Estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS Estado,
-                0 AS DescuentoGeneral,
-                MontoMaximoEstablecido AS LimiteDeCredito,
-                PlazoEstablecido AS DiasDeCredito,
-                NULL AS VendedorAsignado,
-                Observaciones
-            FROM tblcontribuyentesclientes 
-            $whereClause
-            ORDER BY FechaRegistro DESC, NombreDeCliente ASC
-            LIMIT $limit OFFSET $offset
-        ");
+        $stmt = $pdo->prepare("\n            SELECT \n                UUIDCliente,\n                FechaRegistro,\n                NombreDeCliente,\n                NombreComercial,\n                Telefono,\n                CorreoElectronico,\n                Direccion,\n                IDDepartamento AS DepartamentoUUID,\n                IDMunicipio AS MunicipioUUID,\n                IDDistrito AS DistritoUUID,\n                DUI,\n                NIT,\n                NRC,\n                TipoDeCliente,\n                Contribuyente,\n                CASE WHEN TipoDeCliente = 2 THEN 'Jurídica' ELSE 'Natural' END AS TipoDePersona,\n                CodActividad,\n                GiroComercial AS Giro,\n                FacturarCon,\n                OtroDocumento,\n                PercibirIVA,\n                RetenerIVA,\n                RetenerRenta,\n                CASE WHEN Estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS Estado,\n                0 AS DescuentoGeneral,\n                PlazoEstablecido AS DiasDeCredito,\n                NULL AS VendedorAsignado,\n                Observaciones\n            FROM tblcontribuyentesclientes \n            $whereClause\n            ORDER BY FechaRegistro DESC, NombreDeCliente ASC\n            LIMIT $limit OFFSET $offset\n        ");
         
         $stmt->execute($params);
         $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -346,23 +276,22 @@ function handlePost() {
         $uuid = generateUUID();
         
         // Mapear campos al esquema real
-        $tipoPersonaVal = (($input['tipoPersona'] ?? 'Natural') === 'Jurídica') ? 1 : 0; // Contribuyente: 1=Jurídica, 0=Natural
+        $tipoDeClienteVal = isset($input['tipoPersona']) ? (is_numeric($input['tipoPersona']) ? intval($input['tipoPersona']) : (($input['tipoPersona'] === 'Jurídica') ? 2 : 1)) : 1; // 1=Natural, 2=Jurídica
+        $contribuyenteVal = ($tipoDeClienteVal === 2) ? 1 : ((isset($input['esContribuyente']) && (int)$input['esContribuyente'] === 1) ? 1 : 0); // Contribuyente derivado
         $estadoVal = (($input['estado'] ?? 'Activo') === 'Activo') ? 1 : 0; // Estado tinyint
-        $limiteCreditoVal = floatval($input['limiteCredito'] ?? 0); // MontoMaximoEstablecido
-        $diasCreditoVal = intval($input['diasCredito'] ?? 0); // PlazoEstablecido
         $usuarioRegistro = $_SESSION['vendedor_id'] ?? null;
         $uuidContribuyenteVal = $_SESSION['uuid_contribuyente'] ?? null;
         
         $stmt = $pdo->prepare("
             INSERT INTO tblcontribuyentesclientes (
                 UUIDCliente, FechaRegistro, NombreDeCliente, NombreComercial, Telefono, 
-                CorreoElectronico, Direccion, Departamento, Municipio, Distrito, DUI, NIT, NRC, Contribuyente,
+                CorreoElectronico, Direccion, IDDepartamento, Departamento, IDMunicipio, Municipio, IDDistrito, Distrito, DUI, NIT, NRC, FacturarCon, TipoDeCliente, Contribuyente,
                 CodActividad, GiroComercial, OtroDocumento, PercibirIVA, RetenerIVA, RetenerRenta,
-                Estado, MontoMaximoEstablecido, PlazoEstablecido,
+                Estado,
                 Observaciones, UUIDContribuyente, UsuarioRegistro
             ) VALUES (
                 ?, NOW(),
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )
         ");
         
@@ -373,13 +302,18 @@ function handlePost() {
             $input['telefono'] ?? null,
             $input['correoElectronico'] ?? null,
             $input['direccion'] ?? null,
+            $input['idDepartamento'] ?? null,
             $input['departamento'] ?? null,
+            $input['idMunicipio'] ?? null,
             $input['municipio'] ?? null,
+            $input['idDistrito'] ?? null,
             $input['distrito'] ?? null,
             $input['dui'] ?? null,
             $input['nit'] ?? null,
             $input['nrc'] ?? null,
-            $tipoPersonaVal,
+            $input['facturarCon'] ?? null,
+            $tipoDeClienteVal,
+            $contribuyenteVal,
             $input['codActividad'] ?? null,
             $input['giro'] ?? null,
             $input['otroDocumento'] ?? null,
@@ -387,8 +321,6 @@ function handlePost() {
             $input['retenerIVA'] ? 1 : 0,
             $input['retenerRenta'] ? 1 : 0,
             $estadoVal,
-            $limiteCreditoVal,
-            $diasCreditoVal,
             $input['observaciones'] ?? null,
             $uuidContribuyenteVal,
             $usuarioRegistro
@@ -469,39 +401,11 @@ function handlePut() {
     
     try {
         // Mapear entradas al esquema real
-        $tipoPersonaVal = (($input['tipoPersona'] ?? 'Natural') === 'Jurídica') ? 1 : 0; // Contribuyente
+        $tipoDeClienteVal = isset($input['tipoPersona']) ? (is_numeric($input['tipoPersona']) ? intval($input['tipoPersona']) : (($input['tipoPersona'] === 'Jurídica') ? 2 : 1)) : 1; // 1=Natural, 2=Jurídica
+        $contribuyenteVal = ($tipoDeClienteVal === 2) ? 1 : ((isset($input['esContribuyente']) && (int)$input['esContribuyente'] === 1) ? 1 : 0); // Contribuyente
         $estadoVal = (($input['estado'] ?? 'Activo') === 'Activo') ? 1 : 0; // Estado tinyint
-        $limiteCreditoVal = floatval($input['limiteCredito'] ?? 0); // MontoMaximoEstablecido
-        $diasCreditoVal = intval($input['diasCredito'] ?? 0); // PlazoEstablecido
 
-        $stmt = $pdo->prepare("
-            UPDATE tblcontribuyentesclientes SET
-                NombreDeCliente = ?,
-                NombreComercial = ?,
-                Telefono = ?,
-                CorreoElectronico = ?,
-                Direccion = ?,
-                Departamento = ?,
-                Municipio = ?,
-                Distrito = ?,
-                DUI = ?,
-                NIT = ?,
-                NRC = ?,
-                Contribuyente = ?,
-                CodActividad = ?,
-                GiroComercial = ?,
-                OtroDocumento = ?,
-                PercibirIVA = ?,
-                RetenerIVA = ?,
-                RetenerRenta = ?,
-                Estado = ?,
-                MontoMaximoEstablecido = ?,
-                PlazoEstablecido = ?,
-                Observaciones = ?,
-                UsuarioUpdate = ?,
-                FechaUpdate = NOW()
-            WHERE UUIDCliente = ?
-        ");
+        $stmt = $pdo->prepare("\n            UPDATE tblcontribuyentesclientes SET\n                NombreDeCliente = ?,\n                NombreComercial = ?,\n                Telefono = ?,\n                CorreoElectronico = ?,\n                Direccion = ?,\n                Departamento = ?,\n                Municipio = ?,\n                Distrito = ?,\n                DUI = ?,\n                NIT = ?,\n                NRC = ?,\n                TipoDeCliente = ?,\n                Contribuyente = ?,\n                CodActividad = ?,\n                GiroComercial = ?,\n                OtroDocumento = ?,\n                PercibirIVA = ?,\n                RetenerIVA = ?,\n                RetenerRenta = ?,\n                Estado = ?,\n                Observaciones = ?,\n                UsuarioUpdate = ?,\n                FechaUpdate = NOW()\n            WHERE UUIDCliente = ?\n        ");
         
         $result = $stmt->execute([
             $input['nombreCliente'],
@@ -515,7 +419,8 @@ function handlePut() {
             $input['dui'] ?? null,
             $input['nit'] ?? null,
             $input['nrc'] ?? null,
-            $tipoPersonaVal,
+            $tipoDeClienteVal,
+            $contribuyenteVal,
             $input['codActividad'] ?? null,
             $input['giro'] ?? null,
             $input['otroDocumento'] ?? null,
@@ -523,8 +428,6 @@ function handlePut() {
             $input['retenerIVA'] ? 1 : 0,
             $input['retenerRenta'] ? 1 : 0,
             $estadoVal,
-            $limiteCreditoVal,
-            $diasCreditoVal,
             $input['observaciones'] ?? null,
             ($_SESSION['vendedor_id'] ?? null),
             $id
@@ -648,8 +551,8 @@ function validateClientData($data, $excludeId = null) {
     
     // Validar DUI si se proporciona
     if (!empty($data['dui'])) {
-        // Permitir formato con o sin guión
-        if (!preg_match('/^\d{8}-\d$/', $data['dui']) && !preg_match('/^\d{8,9}$/', $data['dui'])) {
+        // Permitir formato con o sin guión: 12345678-9 o 123456789
+        if (!preg_match('/^\d{8}-\d{1}$/', $data['dui']) && !preg_match('/^\d{9}$/', $data['dui'])) {
             $errors[] = 'El formato del DUI no es válido (debe ser: 12345678-9 o 123456789)';
         }
     }
@@ -660,8 +563,16 @@ function validateClientData($data, $excludeId = null) {
     }
     
     // Validar tipo de persona
-    if (!empty($data['tipoPersona']) && !in_array($data['tipoPersona'], ['Natural', 'Jurídica'])) {
-        $errors[] = 'El tipo de persona debe ser Natural o Jurídica';
+    if (isset($data['tipoPersona'])) {
+        $tp = $data['tipoPersona'];
+        if (is_numeric($tp)) {
+            $tpInt = intval($tp);
+            if (!in_array($tpInt, [1, 2], true)) {
+                $errors[] = 'El tipo de persona debe ser 1 (Natural) o 2 (Jurídica)';
+            }
+        } else if (!in_array($tp, ['Natural', 'Jurídica'])) {
+            $errors[] = 'El tipo de persona debe ser Natural o Jurídica';
+        }
     }
     
     // Validar estado
