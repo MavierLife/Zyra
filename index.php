@@ -165,6 +165,20 @@ $pageTitle = 'Nueva venta';
                         </select>
                     </div>
                     
+                    <!-- Selección de cliente -->
+                    <div class="client-selection">
+                        <label for="clientSearch">Cliente</label>
+                        <div class="client-search-container">
+                            <input type="text" id="clientSearch" class="client-search-input" placeholder="Buscar cliente..." autocomplete="off">
+                            <div id="clientSuggestions" class="client-suggestions" style="display: none;"></div>
+                            <input type="hidden" id="selectedClientId" value="">
+                        </div>
+                        <div class="selected-client" id="selectedClient" style="display: none;">
+                            <span class="client-name" id="selectedClientName">Cliente General</span>
+                            <button type="button" class="clear-client-btn" id="clearClientBtn">&times;</button>
+                        </div>
+                    </div>
+                    
                     <div class="document-number">
                         <div class="document-id" id="documentId">N1M001202509040836271</div>
                         <div class="document-total" id="documentTotal">$10.00</div>

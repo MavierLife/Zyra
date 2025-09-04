@@ -65,6 +65,9 @@ async function showSaleModal() {
         // Configurar event listeners del modal
         setupSaleModalEventListeners();
         
+        // Resetear búsqueda de cliente
+        resetClientSearch();
+        
         // Mostrar modal con animación
         displayModal(modal);
         
@@ -168,6 +171,9 @@ function setupSaleModalEventListeners() {
     if (documentTypeSelect) {
         documentTypeSelect.addEventListener('change', updateDocumentType);
     }
+    
+    // Funcionalidad de búsqueda de clientes
+    setupClientSearch();
     
     // Botones de acción (contacto, crédito, múltiple)
     setupActionButtons();
@@ -363,6 +369,8 @@ function validateSaleData(efectivoRecibido) {
  * Preparar datos para enviar al backend
  */
 function prepareSaleData(efectivoRecibido) {
+    const clientData = getSelectedClient();
+    
     return {
         vendedorId: currentVendedorId,
         documentType: currentSaleData.documentType,
@@ -376,6 +384,14 @@ function prepareSaleData(efectivoRecibido) {
         total: currentSaleData.total,
         efectivoRecibido: efectivoRecibido,
         cambio: efectivoRecibido - currentSaleData.total,
+        cliente: clientData ? {
+            id: clientData.UUIDCliente,
+            nombre: clientData.NombreDeCliente,
+            telefono: clientData.Telefono,
+            email: clientData.CorreoElectronico,
+            nit: clientData.NIT,
+            dui: clientData.DUI
+        } : null,
         timestamp: new Date().toISOString()
     };
 }
@@ -486,6 +502,431 @@ function showTemporaryMessage(message, type = 'info') {
     // Fallback simple
     console.log(`[${type.toUpperCase()}] ${message}`);
     alert(message);
+}
+
+// ===== FUNCIONALIDAD DE BÚSQUEDA DE CLIENTES =====
+
+// Variables para el autocompletado de clientes
+let clientSearchTimeout = null;
+let currentClientSuggestions = [];
+let selectedClientIndex = -1;
+let selectedClient = null;
+
+/**
+ * Configurar la funcionalidad de búsqueda de clientes
+ */
+function setupClientSearch() {
+    const clientSearchInput = document.getElementById('clientSearch');
+    const clientSuggestions = document.getElementById('clientSuggestions');
+    const clearClientBtn = document.getElementById('clearClientBtn');
+    
+    if (!clientSearchInput || !clientSuggestions) {
+        console.warn('Elementos de búsqueda de cliente no encontrados');
+        return;
+    }
+    
+    // Event listeners para el campo de búsqueda
+    clientSearchInput.addEventListener('input', handleClientSearchInput);
+    clientSearchInput.addEventListener('keydown', handleClientSearchKeydown);
+    clientSearchInput.addEventListener('focus', handleClientSearchFocus);
+    clientSearchInput.addEventListener('blur', handleClientSearchBlur);
+    
+    // Event listener para limpiar cliente seleccionado
+    if (clearClientBtn) {
+        clearClientBtn.addEventListener('click', clearSelectedClient);
+    }
+    
+    // Resetear estado inicial
+    resetClientSearch();
+}
+
+/**
+ * Manejar entrada de texto en el campo de búsqueda
+ */
+function handleClientSearchInput(event) {
+    const query = event.target.value.trim();
+    
+    // Limpiar timeout anterior
+    if (clientSearchTimeout) {
+        clearTimeout(clientSearchTimeout);
+    }
+    
+    // Si el campo está vacío, ocultar sugerencias
+    if (query.length === 0) {
+        hideClientSuggestions();
+        return;
+    }
+    
+    // Buscar con debounce
+    clientSearchTimeout = setTimeout(() => {
+        searchClients(query);
+    }, 300);
+}
+
+/**
+ * Manejar teclas especiales en el campo de búsqueda
+ */
+function handleClientSearchKeydown(event) {
+    const suggestions = document.getElementById('clientSuggestions');
+    
+    if (!suggestions || suggestions.style.display === 'none') {
+        return;
+    }
+    
+    switch (event.key) {
+        case 'ArrowDown':
+            event.preventDefault();
+            navigateClientSuggestions(1);
+            break;
+        case 'ArrowUp':
+            event.preventDefault();
+            navigateClientSuggestions(-1);
+            break;
+        case 'Enter':
+            event.preventDefault();
+            selectHighlightedClient();
+            break;
+        case 'Escape':
+            event.preventDefault();
+            hideClientSuggestions();
+            break;
+    }
+}
+
+/**
+ * Manejar focus en el campo de búsqueda
+ */
+function handleClientSearchFocus(event) {
+    const query = event.target.value.trim();
+    if (query.length > 0 && currentClientSuggestions.length > 0) {
+        showClientSuggestions();
+    }
+}
+
+/**
+ * Manejar blur en el campo de búsqueda
+ */
+function handleClientSearchBlur(event) {
+    // Delay para permitir clicks en sugerencias
+    setTimeout(() => {
+        hideClientSuggestions();
+    }, 200);
+}
+
+/**
+ * Buscar clientes en el servidor
+ */
+async function searchClients(query) {
+    const clientSearchInput = document.getElementById('clientSearch');
+    
+    try {
+        // Mostrar indicador de carga
+        clientSearchInput.classList.add('loading');
+        
+        const response = await fetch(`api/clientes.php?search=${encodeURIComponent(query)}&limit=5`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+            currentClientSuggestions = result.data;
+            displayClientSuggestions(currentClientSuggestions);
+        } else {
+            currentClientSuggestions = [];
+            displayNoResults();
+        }
+        
+    } catch (error) {
+        console.error('Error al buscar clientes:', error);
+        currentClientSuggestions = [];
+        displayNoResults();
+    } finally {
+        clientSearchInput.classList.remove('loading');
+    }
+}
+
+/**
+ * Mostrar sugerencias de clientes
+ */
+function displayClientSuggestions(clients) {
+    const suggestions = document.getElementById('clientSuggestions');
+    const clientSearchInput = document.getElementById('clientSearch');
+    
+    if (!suggestions || !clients || clients.length === 0) {
+        displayNoResults();
+        return;
+    }
+    
+    suggestions.innerHTML = '';
+    selectedClientIndex = -1;
+    
+    clients.forEach((client, index) => {
+        const suggestionElement = createClientSuggestionElement(client, index);
+        suggestions.appendChild(suggestionElement);
+    });
+    
+    showClientSuggestions();
+    clientSearchInput.classList.add('has-suggestions');
+}
+
+/**
+ * Crear elemento de sugerencia de cliente
+ */
+function createClientSuggestionElement(client, index) {
+    const div = document.createElement('div');
+    div.className = 'client-suggestion';
+    div.dataset.index = index;
+    
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'client-suggestion-name';
+    nameDiv.textContent = client.NombreDeCliente || 'Sin nombre';
+    
+    const detailsDiv = document.createElement('div');
+    detailsDiv.className = 'client-suggestion-details';
+    
+    if (client.Telefono) {
+        const phoneSpan = document.createElement('span');
+        phoneSpan.className = 'client-suggestion-phone';
+        phoneSpan.textContent = `📞 ${client.Telefono}`;
+        detailsDiv.appendChild(phoneSpan);
+    }
+    
+    if (client.CorreoElectronico) {
+        const emailSpan = document.createElement('span');
+        emailSpan.className = 'client-suggestion-email';
+        emailSpan.textContent = `✉️ ${client.CorreoElectronico}`;
+        detailsDiv.appendChild(emailSpan);
+    }
+    
+    div.appendChild(nameDiv);
+    if (detailsDiv.children.length > 0) {
+        div.appendChild(detailsDiv);
+    }
+    
+    // Event listeners
+    div.addEventListener('click', () => selectClient(client));
+    div.addEventListener('mouseenter', () => highlightClientSuggestion(index));
+    
+    return div;
+}
+
+/**
+ * Mostrar mensaje cuando no hay resultados
+ */
+function displayNoResults() {
+    const suggestions = document.getElementById('clientSuggestions');
+    const clientSearchInput = document.getElementById('clientSearch');
+    
+    if (!suggestions) return;
+    
+    suggestions.innerHTML = '<div class="no-results">No se encontraron clientes</div>';
+    showClientSuggestions();
+    clientSearchInput.classList.add('has-suggestions');
+}
+
+/**
+ * Mostrar panel de sugerencias
+ */
+function showClientSuggestions() {
+    const suggestions = document.getElementById('clientSuggestions');
+    if (suggestions) {
+        suggestions.style.display = 'block';
+    }
+}
+
+/**
+ * Ocultar panel de sugerencias
+ */
+function hideClientSuggestions() {
+    const suggestions = document.getElementById('clientSuggestions');
+    const clientSearchInput = document.getElementById('clientSearch');
+    
+    if (suggestions) {
+        suggestions.style.display = 'none';
+    }
+    
+    if (clientSearchInput) {
+        clientSearchInput.classList.remove('has-suggestions');
+    }
+    
+    selectedClientIndex = -1;
+}
+
+/**
+ * Navegar por las sugerencias con teclado
+ */
+function navigateClientSuggestions(direction) {
+    if (currentClientSuggestions.length === 0) return;
+    
+    const previousIndex = selectedClientIndex;
+    selectedClientIndex += direction;
+    
+    // Circular navigation
+    if (selectedClientIndex < 0) {
+        selectedClientIndex = currentClientSuggestions.length - 1;
+    } else if (selectedClientIndex >= currentClientSuggestions.length) {
+        selectedClientIndex = 0;
+    }
+    
+    // Update visual highlighting
+    updateClientSuggestionHighlight(previousIndex, selectedClientIndex);
+}
+
+/**
+ * Actualizar resaltado visual de sugerencias
+ */
+function updateClientSuggestionHighlight(previousIndex, currentIndex) {
+    const suggestions = document.querySelectorAll('.client-suggestion');
+    
+    // Remove previous highlight
+    if (previousIndex >= 0 && suggestions[previousIndex]) {
+        suggestions[previousIndex].classList.remove('highlighted');
+    }
+    
+    // Add current highlight
+    if (currentIndex >= 0 && suggestions[currentIndex]) {
+        suggestions[currentIndex].classList.add('highlighted');
+        suggestions[currentIndex].scrollIntoView({ block: 'nearest' });
+    }
+}
+
+/**
+ * Resaltar sugerencia con mouse
+ */
+function highlightClientSuggestion(index) {
+    const previousIndex = selectedClientIndex;
+    selectedClientIndex = index;
+    updateClientSuggestionHighlight(previousIndex, selectedClientIndex);
+}
+
+/**
+ * Seleccionar cliente resaltado
+ */
+function selectHighlightedClient() {
+    if (selectedClientIndex >= 0 && currentClientSuggestions[selectedClientIndex]) {
+        selectClient(currentClientSuggestions[selectedClientIndex]);
+    }
+}
+
+/**
+ * Seleccionar un cliente
+ */
+function selectClient(client) {
+    selectedClient = client;
+    
+    // Actualizar campos ocultos y visibles
+    const selectedClientId = document.getElementById('selectedClientId');
+    const selectedClientName = document.getElementById('selectedClientName');
+    const selectedClientDiv = document.getElementById('selectedClient');
+    const clientSearchInput = document.getElementById('clientSearch');
+    const clientSearchContainer = document.querySelector('.client-search-container');
+    
+    if (selectedClientId) {
+        selectedClientId.value = client.UUIDCliente || '';
+    }
+    
+    if (selectedClientName) {
+        selectedClientName.textContent = client.NombreDeCliente || 'Cliente seleccionado';
+    }
+    
+    if (selectedClientDiv) {
+        selectedClientDiv.style.display = 'flex';
+    }
+    
+    if (clientSearchInput) {
+        clientSearchInput.value = '';
+        clientSearchInput.style.display = 'none';
+    }
+    
+    if (clientSearchContainer) {
+        clientSearchContainer.style.display = 'none';
+    }
+    
+    // Ocultar sugerencias
+    hideClientSuggestions();
+    
+    console.log('Cliente seleccionado:', client);
+}
+
+/**
+ * Limpiar cliente seleccionado
+ */
+function clearSelectedClient() {
+    selectedClient = null;
+    
+    const selectedClientId = document.getElementById('selectedClientId');
+    const selectedClientDiv = document.getElementById('selectedClient');
+    const clientSearchInput = document.getElementById('clientSearch');
+    const clientSearchContainer = document.querySelector('.client-search-container');
+    
+    if (selectedClientId) {
+        selectedClientId.value = '';
+    }
+    
+    if (selectedClientDiv) {
+        selectedClientDiv.style.display = 'none';
+    }
+    
+    if (clientSearchInput) {
+        clientSearchInput.style.display = 'block';
+        clientSearchInput.value = '';
+        clientSearchInput.focus();
+    }
+    
+    if (clientSearchContainer) {
+        clientSearchContainer.style.display = 'block';
+    }
+    
+    hideClientSuggestions();
+}
+
+/**
+ * Resetear estado de búsqueda de cliente
+ */
+function resetClientSearch() {
+    selectedClient = null;
+    currentClientSuggestions = [];
+    selectedClientIndex = -1;
+    
+    const selectedClientId = document.getElementById('selectedClientId');
+    const selectedClientDiv = document.getElementById('selectedClient');
+    const clientSearchInput = document.getElementById('clientSearch');
+    const clientSearchContainer = document.querySelector('.client-search-container');
+    
+    if (selectedClientId) {
+        selectedClientId.value = '';
+    }
+    
+    if (selectedClientDiv) {
+        selectedClientDiv.style.display = 'none';
+    }
+    
+    if (clientSearchInput) {
+        clientSearchInput.style.display = 'block';
+        clientSearchInput.value = '';
+        clientSearchInput.classList.remove('loading', 'has-suggestions');
+    }
+    
+    if (clientSearchContainer) {
+        clientSearchContainer.style.display = 'block';
+    }
+    
+    hideClientSuggestions();
+}
+
+/**
+ * Obtener cliente seleccionado
+ */
+function getSelectedClient() {
+    return selectedClient;
 }
 
 // ===== EVENT LISTENERS GLOBALES =====
