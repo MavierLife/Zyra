@@ -91,8 +91,8 @@ try {
     $uuidContribuyente = $vendedorData['UUIDContribuyente'];
     $nombreUsuario = $vendedorData['NombreUsuario'];
     
-    // Obtener el código de establecimiento (CM01) del contribuyente
-    $sqlContribuyente = "SELECT CodEstable FROM tblcontribuyentes WHERE UUIDContribuyente = :uuid_contribuyente";
+    // Obtener información del contribuyente incluyendo AmbienteDTE
+    $sqlContribuyente = "SELECT CodEstable, AmbienteDTE FROM tblcontribuyentes WHERE UUIDContribuyente = :uuid_contribuyente";
     $stmtContribuyente = $pdo->prepare($sqlContribuyente);
     $stmtContribuyente->bindParam(':uuid_contribuyente', $uuidContribuyente);
     $stmtContribuyente->execute();
@@ -104,6 +104,14 @@ try {
     }
     
     $codEstable = $contribuyenteData['CodEstable'];
+    $ambienteDTE = $contribuyenteData['AmbienteDTE'];
+    
+    // Obtener TipoMoneda desde tbltipomoneda
+    $sqlTipoMoneda = "SELECT CurrencyISO FROM tbltipomoneda WHERE CurrencyISO = 'SV' LIMIT 1";
+    $stmtTipoMoneda = $pdo->prepare($sqlTipoMoneda);
+    $stmtTipoMoneda->execute();
+    $tipoMonedaData = $stmtTipoMoneda->fetch(PDO::FETCH_ASSOC);
+    $tipoMoneda = $tipoMonedaData ? $tipoMonedaData['CurrencyISO'] : 'USD';
     
     // Generar UUID para la venta
     $uuidVenta = generateUUID();
@@ -137,29 +145,50 @@ try {
     $totalIVA = $totalVentaGravada * 0.13;
     $totalImporte = $subTotal + $totalIVA;
     
-    // Insertar venta principal
+    // Generar UUID independiente para la venta
+    $uuidVentaIndependiente = generateUUID();
+    
+    // Usar el número de documento generado como CodigoVEN
+    $codigoVEN = $documentNumber;
+    
+    // Mapear tipo de documento según especificaciones
+    $codDocumento = mapDocumentTypeToCode($data['documentType']);
+    
+    // Obtener VersionDTE desde tbltipodedocumentos
+    $sqlVersionDTE = "SELECT VersionDTE FROM tbltipodedocumentos WHERE Codigo = :cod_documento LIMIT 1";
+    $stmtVersionDTE = $pdo->prepare($sqlVersionDTE);
+    $stmtVersionDTE->bindParam(':cod_documento', $codDocumento);
+    $stmtVersionDTE->execute();
+    $versionDTEData = $stmtVersionDTE->fetch(PDO::FETCH_ASSOC);
+    $versionDTE = $versionDTEData ? $versionDTEData['VersionDTE'] : 1;
+    
+    // Fecha de facturación (solo fecha, sin hora)
+    $fechaFacturacion = date('Y-m-d');
+    
+    // Insertar venta principal en tblnotasdeentrega
     $sqlVenta = "INSERT INTO tblnotasdeentrega (
-        UUIDVenta, UUIDContribuyente, UsuarioRegistro, CodigoVEN, 
-        TipoDespacho, CodDocumento, NombreDeCliente, 
+        UUIDVenta, CodigoVEN, CodDocumento, VersionDTE, UsuarioRegistro,
+        FechaFacturacion, Ambiente, TipoMoneda,
+        TipoDespacho, NombreDeCliente, 
         SubTotalVentas, IVAPercibido, TotalImporte,
-        PagoEfectivo, CambioEntregado, Estado, FechaRegistro
+        PagoEfectivo, Cambio, Estado
     ) VALUES (
-        :uuid_venta, :uuid_contribuyente, :usuario_registro, :codigo_ven,
-        1, :cod_documento, 'Cliente General',
+        :uuid_venta, :codigo_ven, :cod_documento, :version_dte, :usuario_registro,
+        :fecha_facturacion, :ambiente, :tipo_moneda,
+        1, 'Cliente General',
         :subtotal, :iva, :total_importe,
-        :pago_efectivo, :cambio, 1, NOW()
+        :pago_efectivo, :cambio, 1
     )";
     
     $stmtVenta = $pdo->prepare($sqlVenta);
-    $stmtVenta->bindParam(':uuid_venta', $uuidVenta);
-    $stmtVenta->bindParam(':uuid_contribuyente', $uuidContribuyente);
-    $stmtVenta->bindParam(':usuario_registro', $nombreUsuario);
-    $stmtVenta->bindParam(':codigo_ven', $documentNumber);
-    
-    // Mapear tipo de documento
-    $codDocumento = mapDocumentType($data['documentType']);
+    $stmtVenta->bindParam(':uuid_venta', $uuidVentaIndependiente);
+    $stmtVenta->bindParam(':codigo_ven', $codigoVEN);
     $stmtVenta->bindParam(':cod_documento', $codDocumento);
-    
+    $stmtVenta->bindParam(':version_dte', $versionDTE);
+    $stmtVenta->bindParam(':usuario_registro', $nombreUsuario);
+    $stmtVenta->bindParam(':fecha_facturacion', $fechaFacturacion);
+    $stmtVenta->bindParam(':ambiente', $ambienteDTE);
+    $stmtVenta->bindParam(':tipo_moneda', $tipoMoneda);
     $stmtVenta->bindParam(':subtotal', $subTotal);
     $stmtVenta->bindParam(':iva', $totalIVA);
     $stmtVenta->bindParam(':total_importe', $totalImporte);
@@ -169,6 +198,9 @@ try {
     $stmtVenta->bindParam(':cambio', $cambio);
     
     $stmtVenta->execute();
+    
+    // Usar el UUID independiente para los detalles
+    $uuidVenta = $uuidVentaIndependiente;
     
     // Insertar detalles de la venta
     $sqlDetalle = "INSERT INTO tblnotasdeentregadetalle (
@@ -212,7 +244,7 @@ try {
         $stmtDetalle->execute();
         
         // Actualizar inventario (reducir existencias)
-        $sqlUpdateInventario = "UPDATE tblproductos SET Existencias = Existencias - :cantidad WHERE UUIDProducto = :uuid_producto";
+        $sqlUpdateInventario = "UPDATE tblcontribuyentesproductos SET Existencias = Existencias - :cantidad WHERE UUIDProducto = :uuid_producto";
         $stmtUpdateInventario = $pdo->prepare($sqlUpdateInventario);
         $stmtUpdateInventario->bindParam(':cantidad', $cantidad);
         $stmtUpdateInventario->bindParam(':uuid_producto', $item['id']);
@@ -227,9 +259,11 @@ try {
         'success' => true,
         'message' => 'Venta procesada exitosamente',
         'saleId' => $uuidVenta,
-        'documentNumber' => $documentNumber,
+        'codigoVEN' => $codigoVEN,
+        'codDocumento' => $codDocumento,
         'total' => $totalImporte,
-        'cambio' => $cambio
+        'cambio' => $cambio,
+        'fechaFacturacion' => $fechaFacturacion
     ]);
     
 } catch (Exception $e) {
@@ -241,7 +275,10 @@ try {
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage()
+        'error' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'trace' => $e->getTraceAsString()
     ]);
 } catch (PDOException $e) {
     // Rollback en caso de error de base de datos
@@ -252,7 +289,10 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => 'Error de base de datos: ' . $e->getMessage()
+        'error' => 'Error de base de datos: ' . $e->getMessage(),
+        'sql_state' => $e->getCode(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine()
     ]);
 }
 
@@ -280,17 +320,22 @@ function generateUUID() {
     );
 }
 
-// Función para mapear tipo de documento
-function mapDocumentType($documentType) {
-    switch ($documentType) {
+// Función para mapear tipo de documento según especificaciones
+function mapDocumentTypeToCode($documentType) {
+    switch (strtolower($documentType)) {
         case 'factura':
-            return '01'; // Factura
+        case 'factura electronica':
+            return '01'; // FACTURA
         case 'credito':
-            return '03'; // Crédito Fiscal
+        case 'credito fiscal':
+            return '03'; // CRÉDITO FISCAL
         case 'nota':
-            return '05'; // Nota de Crédito
+        case 'nota de credito':
+            return '05'; // NOTA DE CRÉDITO
+        case 'sujeto excluido':
+            return '14'; // SUJETO EXCLUIDO
         default:
-            return '01'; // Por defecto factura
+            return '01'; // Por defecto FACTURA
     }
 }
 ?>

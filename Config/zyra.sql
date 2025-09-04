@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-09-2025 a las 00:14:50
+-- Tiempo de generación: 04-09-2025 a las 22:02:33
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -889,7 +889,7 @@ CREATE TABLE `tblcontribuyentesaparturacajas` (
 --
 
 INSERT INTO `tblcontribuyentesaparturacajas` (`UUIDApertura`, `FechaRegistro`, `UsuarioApertura`, `UsuarioCierre`, `UUIDContribuyente`, `UUIDTerminal`, `EfectivoApertura`, `HoraApertura`, `HoraCierre`, `Estado`, `UsuarioUpdate`, `FechaUpdate`, `UUIDVendedor`) VALUES
-('APT_68b7715ecdf6f2.91671242_1756852574', '2025-09-02 16:36:14', 'Edwin Antonio Coto Benavides', NULL, '1', 'P001', 15.50, '16:36:14', NULL, 1, NULL, NULL, '721dfc2f-841e-11f0-9acd-989096a0999b');
+('APT_68b9b2a99c3630.82040864_1757000361', '2025-09-04 09:39:21', 'Edwin Antonio Coto Benavides', NULL, '1', 'P001', 100.00, '09:39:21', NULL, 1, NULL, NULL, '721dfc2f-841e-11f0-9acd-989096a0999b');
 
 -- --------------------------------------------------------
 
@@ -969,6 +969,13 @@ CREATE TABLE `tblcontribuyentesclientes` (
   `UsuarioUpdate` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
 
+--
+-- Volcado de datos para la tabla `tblcontribuyentesclientes`
+--
+
+INSERT INTO `tblcontribuyentesclientes` (`UUIDCliente`, `FechaRegistro`, `UsuarioRegistro`, `UUIDContribuyente`, `TipoDeCliente`, `NombreDeCliente`, `NombreComercial`, `Direccion`, `IDZona`, `IDDepartamento`, `Departamento`, `IDMunicipio`, `Municipio`, `IDDistrito`, `Distrito`, `FacturarCon`, `Telefono`, `DUI`, `NIT`, `OtroDocumento`, `CorreoElectronico`, `Contribuyente`, `NRC`, `CodActividad`, `GiroComercial`, `PercibirIVA`, `RetenerIVA`, `RetenerRenta`, `Estado`, `Observaciones`, `DocumentoEstablecido`, `CondicionEstablecida`, `PlazoEstablecido`, `FechaUpdate`, `UsuarioUpdate`) VALUES
+('40416a31-89b2-48ea-b7a6-40a567f2a561', '2025-09-04 10:17:43', 'Edwin Antonio Coto Benavides', '1', 2, 'Jose Antonio Hernandez Guzman', '', 'Concepción Batres\nUsulután', 0, 11, 'USULUTAN', 28, 'USULUTAN ESTE', 1104, 'CONCEPCIÓN BATRES', '13', '75399076', '066030720', '1218-030905-101-0', '', 'Saito.tiffa@gmail.com', 1, '1757811', '47111', 'VENTA EN SUPERMERCADOS (47111)', 0, 0, 0, 1, '', '01', 1, 0, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -994,8 +1001,8 @@ CREATE TABLE `tblcontribuyentesproductos` (
 --
 
 INSERT INTO `tblcontribuyentesproductos` (`UUIDProducto`, `UUIDContribuyente`, `CodigoDeBarras`, `Descripcion`, `Existencias`, `PrecioVenta`, `CostoCompra`, `IDCategoria`, `cantidadminima`, `preciodescuento`, `ventafracciones`) VALUES
-(1, '1', '7478145845855', 'COCA COLA 2.5 LITROS', '100', 1.50, 1.00, 1, 0, '2.95', 1),
-(2, '1', '7478145845856', 'PEPSI COLA 2 LITROS', '15', 4.50, 2.25, 1, 0, '0', 0),
+(1, '1', '7478145845855', 'COCA COLA 2.5 LITROS', '98', 1.50, 1.00, 1, 0, '2.95', 1),
+(2, '1', '7478145845856', 'PEPSI COLA 2 LITROS', '13', 4.50, 2.25, 1, 0, '0', 0),
 (3, '1', '7478145845857', 'SPRITE 1.5 LITROS', '20', 3.75, 1.85, 1, 0, '0', 0),
 (4, '1', '7478145845858', 'FANTA NARANJA 2 LITROS', '12', 4.25, 2.10, 1, 0, '0', 0),
 (5, '1', '7478145845859', 'AGUA PURA 1 LITRO', '50', 1.00, 0.50, 1, 0, '0', 0),
@@ -1003,7 +1010,7 @@ INSERT INTO `tblcontribuyentesproductos` (`UUIDProducto`, `UUIDContribuyente`, `
 (7, '1', '7478145845861', 'CERVEZA PILSENER 355ML', '100', 1.25, 0.75, 1, 0, '0', 0),
 (8, '1', '7478145845862', 'REDBULL 250ML', '30', 2.00, 1.20, 1, 0, '0', 0),
 (9, '1', '7478145845863', 'CAF?ë INSTANT?üNEO 200G', '40', 5.50, 3.25, 1, 0, '0', 0),
-(10, '1', '7478145845864', 'ARROZ BLANCO 1 LIBRA', '80', 1.50, 0.85, 18, 0, '0', 0),
+(10, '1', '7478145845864', 'ARROZ BLANCO 1 LIBRA', '79', 1.50, 0.85, 18, 0, '0', 0),
 (11, '1', '7478145845865', 'FRIJOLES ROJOS 1 LIBRA', '60', 2.00, 1.20, 18, 0, '0', 0),
 (13, '1', '7478145845867', 'AZ?ÜCAR BLANCA 1 LIBRA', '70', 1.25, 0.75, 18, 0, '0', 0),
 (14, '1', '7478145845868', 'SAL DE MESA 1 LIBRA', '90', 0.75, 0.40, 18, 0, '0', 0),
@@ -1799,6 +1806,14 @@ CREATE TABLE `tblnotasdeentrega` (
   `MensajePublicitario` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
+--
+-- Volcado de datos para la tabla `tblnotasdeentrega`
+--
+
+INSERT INTO `tblnotasdeentrega` (`UUIDVenta`, `CodigoVEN`, `FechaRegistro`, `UsuarioRegistro`, `FechaFacturacion`, `FechaEnvio`, `FechaEntrega`, `NoAnualCorrelativo`, `FechaHoraGeneracion`, `Ambiente`, `TipoContingencia`, `MotivoContingencia`, `TipoMoneda`, `CodDocumento`, `NoCorrelativo`, `VersionDTE`, `CodigoDeGeneracion`, `NumeroDeControl`, `SelloDeRecepcion`, `ModeloDeFacturacion`, `TipoDeTransmision`, `UUIDNegocio`, `UUIDSucursal`, `UUIDCaja`, `UUIDOperador`, `Operador`, `UUIDVendedor`, `CodEstablecimiento`, `CodEstablecimientoMH`, `CodPuntoVenta`, `CodPuntoVentaMH`, `TipoDespacho`, `Repartidor`, `Carga`, `Condicion`, `Plazo`, `FechaVencimiento`, `SaldoActual`, `Abonos`, `CodigoCLI`, `NombreDeCliente`, `NombreComercial`, `CodigoActividad`, `Actividad`, `Direccion`, `IDDepartamento`, `Departamento`, `IDMunicipio`, `Municipio`, `IDDistrito`, `Distrito`, `DUI`, `NRC`, `NIT`, `TelMovilWhatsApp`, `CorreoElectronico`, `TipoDocumentoReceptor`, `NumeroDocumentoReceptor`, `TelefonoReceptor`, `CodActividadReceptor`, `DocumentoRelacionado`, `Notas`, `TotalCosto`, `TotalImporte`, `PagoTarjeta`, `PagoCheque`, `PagoElectronico`, `PagoVale`, `PagoGiftCard`, `PagoEfectivo`, `PagoRecibido`, `Cambio`, `PagoContado`, `NumeroComprobante`, `Estado`, `Para`, `DireccionEnvio`, `Contacto`, `Cancelada`, `DescuentosNoSujetas`, `DescuentosExentas`, `DescuentosGravadas`, `NumPagoElectronico`, `PorcentajeDescuento`, `SaldoFavor`, `TotalDescuentos`, `TotalNoSujetas`, `TotalExentas`, `TotalGravadas`, `SubTotal`, `TotalIVA`, `SubTotalVentas`, `IVAPercibido`, `IVARetencion`, `RetencionRenta`, `TotalLetras`, `Tributos`, `TotalNoGravado`, `TotalOperacion`, `descuSE`, `TotalPagar`, `Anulada`, `NotasDespacho`, `Mensaje`, `FechaUpdate`, `UsuarioUpdate`, `Token`, `JSONGenerado`, `JSONFirmado`, `RespuestaMH`, `Entregado`, `RespuestaMHAnulacion`, `RespuestaCORREO`, `MensajePublicitario`) VALUES
+('0daba6d4-7e1d-4e98-a82c-9ccbe7475179', 'N1M00120250616110439', '2025-06-16 11:04:39', 'JOSE ANTONIO', '2025-06-16', '2025-06-16 11:22:08', '2025-06-16 11:22:08', 29, '2025-06-16 11:22:08', '01', NULL, NULL, 'USD', '03', 4, 3, 'BB2D85A3-28EA-40AB-AA00-EE1F6D3DD57F', 'DTE-03-CM01P017-000000000000029', '202597D95FD69E8C452EA27B8EA29368767ERTNB', 1, 1, 1, 'N1M001', 'N1M01-CAJA17', '220', '0220', '220', 'CM01', NULL, 'P017', NULL, 1, 0, 0, 1, 0, NULL, 0.00, 0.00, '20250409144717', 'GUADALUPE ESTEFANY ULLOA DE CHAVEZ', 'TIENDA ECONOMICA', '66190', 'Actividades auxiliares de la intermediación financiera ncp (66190)', '2A AVENIDASUR, BARRIO SAN JUAN', '12', 'SAN MIGUEL', '42', 'SAN MIGUEL OESTE', '1218', 'SAN RAFAEL ORIENTE', '04495225-7', '3345265', '04495225-7', '7404-8730', 'tiendaeconomicasro@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 257.79, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 257.79, 0.00, 257.79, NULL, 3, NULL, NULL, NULL, 0, 0.00, 0.00, 0.00, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 228.13, 228.13, 29.66, 228.13, 0.00, 0.00, 0.00, 'DOSCIENTOS CINCUENTA Y SIETE 79/100 DÓLARES', '{\n    \"codigo\": \"20\",\n    \"descripcion\": \"Impuesto al Valor Agregado 13%\",\n    \"valor\": 29.66\n}', 0.00, 257.79, 0.00, 257.79, 0, NULL, NULL, '2025-06-16', 'JOSE ANTONIO', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMjE3MTMwOTg2MTAxMyIsImF1dGhvcml0aWVzIjpbIlVTRVIiLCJVU0VSX0FQSSIsIlVzdWFyaW8iXSwiY19uaXQiOiIxMjE3MTMwOTg2MTAxMyIsImNfZHVpIjoiMDM2MDM0NDE5IiwiaWF0IjoxNzUwMDc4ODcxLCJleHAiOjE3NTAxNjUyNzF9.LVr6QTtpbXDCrl5gyQYlJ0aAbhd2gkiyhn9S-IuFNOU-32DLgRoJjKEU7CH-c-CJqf-rVfkapAtlZlLe0Ofc0w', '{\n    \"identificacion\": {\n        \"ambiente\": \"01\",\n        \"codigoGeneracion\": \"BB2D85A3-28EA-40AB-AA00-EE1F6D3DD57F\",\n        \"fecEmi\": \"2025-06-16\",\n        \"horEmi\": \"11:04:39\",\n        \"numeroControl\": \"DTE-03-CM01P017-000000000000029\",\n        \"tipoDte\": \"03\",\n        \"tipoModelo\": 1,\n        \"tipoOperacion\": 1,\n        \"tipoContingencia\": null,\n        \"motivoContin\": null,\n        \"tipoMoneda\": \"USD\",\n        \"version\": 3\n    },\n    \"documentoRelacionado\": null,\n    \"emisor\": {\n        \"codActividad\": \"47111\",\n        \"codEstable\": \"CM01\",\n        \"codEstableMH\": null,\n        \"codPuntoVenta\": \"P017\",\n        \"codPuntoVentaMH\": null,\n        \"correo\": \"facturacionelectronica@grupobenavides.com\",\n        \"descActividad\": \"VENTA EN SUPERMERCADOS (47111)\",\n        \"nit\": \"12171309861013\",\n        \"nombre\": \"EDWIN ANTONIO COTO BENAVIDES\",\n        \"nombreComercial\": \"BENAMAX\",\n        \"nrc\": \"1757811\",\n        \"telefono\": \"76973748\",\n        \"tipoEstablecimiento\": \"02\",\n        \"direccion\": {\n            \"complemento\": \"CASERIO LA GOLONDRINA\",\n            \"departamento\": \"12\",\n            \"municipio\": \"23\"\n        }\n    },\n    \"receptor\": {\n        \"nrc\": \"3345265\",\n        \"nit\": \"044952257\",\n        \"nombre\": \"GUADALUPE ESTEFANY ULLOA DE CHAVEZ\",\n        \"nombreComercial\": \"TIENDA ECONOMICA\",\n        \"codActividad\": \"66190\",\n        \"descActividad\": \"Actividades auxiliares de la intermediación financiera ncp (66190)\",\n        \"telefono\": \"7404-8730\",\n        \"correo\": \"tiendaeconomicasro@gmail.com\",\n        \"direccion\": {\n            \"complemento\": \"2A AVENIDASUR, BARRIO SAN JUAN\",\n            \"departamento\": \"12\",\n            \"municipio\": \"23\"\n        }\n    },\n    \"otrosDocumentos\": null,\n    \"ventaTercero\": null,\n    \"cuerpoDocumento\": [\n        {\n            \"numItem\": 1,\n            \"tipoItem\": 1,\n            \"numeroDocumento\": null,\n            \"codigo\": \"0050303\",\n            \"descripcion\": \"ACEITE SANTA CLARA 6X3,750ML CAJA\",\n            \"uniMedida\": 99,\n            \"cantidad\": 1,\n            \"precioUni\": 49.8053,\n            \"montoDescu\": 0,\n            \"ventaNoSuj\": 0,\n            \"ventaExenta\": 0,\n            \"ventaGravada\": 49.8053,\n            \"noGravado\": 0,\n            \"psv\": 0,\n            \"codTributo\": null,\n            \"tributos\": [\n                \"20\"\n            ]\n        },\n        {\n            \"numItem\": 2,\n            \"tipoItem\": 1,\n            \"numeroDocumento\": null,\n            \"codigo\": \"0590403\",\n            \"descripcion\": \"DESCAR FOM PLATO N° 9 25 PAQUETE\",\n            \"uniMedida\": 99,\n            \"cantidad\": 40,\n            \"precioUni\": 0.4867,\n            \"montoDescu\": 0,\n            \"ventaNoSuj\": 0,\n            \"ventaExenta\": 0,\n            \"ventaGravada\": 19.469,\n            \"noGravado\": 0,\n            \"psv\": 0,\n            \"codTributo\": null,\n            \"tributos\": [\n                \"20\"\n            ]\n        },\n        {\n            \"numItem\": 3,\n            \"tipoItem\": 1,\n            \"numeroDocumento\": null,\n            \"codigo\": \"0020685\",\n            \"descripcion\": \"HIGIENICO ENCANTO 1000 HOJAS 12X4U FARDO\",\n            \"uniMedida\": 99,\n            \"cantidad\": 1,\n            \"precioUni\": 26.8673,\n            \"montoDescu\": 0,\n            \"ventaNoSuj\": 0,\n            \"ventaExenta\": 0,\n            \"ventaGravada\": 26.8673,\n            \"noGravado\": 0,\n            \"psv\": 0,\n            \"codTributo\": null,\n            \"tributos\": [\n                \"20\"\n            ]\n        },\n        {\n            \"numItem\": 4,\n            \"tipoItem\": 1,\n            \"numeroDocumento\": null,\n            \"codigo\": \"0591185\",\n            \"descripcion\": \"DESCAR FOM BANDEJA N° 2 5X50U FARDO\",\n            \"uniMedida\": 99,\n            \"cantidad\": 5,\n            \"precioUni\": 4.3805,\n            \"montoDescu\": 0,\n            \"ventaNoSuj\": 0,\n            \"ventaExenta\": 0,\n            \"ventaGravada\": 21.9027,\n            \"noGravado\": 0,\n            \"psv\": 0,\n            \"codTributo\": null,\n            \"tributos\": [\n                \"20\"\n            ]\n        },\n        {\n            \"numItem\": 5,\n            \"tipoItem\": 1,\n            \"numeroDocumento\": null,\n            \"codigo\": \"0006598\",\n            \"descripcion\": \"DESCAR FOM BANDE\\/DEPOCITO 7X7 4X50U FARDO\",\n            \"uniMedida\": 99,\n            \"cantidad\": 2,\n            \"precioUni\": 12.0354,\n            \"montoDescu\": 0,\n            \"ventaNoSuj\": 0,\n            \"ventaExenta\": 0,\n            \"ventaGravada\": 24.0708,\n            \"noGravado\": 0,\n            \"psv\": 0,\n            \"codTributo\": null,\n            \"tributos\": [\n                \"20\"\n            ]\n        },\n        {\n            \"numItem\": 6,\n            \"tipoItem\": 1,\n            \"numeroDocumento\": null,\n            \"codigo\": \"0020102\",\n            \"descripcion\": \"HIGIENICO ENCANTO CLASSICO 12X4U FARDO\",\n            \"uniMedida\": 99,\n            \"cantidad\": 5,\n            \"precioUni\": 8.0708,\n            \"montoDescu\": 0,\n            \"ventaNoSuj\": 0,\n            \"ventaExenta\": 0,\n            \"ventaGravada\": 40.354,\n            \"noGravado\": 0,\n            \"psv\": 0,\n            \"codTributo\": null,\n            \"tributos\": [\n                \"20\"\n            ]\n        },\n        {\n            \"numItem\": 7,\n            \"tipoItem\": 1,\n            \"numeroDocumento\": null,\n            \"codigo\": \"1692753\",\n            \"descripcion\": \"HIGIENICO ROSAL SOFT PLUS 4 OFERTA\",\n            \"uniMedida\": 99,\n            \"cantidad\": 60,\n            \"precioUni\": 0.7611,\n            \"montoDescu\": 0,\n            \"ventaNoSuj\": 0,\n            \"ventaExenta\": 0,\n            \"ventaGravada\": 45.6637,\n            \"noGravado\": 0,\n            \"psv\": 0,\n            \"codTributo\": null,\n            \"tributos\": [\n                \"20\"\n            ]\n        }\n    ],\n    \"resumen\": {\n        \"totalNoSuj\": 0,\n        \"totalExenta\": 0,\n        \"totalNoGravado\": 0,\n        \"totalGravada\": 228.13,\n        \"subTotal\": 228.13,\n        \"descuNoSuj\": 0,\n        \"descuExenta\": 0,\n        \"descuGravada\": 0,\n        \"subTotalVentas\": 228.13,\n        \"porcentajeDescuento\": 0,\n        \"ivaRete1\": 0,\n        \"ivaPerci1\": 0,\n        \"reteRenta\": 0,\n        \"montoTotalOperacion\": 257.79,\n        \"totalDescu\": 0,\n        \"totalPagar\": 257.79,\n        \"totalLetras\": \"DOSCIENTOS CINCUENTA Y SIETE 79\\/100 DÓLARES\",\n        \"saldoFavor\": 0,\n        \"condicionOperacion\": 1,\n        \"pagos\": null,\n        \"numPagoElectronico\": null,\n        \"tributos\": [\n            {\n                \"codigo\": \"20\",\n                \"descripcion\": \"Impuesto al Valor Agregado 13%\",\n                \"valor\": 29.66\n            }\n        ]\n    },\n    \"extension\": null,\n    \"apendice\": null,\n    \"selloRecibido\": \"202597D95FD69E8C452EA27B8EA29368767ERTNB\",\n    \"firmaElectronica\": \"eyJhbGciOiJSUzUxMiJ9.ewogICJpZGVudGlmaWNhY2lvbiIgOiB7CiAgICAiYW1iaWVudGUiIDogIjAxIiwKICAgICJjb2RpZ29HZW5lcmFjaW9uIiA6ICJCQjJEODVBMy0yOEVBLTQwQUItQUEwMC1FRTFGNkQzREQ1N0YiLAogICAgImZlY0VtaSIgOiAiMjAyNS0wNi0xNiIsCiAgICAiaG9yRW1pIiA6ICIxMTowNDozOSIsCiAgICAibnVtZXJvQ29udHJvbCIgOiAiRFRFLTAzLUNNMDFQMDE3LTAwMDAwMDAwMDAwMDAyOSIsCiAgICAidGlwb0R0ZSIgOiAiMDMiLAogICAgInRpcG9Nb2RlbG8iIDogMSwKICAgICJ0aXBvT3BlcmFjaW9uIiA6IDEsCiAgICAidGlwb0NvbnRpbmdlbmNpYSIgOiBudWxsLAogICAgIm1vdGl2b0NvbnRpbiIgOiBudWxsLAogICAgInRpcG9Nb25lZGEiIDogIlVTRCIsCiAgICAidmVyc2lvbiIgOiAzCiAgfSwKICAiZG9jdW1lbnRvUmVsYWNpb25hZG8iIDogbnVsbCwKICAiZW1pc29yIiA6IHsKICAgICJjb2RBY3RpdmlkYWQiIDogIjQ3MTExIiwKICAgICJjb2RFc3RhYmxlIiA6ICJDTTAxIiwKICAgICJjb2RFc3RhYmxlTUgiIDogbnVsbCwKICAgICJjb2RQdW50b1ZlbnRhIiA6ICJQMDE3IiwKICAgICJjb2RQdW50b1ZlbnRhTUgiIDogbnVsbCwKICAgICJjb3JyZW8iIDogImZhY3R1cmFjaW9uZWxlY3Ryb25pY2FAZ3J1cG9iZW5hdmlkZXMuY29tIiwKICAgICJkZXNjQWN0aXZpZGFkIiA6ICJWRU5UQSBFTiBTVVBFUk1FUkNBRE9TICg0NzExMSkiLAogICAgIm5pdCIgOiAiMTIxNzEzMDk4NjEwMTMiLAogICAgIm5vbWJyZSIgOiAiRURXSU4gQU5UT05JTyBDT1RPIEJFTkFWSURFUyIsCiAgICAibm9tYnJlQ29tZXJjaWFsIiA6ICJCRU5BTUFYIiwKICAgICJucmMiIDogIjE3NTc4MTEiLAogICAgInRlbGVmb25vIiA6ICI3Njk3Mzc0OCIsCiAgICAidGlwb0VzdGFibGVjaW1pZW50byIgOiAiMDIiLAogICAgImRpcmVjY2lvbiIgOiB7CiAgICAgICJjb21wbGVtZW50byIgOiAiQ0FTRVJJTyBMQSBHT0xPTkRSSU5BIiwKICAgICAgImRlcGFydGFtZW50byIgOiAiMTIiLAogICAgICAibXVuaWNpcGlvIiA6ICIyMyIKICAgIH0KICB9LAogICJyZWNlcHRvciIgOiB7CiAgICAibnJjIiA6ICIzMzQ1MjY1IiwKICAgICJuaXQiIDogIjA0NDk1MjI1NyIsCiAgICAibm9tYnJlIiA6ICJHVUFEQUxVUEUgRVNURUZBTlkgVUxMT0EgREUgQ0hBVkVaIiwKICAgICJub21icmVDb21lcmNpYWwiIDogIlRJRU5EQSBFQ09OT01JQ0EiLAogICAgImNvZEFjdGl2aWRhZCIgOiAiNjYxOTAiLAogICAgImRlc2NBY3RpdmlkYWQiIDogIkFjdGl2aWRhZGVzIGF1eGlsaWFyZXMgZGUgbGEgaW50ZXJtZWRpYWNpw7NuIGZpbmFuY2llcmEgbmNwICg2NjE5MCkiLAogICAgInRlbGVmb25vIiA6ICI3NDA0LTg3MzAiLAogICAgImNvcnJlbyIgOiAidGllbmRhZWNvbm9taWNhc3JvQGdtYWlsLmNvbSIsCiAgICAiZGlyZWNjaW9uIiA6IHsKICAgICAgImNvbXBsZW1lbnRvIiA6ICIyQSBBVkVOSURBU1VSLCBCQVJSSU8gU0FOIEpVQU4iLAogICAgICAiZGVwYXJ0YW1lbnRvIiA6ICIxMiIsCiAgICAgICJtdW5pY2lwaW8iIDogIjIzIgogICAgfQogIH0sCiAgIm90cm9zRG9jdW1lbnRvcyIgOiBudWxsLAogICJ2ZW50YVRlcmNlcm8iIDogbnVsbCwKICAiY3VlcnBvRG9jdW1lbnRvIiA6IFsgewogICAgIm51bUl0ZW0iIDogMSwKICAgICJ0aXBvSXRlbSIgOiAxLAogICAgIm51bWVyb0RvY3VtZW50byIgOiBudWxsLAogICAgImNvZGlnbyIgOiAiMDA1MDMwMyIsCiAgICAiZGVzY3JpcGNpb24iIDogIkFDRUlURSBTQU5UQSBDTEFSQSA2WDMsNzUwTUwgQ0FKQSIsCiAgICAidW5pTWVkaWRhIiA6IDk5LAogICAgImNhbnRpZGFkIiA6IDEsCiAgICAicHJlY2lvVW5pIiA6IDQ5LjgwNTMsCiAgICAibW9udG9EZXNjdSIgOiAwLAogICAgInZlbnRhTm9TdWoiIDogMCwKICAgICJ2ZW50YUV4ZW50YSIgOiAwLAogICAgInZlbnRhR3JhdmFkYSIgOiA0OS44MDUzLAogICAgIm5vR3JhdmFkbyIgOiAwLAogICAgInBzdiIgOiAwLAogICAgImNvZFRyaWJ1dG8iIDogbnVsbCwKICAgICJ0cmlidXRvcyIgOiBbICIyMCIgXQogIH0sIHsKICAgICJudW1JdGVtIiA6IDIsCiAgICAidGlwb0l0ZW0iIDogMSwKICAgICJudW1lcm9Eb2N1bWVudG8iIDogbnVsbCwKICAgICJjb2RpZ28iIDogIjA1OTA0MDMiLAogICAgImRlc2NyaXBjaW9uIiA6ICJERVNDQVIgRk9NIFBMQVRPIE7CsCA5IDI1IFBBUVVFVEUiLAogICAgInVuaU1lZGlkYSIgOiA5OSwKICAgICJjYW50aWRhZCIgOiA0MCwKICAgICJwcmVjaW9VbmkiIDogMC40ODY3LAogICAgIm1vbnRvRGVzY3UiIDogMCwKICAgICJ2ZW50YU5vU3VqIiA6IDAsCiAgICAidmVudGFFeGVudGEiIDogMCwKICAgICJ2ZW50YUdyYXZhZGEiIDogMTkuNDY5LAogICAgIm5vR3JhdmFkbyIgOiAwLAogICAgInBzdiIgOiAwLAogICAgImNvZFRyaWJ1dG8iIDogbnVsbCwKICAgICJ0cmlidXRvcyIgOiBbICIyMCIgXQogIH0sIHsKICAgICJudW1JdGVtIiA6IDMsCiAgICAidGlwb0l0ZW0iIDogMSwKICAgICJudW1lcm9Eb2N1bWVudG8iIDogbnVsbCwKICAgICJjb2RpZ28iIDogIjAwMjA2ODUiLAogICAgImRlc2NyaXBjaW9uIiA6ICJISUdJRU5JQ08gRU5DQU5UTyAxMDAwIEhPSkFTIDEyWDRVIEZBUkRPIiwKICAgICJ1bmlNZWRpZGEiIDogOTksCiAgICAiY2FudGlkYWQiIDogMSwKICAgICJwcmVjaW9VbmkiIDogMjYuODY3MywKICAgICJtb250b0Rlc2N1IiA6IDAsCiAgICAidmVudGFOb1N1aiIgOiAwLAogICAgInZlbnRhRXhlbnRhIiA6IDAsCiAgICAidmVudGFHcmF2YWRhIiA6IDI2Ljg2NzMsCiAgICAibm9HcmF2YWRvIiA6IDAsCiAgICAicHN2IiA6IDAsCiAgICAiY29kVHJpYnV0byIgOiBudWxsLAogICAgInRyaWJ1dG9zIiA6IFsgIjIwIiBdCiAgfSwgewogICAgIm51bUl0ZW0iIDogNCwKICAgICJ0aXBvSXRlbSIgOiAxLAogICAgIm51bWVyb0RvY3VtZW50byIgOiBudWxsLAogICAgImNvZGlnbyIgOiAiMDU5MTE4NSIsCiAgICAiZGVzY3JpcGNpb24iIDogIkRFU0NBUiBGT00gQkFOREVKQSBOwrAgMiA1WDUwVSBGQVJETyIsCiAgICAidW5pTWVkaWRhIiA6IDk5LAogICAgImNhbnRpZGFkIiA6IDUsCiAgICAicHJlY2lvVW5pIiA6IDQuMzgwNSwKICAgICJtb250b0Rlc2N1IiA6IDAsCiAgICAidmVudGFOb1N1aiIgOiAwLAogICAgInZlbnRhRXhlbnRhIiA6IDAsCiAgICAidmVudGFHcmF2YWRhIiA6IDIxLjkwMjcsCiAgICAibm9HcmF2YWRvIiA6IDAsCiAgICAicHN2IiA6IDAsCiAgICAiY29kVHJpYnV0byIgOiBudWxsLAogICAgInRyaWJ1dG9zIiA6IFsgIjIwIiBdCiAgfSwgewogICAgIm51bUl0ZW0iIDogNSwKICAgICJ0aXBvSXRlbSIgOiAxLAogICAgIm51bWVyb0RvY3VtZW50byIgOiBudWxsLAogICAgImNvZGlnbyIgOiAiMDAwNjU5OCIsCiAgICAiZGVzY3JpcGNpb24iIDogIkRFU0NBUiBGT00gQkFOREUvREVQT0NJVE8gN1g3IDRYNTBVIEZBUkRPIiwKICAgICJ1bmlNZWRpZGEiIDogOTksCiAgICAiY2FudGlkYWQiIDogMiwKICAgICJwcmVjaW9VbmkiIDogMTIuMDM1NCwKICAgICJtb250b0Rlc2N1IiA6IDAsCiAgICAidmVudGFOb1N1aiIgOiAwLAogICAgInZlbnRhRXhlbnRhIiA6IDAsCiAgICAidmVudGFHcmF2YWRhIiA6IDI0LjA3MDgsCiAgICAibm9HcmF2YWRvIiA6IDAsCiAgICAicHN2IiA6IDAsCiAgICAiY29kVHJpYnV0byIgOiBudWxsLAogICAgInRyaWJ1dG9zIiA6IFsgIjIwIiBdCiAgfSwgewogICAgIm51bUl0ZW0iIDogNiwKICAgICJ0aXBvSXRlbSIgOiAxLAogICAgIm51bWVyb0RvY3VtZW50byIgOiBudWxsLAogICAgImNvZGlnbyIgOiAiMDAyMDEwMiIsCiAgICAiZGVzY3JpcGNpb24iIDogIkhJR0lFTklDTyBFTkNBTlRPIENMQVNTSUNPIDEyWDRVIEZBUkRPIiwKICAgICJ1bmlNZWRpZGEiIDogOTksCiAgICAiY2FudGlkYWQiIDogNSwKICAgICJwcmVjaW9VbmkiIDogOC4wNzA4LAogICAgIm1vbnRvRGVzY3UiIDogMCwKICAgICJ2ZW50YU5vU3VqIiA6IDAsCiAgICAidmVudGFFeGVudGEiIDogMCwKICAgICJ2ZW50YUdyYXZhZGEiIDogNDAuMzU0LAogICAgIm5vR3JhdmFkbyIgOiAwLAogICAgInBzdiIgOiAwLAogICAgImNvZFRyaWJ1dG8iIDogbnVsbCwKICAgICJ0cmlidXRvcyIgOiBbICIyMCIgXQogIH0sIHsKICAgICJudW1JdGVtIiA6IDcsCiAgICAidGlwb0l0ZW0iIDogMSwKICAgICJudW1lcm9Eb2N1bWVudG8iIDogbnVsbCwKICAgICJjb2RpZ28iIDogIjE2OTI3NTMiLAogICAgImRlc2NyaXBjaW9uIiA6ICJISUdJRU5JQ08gUk9TQUwgU09GVCBQTFVTIDQgT0ZFUlRBIiwKICAgICJ1bmlNZWRpZGEiIDogOTksCiAgICAiY2FudGlkYWQiIDogNjAsCiAgICAicHJlY2lvVW5pIiA6IDAuNzYxMSwKICAgICJtb250b0Rlc2N1IiA6IDAsCiAgICAidmVudGFOb1N1aiIgOiAwLAogICAgInZlbnRhRXhlbnRhIiA6IDAsCiAgICAidmVudGFHcmF2YWRhIiA6IDQ1LjY2MzcsCiAgICAibm9HcmF2YWRvIiA6IDAsCiAgICAicHN2IiA6IDAsCiAgICAiY29kVHJpYnV0byIgOiBudWxsLAogICAgInRyaWJ1dG9zIiA6IFsgIjIwIiBdCiAgfSBdLAogICJyZXN1bWVuIiA6IHsKICAgICJ0b3RhbE5vU3VqIiA6IDAsCiAgICAidG90YWxFeGVudGEiIDogMCwKICAgICJ0b3RhbE5vR3JhdmFkbyIgOiAwLAogICAgInRvdGFsR3JhdmFkYSIgOiAyMjguMTMsCiAgICAic3ViVG90YWwiIDogMjI4LjEzLAogICAgImRlc2N1Tm9TdWoiIDogMCwKICAgICJkZXNjdUV4ZW50YSIgOiAwLAogICAgImRlc2N1R3JhdmFkYSIgOiAwLAogICAgInN1YlRvdGFsVmVudGFzIiA6IDIyOC4xMywKICAgICJwb3JjZW50YWplRGVzY3VlbnRvIiA6IDAsCiAgICAiaXZhUmV0ZTEiIDogMCwKICAgICJpdmFQZXJjaTEiIDogMCwKICAgICJyZXRlUmVudGEiIDogMCwKICAgICJtb250b1RvdGFsT3BlcmFjaW9uIiA6IDI1Ny43OSwKICAgICJ0b3RhbERlc2N1IiA6IDAsCiAgICAidG90YWxQYWdhciIgOiAyNTcuNzksCiAgICAidG90YWxMZXRyYXMiIDogIkRPU0NJRU5UT1MgQ0lOQ1VFTlRBIFkgU0lFVEUgNzkvMTAwIETDk0xBUkVTIiwKICAgICJzYWxkb0Zhdm9yIiA6IDAsCiAgICAiY29uZGljaW9uT3BlcmFjaW9uIiA6IDEsCiAgICAicGFnb3MiIDogbnVsbCwKICAgICJudW1QYWdvRWxlY3Ryb25pY28iIDogbnVsbCwKICAgICJ0cmlidXRvcyIgOiBbIHsKICAgICAgImNvZGlnbyIgOiAiMjAiLAogICAgICAiZGVzY3JpcGNpb24iIDogIkltcHVlc3RvIGFsIFZhbG9yIEFncmVnYWRvIDEzJSIsCiAgICAgICJ2YWxvciIgOiAyOS42NgogICAgfSBdCiAgfSwKICAiZXh0ZW5zaW9uIiA6IG51bGwsCiAgImFwZW5kaWNlIiA6IG51bGwKfQ.U_Igz8RgpS5RZYq_ix8_oWyxFydF6YaKmomKfnkOj98aKm7Ax-skIKwAnbA25qPI4eTC9TzaYQGmUlCmWvl22m1-l3w8p-FFH7L8IFwp60JzxIIqldkDN5JX8fYCsuTYkW05QJPKhiebDavLi1fONWm5wyvExIkrPbNjWunTLa5zg3sT6DNUsXVhA1zKkDU0yNnfaVvD1hr9vjbsQNn4oa4tGcTQXSbc27aFu73avpstWRkTCi8edFSNmb4M3iwBx3za4qbtSQ0-ARx0ymuPUhLMBRrQD_bmiV8GfiKHNcKSIYug8WyCvedxNwkCHSfhuHoWvUQZDvXpicMpvp7HhQ\"\n}', '{\n    \"status\": \"OK\",\n    \"body\": \"eyJhbGciOiJSUzUxMiJ9.ewogICJpZGVudGlmaWNhY2lvbiIgOiB7CiAgICAiYW1iaWVudGUiIDogIjAxIiwKICAgICJjb2RpZ29HZW5lcmFjaW9uIiA6ICJCQjJEODVBMy0yOEVBLTQwQUItQUEwMC1FRTFGNkQzREQ1N0YiLAogICAgImZlY0VtaSIgOiAiMjAyNS0wNi0xNiIsCiAgICAiaG9yRW1pIiA6ICIxMTowNDozOSIsCiAgICAibnVtZXJvQ29udHJvbCIgOiAiRFRFLTAzLUNNMDFQMDE3LTAwMDAwMDAwMDAwMDAyOSIsCiAgICAidGlwb0R0ZSIgOiAiMDMiLAogICAgInRpcG9Nb2RlbG8iIDogMSwKICAgICJ0aXBvT3BlcmFjaW9uIiA6IDEsCiAgICAidGlwb0NvbnRpbmdlbmNpYSIgOiBudWxsLAogICAgIm1vdGl2b0NvbnRpbiIgOiBudWxsLAogICAgInRpcG9Nb25lZGEiIDogIlVTRCIsCiAgICAidmVyc2lvbiIgOiAzCiAgfSwKICAiZG9jdW1lbnRvUmVsYWNpb25hZG8iIDogbnVsbCwKICAiZW1pc29yIiA6IHsKICAgICJjb2RBY3RpdmlkYWQiIDogIjQ3MTExIiwKICAgICJjb2RFc3RhYmxlIiA6ICJDTTAxIiwKICAgICJjb2RFc3RhYmxlTUgiIDogbnVsbCwKICAgICJjb2RQdW50b1ZlbnRhIiA6ICJQMDE3IiwKICAgICJjb2RQdW50b1ZlbnRhTUgiIDogbnVsbCwKICAgICJjb3JyZW8iIDogImZhY3R1cmFjaW9uZWxlY3Ryb25pY2FAZ3J1cG9iZW5hdmlkZXMuY29tIiwKICAgICJkZXNjQWN0aXZpZGFkIiA6ICJWRU5UQSBFTiBTVVBFUk1FUkNBRE9TICg0NzExMSkiLAogICAgIm5pdCIgOiAiMTIxNzEzMDk4NjEwMTMiLAogICAgIm5vbWJyZSIgOiAiRURXSU4gQU5UT05JTyBDT1RPIEJFTkFWSURFUyIsCiAgICAibm9tYnJlQ29tZXJjaWFsIiA6ICJCRU5BTUFYIiwKICAgICJucmMiIDogIjE3NTc4MTEiLAogICAgInRlbGVmb25vIiA6ICI3Njk3Mzc0OCIsCiAgICAidGlwb0VzdGFibGVjaW1pZW50byIgOiAiMDIiLAogICAgImRpcmVjY2lvbiIgOiB7CiAgICAgICJjb21wbGVtZW50byIgOiAiQ0FTRVJJTyBMQSBHT0xPTkRSSU5BIiwKICAgICAgImRlcGFydGFtZW50byIgOiAiMTIiLAogICAgICAibXVuaWNpcGlvIiA6ICIyMyIKICAgIH0KICB9LAogICJyZWNlcHRvciIgOiB7CiAgICAibnJjIiA6ICIzMzQ1MjY1IiwKICAgICJuaXQiIDogIjA0NDk1MjI1NyIsCiAgICAibm9tYnJlIiA6ICJHVUFEQUxVUEUgRVNURUZBTlkgVUxMT0EgREUgQ0hBVkVaIiwKICAgICJub21icmVDb21lcmNpYWwiIDogIlRJRU5EQSBFQ09OT01JQ0EiLAogICAgImNvZEFjdGl2aWRhZCIgOiAiNjYxOTAiLAogICAgImRlc2NBY3RpdmlkYWQiIDogIkFjdGl2aWRhZGVzIGF1eGlsaWFyZXMgZGUgbGEgaW50ZXJtZWRpYWNpw7NuIGZpbmFuY2llcmEgbmNwICg2NjE5MCkiLAogICAgInRlbGVmb25vIiA6ICI3NDA0LTg3MzAiLAogICAgImNvcnJlbyIgOiAidGllbmRhZWNvbm9taWNhc3JvQGdtYWlsLmNvbSIsCiAgICAiZGlyZWNjaW9uIiA6IHsKICAgICAgImNvbXBsZW1lbnRvIiA6ICIyQSBBVkVOSURBU1VSLCBCQVJSSU8gU0FOIEpVQU4iLAogICAgICAiZGVwYXJ0YW1lbnRvIiA6ICIxMiIsCiAgICAgICJtdW5pY2lwaW8iIDogIjIzIgogICAgfQogIH0sCiAgIm90cm9zRG9jdW1lbnRvcyIgOiBudWxsLAogICJ2ZW50YVRlcmNlcm8iIDogbnVsbCwKICAiY3VlcnBvRG9jdW1lbnRvIiA6IFsgewogICAgIm51bUl0ZW0iIDogMSwKICAgICJ0aXBvSXRlbSIgOiAxLAogICAgIm51bWVyb0RvY3VtZW50byIgOiBudWxsLAogICAgImNvZGlnbyIgOiAiMDA1MDMwMyIsCiAgICAiZGVzY3JpcGNpb24iIDogIkFDRUlURSBTQU5UQSBDTEFSQSA2WDMsNzUwTUwgQ0FKQSIsCiAgICAidW5pTWVkaWRhIiA6IDk5LAogICAgImNhbnRpZGFkIiA6IDEsCiAgICAicHJlY2lvVW5pIiA6IDQ5LjgwNTMsCiAgICAibW9udG9EZXNjdSIgOiAwLAogICAgInZlbnRhTm9TdWoiIDogMCwKICAgICJ2ZW50YUV4ZW50YSIgOiAwLAogICAgInZlbnRhR3JhdmFkYSIgOiA0OS44MDUzLAogICAgIm5vR3JhdmFkbyIgOiAwLAogICAgInBzdiIgOiAwLAogICAgImNvZFRyaWJ1dG8iIDogbnVsbCwKICAgICJ0cmlidXRvcyIgOiBbICIyMCIgXQogIH0sIHsKICAgICJudW1JdGVtIiA6IDIsCiAgICAidGlwb0l0ZW0iIDogMSwKICAgICJudW1lcm9Eb2N1bWVudG8iIDogbnVsbCwKICAgICJjb2RpZ28iIDogIjA1OTA0MDMiLAogICAgImRlc2NyaXBjaW9uIiA6ICJERVNDQVIgRk9NIFBMQVRPIE7CsCA5IDI1IFBBUVVFVEUiLAogICAgInVuaU1lZGlkYSIgOiA5OSwKICAgICJjYW50aWRhZCIgOiA0MCwKICAgICJwcmVjaW9VbmkiIDogMC40ODY3LAogICAgIm1vbnRvRGVzY3UiIDogMCwKICAgICJ2ZW50YU5vU3VqIiA6IDAsCiAgICAidmVudGFFeGVudGEiIDogMCwKICAgICJ2ZW50YUdyYXZhZGEiIDogMTkuNDY5LAogICAgIm5vR3JhdmFkbyIgOiAwLAogICAgInBzdiIgOiAwLAogICAgImNvZFRyaWJ1dG8iIDogbnVsbCwKICAgICJ0cmlidXRvcyIgOiBbICIyMCIgXQogIH0sIHsKICAgICJudW1JdGVtIiA6IDMsCiAgICAidGlwb0l0ZW0iIDogMSwKICAgICJudW1lcm9Eb2N1bWVudG8iIDogbnVsbCwKICAgICJjb2RpZ28iIDogIjAwMjA2ODUiLAogICAgImRlc2NyaXBjaW9uIiA6ICJISUdJRU5JQ08gRU5DQU5UTyAxMDAwIEhPSkFTIDEyWDRVIEZBUkRPIiwKICAgICJ1bmlNZWRpZGEiIDogOTksCiAgICAiY2FudGlkYWQiIDogMSwKICAgICJwcmVjaW9VbmkiIDogMjYuODY3MywKICAgICJtb250b0Rlc2N1IiA6IDAsCiAgICAidmVudGFOb1N1aiIgOiAwLAogICAgInZlbnRhRXhlbnRhIiA6IDAsCiAgICAidmVudGFHcmF2YWRhIiA6IDI2Ljg2NzMsCiAgICAibm9HcmF2YWRvIiA6IDAsCiAgICAicHN2IiA6IDAsCiAgICAiY29kVHJpYnV0byIgOiBudWxsLAogICAgInRyaWJ1dG9zIiA6IFsgIjIwIiBdCiAgfSwgewogICAgIm51bUl0ZW0iIDogNCwKICAgICJ0aXBvSXRlbSIgOiAxLAogICAgIm51bWVyb0RvY3VtZW50byIgOiBudWxsLAogICAgImNvZGlnbyIgOiAiMDU5MTE4NSIsCiAgICAiZGVzY3JpcGNpb24iIDogIkRFU0NBUiBGT00gQkFOREVKQSBOwrAgMiA1WDUwVSBGQVJETyIsCiAgICAidW5pTWVkaWRhIiA6IDk5LAogICAgImNhbnRpZGFkIiA6IDUsCiAgICAicHJlY2lvVW5pIiA6IDQuMzgwNSwKICAgICJtb250b0Rlc2N1IiA6IDAsCiAgICAidmVudGFOb1N1aiIgOiAwLAogICAgInZlbnRhRXhlbnRhIiA6IDAsCiAgICAidmVudGFHcmF2YWRhIiA6IDIxLjkwMjcsCiAgICAibm9HcmF2YWRvIiA6IDAsCiAgICAicHN2IiA6IDAsCiAgICAiY29kVHJpYnV0byIgOiBudWxsLAogICAgInRyaWJ1dG9zIiA6IFsgIjIwIiBdCiAgfSwgewogICAgIm51bUl0ZW0iIDogNSwKICAgICJ0aXBvSXRlbSIgOiAxLAogICAgIm51bWVyb0RvY3VtZW50byIgOiBudWxsLAogICAgImNvZGlnbyIgOiAiMDAwNjU5OCIsCiAgICAiZGVzY3JpcGNpb24iIDogIkRFU0NBUiBGT00gQkFOREUvREVQT0NJVE8gN1g3IDRYNTBVIEZBUkRPIiwKICAgICJ1bmlNZWRpZGEiIDogOTksCiAgICAiY2FudGlkYWQiIDogMiwKICAgICJwcmVjaW9VbmkiIDogMTIuMDM1NCwKICAgICJtb250b0Rlc2N1IiA6IDAsCiAgICAidmVudGFOb1N1aiIgOiAwLAogICAgInZlbnRhRXhlbnRhIiA6IDAsCiAgICAidmVudGFHcmF2YWRhIiA6IDI0LjA3MDgsCiAgICAibm9HcmF2YWRvIiA6IDAsCiAgICAicHN2IiA6IDAsCiAgICAiY29kVHJpYnV0byIgOiBudWxsLAogICAgInRyaWJ1dG9zIiA6IFsgIjIwIiBdCiAgfSwgewogICAgIm51bUl0ZW0iIDogNiwKICAgICJ0aXBvSXRlbSIgOiAxLAogICAgIm51bWVyb0RvY3VtZW50byIgOiBudWxsLAogICAgImNvZGlnbyIgOiAiMDAyMDEwMiIsCiAgICAiZGVzY3JpcGNpb24iIDogIkhJR0lFTklDTyBFTkNBTlRPIENMQVNTSUNPIDEyWDRVIEZBUkRPIiwKICAgICJ1bmlNZWRpZGEiIDogOTksCiAgICAiY2FudGlkYWQiIDogNSwKICAgICJwcmVjaW9VbmkiIDogOC4wNzA4LAogICAgIm1vbnRvRGVzY3UiIDogMCwKICAgICJ2ZW50YU5vU3VqIiA6IDAsCiAgICAidmVudGFFeGVudGEiIDogMCwKICAgICJ2ZW50YUdyYXZhZGEiIDogNDAuMzU0LAogICAgIm5vR3JhdmFkbyIgOiAwLAogICAgInBzdiIgOiAwLAogICAgImNvZFRyaWJ1dG8iIDogbnVsbCwKICAgICJ0cmlidXRvcyIgOiBbICIyMCIgXQogIH0sIHsKICAgICJudW1JdGVtIiA6IDcsCiAgICAidGlwb0l0ZW0iIDogMSwKICAgICJudW1lcm9Eb2N1bWVudG8iIDogbnVsbCwKICAgICJjb2RpZ28iIDogIjE2OTI3NTMiLAogICAgImRlc2NyaXBjaW9uIiA6ICJISUdJRU5JQ08gUk9TQUwgU09GVCBQTFVTIDQgT0ZFUlRBIiwKICAgICJ1bmlNZWRpZGEiIDogOTksCiAgICAiY2FudGlkYWQiIDogNjAsCiAgICAicHJlY2lvVW5pIiA6IDAuNzYxMSwKICAgICJtb250b0Rlc2N1IiA6IDAsCiAgICAidmVudGFOb1N1aiIgOiAwLAogICAgInZlbnRhRXhlbnRhIiA6IDAsCiAgICAidmVudGFHcmF2YWRhIiA6IDQ1LjY2MzcsCiAgICAibm9HcmF2YWRvIiA6IDAsCiAgICAicHN2IiA6IDAsCiAgICAiY29kVHJpYnV0byIgOiBudWxsLAogICAgInRyaWJ1dG9zIiA6IFsgIjIwIiBdCiAgfSBdLAogICJyZXN1bWVuIiA6IHsKICAgICJ0b3RhbE5vU3VqIiA6IDAsCiAgICAidG90YWxFeGVudGEiIDogMCwKICAgICJ0b3RhbE5vR3JhdmFkbyIgOiAwLAogICAgInRvdGFsR3JhdmFkYSIgOiAyMjguMTMsCiAgICAic3ViVG90YWwiIDogMjI4LjEzLAogICAgImRlc2N1Tm9TdWoiIDogMCwKICAgICJkZXNjdUV4ZW50YSIgOiAwLAogICAgImRlc2N1R3JhdmFkYSIgOiAwLAogICAgInN1YlRvdGFsVmVudGFzIiA6IDIyOC4xMywKICAgICJwb3JjZW50YWplRGVzY3VlbnRvIiA6IDAsCiAgICAiaXZhUmV0ZTEiIDogMCwKICAgICJpdmFQZXJjaTEiIDogMCwKICAgICJyZXRlUmVudGEiIDogMCwKICAgICJtb250b1RvdGFsT3BlcmFjaW9uIiA6IDI1Ny43OSwKICAgICJ0b3RhbERlc2N1IiA6IDAsCiAgICAidG90YWxQYWdhciIgOiAyNTcuNzksCiAgICAidG90YWxMZXRyYXMiIDogIkRPU0NJRU5UT1MgQ0lOQ1VFTlRBIFkgU0lFVEUgNzkvMTAwIETDk0xBUkVTIiwKICAgICJzYWxkb0Zhdm9yIiA6IDAsCiAgICAiY29uZGljaW9uT3BlcmFjaW9uIiA6IDEsCiAgICAicGFnb3MiIDogbnVsbCwKICAgICJudW1QYWdvRWxlY3Ryb25pY28iIDogbnVsbCwKICAgICJ0cmlidXRvcyIgOiBbIHsKICAgICAgImNvZGlnbyIgOiAiMjAiLAogICAgICAiZGVzY3JpcGNpb24iIDogIkltcHVlc3RvIGFsIFZhbG9yIEFncmVnYWRvIDEzJSIsCiAgICAgICJ2YWxvciIgOiAyOS42NgogICAgfSBdCiAgfSwKICAiZXh0ZW5zaW9uIiA6IG51bGwsCiAgImFwZW5kaWNlIiA6IG51bGwKfQ.U_Igz8RgpS5RZYq_ix8_oWyxFydF6YaKmomKfnkOj98aKm7Ax-skIKwAnbA25qPI4eTC9TzaYQGmUlCmWvl22m1-l3w8p-FFH7L8IFwp60JzxIIqldkDN5JX8fYCsuTYkW05QJPKhiebDavLi1fONWm5wyvExIkrPbNjWunTLa5zg3sT6DNUsXVhA1zKkDU0yNnfaVvD1hr9vjbsQNn4oa4tGcTQXSbc27aFu73avpstWRkTCi8edFSNmb4M3iwBx3za4qbtSQ0-ARx0ymuPUhLMBRrQD_bmiV8GfiKHNcKSIYug8WyCvedxNwkCHSfhuHoWvUQZDvXpicMpvp7HhQ\"\n}', '{\n    \"version\": 2,\n    \"ambiente\": \"01\",\n    \"versionApp\": 2,\n    \"estado\": \"PROCESADO\",\n    \"codigoGeneracion\": \"BB2D85A3-28EA-40AB-AA00-EE1F6D3DD57F\",\n    \"selloRecibido\": \"202597D95FD69E8C452EA27B8EA29368767ERTNB\",\n    \"fhProcesamiento\": \"16\\/06\\/2025 11:22:23\",\n    \"clasificaMsg\": \"10\",\n    \"codigoMsg\": \"001\",\n    \"descripcionMsg\": \"RECIBIDO\",\n    \"observaciones\": []\n}', 1, NULL, 'Documento enviado y entregado a: tiendaeconomicasro@gmail.com', NULL),
+('a0282f4f-01d1-45a9-ba40-880f64ebcaff', 'CM0120250904214554', '2025-09-04 13:45:54', 'Edwin Antonio Coto Benavides', '2025-09-04', NULL, NULL, 0, NULL, '00', NULL, NULL, 'USD', '03', 0, 1, NULL, NULL, NULL, 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 1, 0, NULL, 0.00, 0.00, NULL, 'Cliente General', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00, 1.70, 0.00, 0.00, 0.00, 0.00, 0.00, 1.50, 0.00, -0.20, 0.00, NULL, 1, NULL, NULL, NULL, 0, 0.00, 0.00, 0.00, NULL, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.50, 0.20, 0.00, 0.00, NULL, NULL, 0.00, 0.00, 0.00, 0.00, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -1842,6 +1857,46 @@ CREATE TABLE `tblnotasdeentregadetalle` (
   `UsuarioUpdate` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
+--
+-- Volcado de datos para la tabla `tblnotasdeentregadetalle`
+--
+
+INSERT INTO `tblnotasdeentregadetalle` (`UUIDDetalleVenta`, `UUIDVenta`, `FechaRegistro`, `UsuarioRegistro`, `NumeroDocumento`, `NoItem`, `TipoDeItem`, `CodigoPROD`, `CodigoBarra`, `Concepto`, `TV`, `UnidadDeMedida`, `Cantidad`, `UnidadesVendidas`, `PrecioVenta`, `PrecioVentaSinImpuesto`, `PrecioNormal`, `PrecioSugeridoVenta`, `Descuento`, `VentaNoSujeta`, `VentaExenta`, `VentaGravada`, `VentaGravadaSinImpuesto`, `TotalImporte`, `TotalOperacion`, `IVAItem`, `PrecioCosto`, `TotalCosto`, `PagaImpuesto`, `PorcentajeImpuesto`, `CodigoTributo`, `Tributo`, `FechaUpdate`, `UsuarioUpdate`) VALUES
+('87fbab11-31bd-4cbe-94d1-c38534249741', '3ab371c2-b42c-43ec-8e5a-4e655738c82f', '2025-09-04 13:40:25', 'Edwin Antonio Coto Benavides', NULL, 0, 1, '2', NULL, 'PEPSI COLA 2 LITROS', 1, 99, 1.0000, 0, 4.5000, 3.9823, 0.00, 0.00, 0.00, 0.00, 0.00, 4.50, 3.9823, 4.50, 0.00, 0.5177, 0.0000, 0.00, 1, 0.00, NULL, NULL, NULL, NULL),
+('263740b5-1238-4d26-bd73-e00f02cdada7', 'cca10210-290a-46a3-b118-6fbf6159f562', '2025-09-04 13:43:01', 'Edwin Antonio Coto Benavides', NULL, 0, 1, '1', NULL, 'COCA COLA 2.5 LITROS', 1, 99, 1.0000, 0, 1.5000, 1.3274, 0.00, 0.00, 0.00, 0.00, 0.00, 1.50, 1.3274, 1.50, 0.00, 0.1726, 0.0000, 0.00, 1, 0.00, NULL, NULL, NULL, NULL),
+('8adf8e58-ecf7-48b0-aa5d-08d32ef1b69b', '3b017ff2-37b1-437b-88f7-0d12c530de8a', '2025-09-04 13:43:49', 'Edwin Antonio Coto Benavides', NULL, 0, 1, '1', NULL, 'COCA COLA 2.5 LITROS', 1, 99, 1.0000, 0, 1.5000, 1.3274, 0.00, 0.00, 0.00, 0.00, 0.00, 1.50, 1.3274, 1.50, 0.00, 0.1726, 0.0000, 0.00, 1, 0.00, NULL, NULL, NULL, NULL),
+('8d2627e5-1b18-422c-aaa2-84f1587676b3', 'd981bbb4-ebc0-4615-97bf-2da1f1974236', '2025-09-04 13:44:53', 'Edwin Antonio Coto Benavides', NULL, 0, 1, '2', NULL, 'PEPSI COLA 2 LITROS', 1, 99, 1.0000, 0, 4.5000, 3.9823, 0.00, 0.00, 0.00, 0.00, 0.00, 4.50, 3.9823, 4.50, 0.00, 0.5177, 0.0000, 0.00, 1, 0.00, NULL, NULL, NULL, NULL),
+('4fbdfde2-09d3-4c25-b80d-9ff039d612d2', 'a0282f4f-01d1-45a9-ba40-880f64ebcaff', '2025-09-04 13:45:54', 'Edwin Antonio Coto Benavides', NULL, 0, 1, '10', NULL, 'ARROZ BLANCO 1 LIBRA', 1, 99, 1.0000, 0, 1.5000, 1.3274, 0.00, 0.00, 0.00, 0.00, 0.00, 1.50, 1.3274, 1.50, 0.00, 0.1726, 0.0000, 0.00, 1, 0.00, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbltipodedocumentos`
+--
+
+CREATE TABLE `tbltipodedocumentos` (
+  `Codigo` varchar(10) DEFAULT NULL,
+  `Valor` varchar(200) DEFAULT NULL,
+  `VersionDTE` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish2_ci;
+
+--
+-- Volcado de datos para la tabla `tbltipodedocumentos`
+--
+
+INSERT INTO `tbltipodedocumentos` (`Codigo`, `Valor`, `VersionDTE`) VALUES
+('01', 'FACTURA ELECTRONICA', 1),
+('03', 'COMPROBANTE DE CREDITO FISCAL ELECRONICO', 3),
+('04', 'NOTA DE REMISION ELECTRONICA', 3),
+('05', 'NOTA DE CREDITO ELECRONICA', 3),
+('06', 'NOTA DE DEBITO ELECTRONICA', 3),
+('07', 'COMPROBANTE DE RETENCION ELECTRONICO', 1),
+('08', 'COMPROBANTE DE LIQUIDACION ELECTRONICO', 1),
+('09', 'DOCUMENTO CONTABLE DE LIQUIDACION ELECTRONICO', 1),
+('11', 'FACTURA DE EXPORTACION ELECTRONICA', 1),
+('14', 'FACTURA DE SUJETO EXCLUIDO ELECTRONICA', 1),
+('15', 'COMPRABANTE DE DONACION ELECTRONICO', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -1855,19 +1910,20 @@ CREATE TABLE `tbltipomoneda` (
   `CurrencyName` varchar(35) DEFAULT NULL,
   `Money` varchar(30) DEFAULT NULL,
   `Symbol` varchar(3) DEFAULT NULL,
-  `codigoarea` varchar(4) NOT NULL
+  `codigoarea` varchar(4) NOT NULL,
+  `TipoMoneda` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbltipomoneda`
 --
 
-INSERT INTO `tbltipomoneda` (`idcurrency`, `CurrencyISO`, `Language`, `CurrencyName`, `Money`, `Symbol`, `codigoarea`) VALUES
-(1, 'CRC', 'ES', 'Colon Costa Ricense', 'Colón', '₡', '506'),
-(2, 'HNL', 'ES', 'Lempira Hondureno', 'Lempira', 'L', '504'),
-(3, 'GTQ', 'ES', 'Quetzal', 'Quetzal', 'Q', '502'),
-(4, 'SV', 'ES', 'Dolar Estadounidense', 'US.Dolar', '$', '503'),
-(5, 'NIC', 'ES', 'Cordoba Nicaraguense', 'Córdoba', 'C', '505');
+INSERT INTO `tbltipomoneda` (`idcurrency`, `CurrencyISO`, `Language`, `CurrencyName`, `Money`, `Symbol`, `codigoarea`, `TipoMoneda`) VALUES
+(1, 'CRC', 'ES', 'Colon Costa Ricense', 'Colón', '₡', '506', '0'),
+(2, 'HNL', 'ES', 'Lempira Hondureno', 'Lempira', 'L', '504', '0'),
+(3, 'GTQ', 'ES', 'Quetzal', 'Quetzal', 'Q', '502', '0'),
+(4, 'USD', 'ES', 'Dolar Estadounidense', 'US.Dolar', '$', '503', 'USD'),
+(5, 'NIC', 'ES', 'Cordoba Nicaraguense', 'Córdoba', 'C', '505', '0');
 
 -- --------------------------------------------------------
 
@@ -1890,7 +1946,7 @@ CREATE TABLE `tbltokens_verificacion` (
 
 INSERT INTO `tbltokens_verificacion` (`IDToken`, `UUIDVendedor`, `Token`, `FechaCreacion`, `FechaExpiracion`, `Usado`) VALUES
 (32, '0ff038f6-8745-11f0-ac94-989096a0999b', '433466', '2025-09-02 07:59:14', '2025-09-02 08:09:14', 1),
-(49, '721dfc2f-841e-11f0-9acd-989096a0999b', '295938', '2025-09-03 08:41:36', '2025-09-03 08:51:36', 1);
+(50, '721dfc2f-841e-11f0-9acd-989096a0999b', '209980', '2025-09-04 13:36:15', '2025-09-04 13:46:15', 1);
 
 --
 -- Índices para tablas volcadas
@@ -1925,12 +1981,7 @@ ALTER TABLE `tblcontribuyentescategorias`
 -- Indices de la tabla `tblcontribuyentesclientes`
 --
 ALTER TABLE `tblcontribuyentesclientes`
-  ADD PRIMARY KEY (`UUIDCliente`),
-  ADD KEY `idx_uuid_contribuyente` (`UUIDContribuyente`),
-  ADD KEY `idx_dui` (`DUI`),
-  ADD KEY `idx_nit` (`NIT`),
-  ADD KEY `idx_correo` (`CorreoElectronico`),
-  ADD KEY `idx_estado` (`Estado`);
+  ADD PRIMARY KEY (`UUIDCliente`);
 
 --
 -- Indices de la tabla `tblcontribuyentesproductos`
@@ -1963,10 +2014,10 @@ ALTER TABLE `tbldistritos`
   ADD PRIMARY KEY (`UUIDDistrito`);
 
 --
--- Indices de la tabla `tblmunicipios`
+-- Indices de la tabla `tblnotasdeentrega`
 --
-ALTER TABLE `tblmunicipios`
-  ADD PRIMARY KEY (`UUIDMunicipio`);
+ALTER TABLE `tblnotasdeentrega`
+  ADD PRIMARY KEY (`UUIDVenta`);
 
 --
 -- Indices de la tabla `tbltipomoneda`
@@ -2024,12 +2075,6 @@ ALTER TABLE `tbldistritos`
   MODIFY `UUIDDistrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1420;
 
 --
--- AUTO_INCREMENT de la tabla `tblmunicipios`
---
-ALTER TABLE `tblmunicipios`
-  MODIFY `UUIDMunicipio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
-
---
 -- AUTO_INCREMENT de la tabla `tbltipomoneda`
 --
 ALTER TABLE `tbltipomoneda`
@@ -2039,7 +2084,7 @@ ALTER TABLE `tbltipomoneda`
 -- AUTO_INCREMENT de la tabla `tbltokens_verificacion`
 --
 ALTER TABLE `tbltokens_verificacion`
-  MODIFY `IDToken` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `IDToken` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- Restricciones para tablas volcadas

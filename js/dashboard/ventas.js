@@ -294,7 +294,8 @@ function updateDocumentType() {
         const statusTexts = {
             'factura': 'VENTA POR DESPACHO',
             'credito': 'CREDITO FISCAL',
-            'nota': 'NOTA DE CREDITO'
+            'nota': 'NOTA DE CREDITO',
+            'sujeto excluido': 'SUJETO EXCLUIDO'
         };
         statusElement.textContent = statusTexts[documentType] || 'VENTA POR DESPACHO';
     }
@@ -335,7 +336,15 @@ async function processSale() {
         
     } catch (error) {
         console.error('Error al procesar venta:', error);
-        showTemporaryMessage('Error al procesar la venta: ' + error.message, 'error');
+        let errorMessage = 'Error al procesar la venta: ' + error.message;
+        
+        // Si el error tiene más detalles, mostrarlos en consola
+        if (error.details) {
+            console.error('Detalles del error:', error.details);
+            errorMessage += '\nRevisa la consola para más detalles.';
+        }
+        
+        showTemporaryMessage(errorMessage, 'error');
     } finally {
         if (typeof hideLoadingIndicator === 'function') {
             hideLoadingIndicator();
@@ -400,6 +409,8 @@ function prepareSaleData(efectivoRecibido) {
  * Enviar datos de venta al backend
  */
 async function sendSaleToBackend(saleData) {
+    console.log('Enviando datos de venta:', saleData);
+    
     const response = await fetch('api/ventas.php', {
         method: 'POST',
         headers: {
@@ -408,14 +419,31 @@ async function sendSaleToBackend(saleData) {
         body: JSON.stringify(saleData)
     });
     
-    if (!response.ok) {
-        throw new Error(`Error HTTP: ${response.status}`);
+    console.log('Respuesta del servidor:', response.status, response.statusText);
+    
+    let result;
+    try {
+        const responseText = await response.text();
+        console.log('Texto de respuesta:', responseText);
+        result = JSON.parse(responseText);
+    } catch (parseError) {
+        console.error('Error al parsear JSON:', parseError);
+        console.error('Respuesta del servidor:', await response.text());
+        throw new Error('Error al procesar respuesta del servidor');
     }
     
-    const result = await response.json();
+    if (!response.ok) {
+        console.error('Error del servidor:', result);
+        const error = new Error(`Error HTTP: ${response.status} - ${result.error || 'Error desconocido'}`);
+        error.details = result;
+        throw error;
+    }
     
     if (!result.success) {
-        throw new Error(result.error || result.message || 'Error desconocido');
+        console.error('Error en la respuesta:', result);
+        const error = new Error(result.error || result.message || 'Error desconocido');
+        error.details = result;
+        throw error;
     }
     
     return result;
