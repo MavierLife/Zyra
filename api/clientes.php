@@ -304,7 +304,7 @@ function handlePost() {
             $stmtActividad->execute([$input['codActividad']]);
             $actividad = $stmtActividad->fetch(PDO::FETCH_ASSOC);
             if ($actividad) {
-                $giroComercialVal = $actividad['DescripcionActividad'] . ' (' . $input['codActividad'] . ')';
+                $giroComercialVal = $actividad['DescripcionActividad'];
             } else {
                 $giroComercialVal = $input['giro'] ?? null;
             }
@@ -435,6 +435,21 @@ function handlePut() {
         $contribuyenteVal = ($tipoDeClienteVal === 2) ? 1 : ((isset($input['esContribuyente']) && (int)$input['esContribuyente'] === 1) ? 1 : 0); // Contribuyente
         $estadoVal = (($input['estado'] ?? 'Activo') === 'Activo') ? 1 : 0; // Estado tinyint
 
+        // Obtener descripción de actividad si existe código (mismo comportamiento que en handlePost)
+        $giroComercialVal = null;
+        if (!empty($input['codActividad'])) {
+            $stmtActividad = $pdo->prepare("SELECT DescripcionActividad FROM tblcatalogodeactividades WHERE CodigoActividad = ?");
+            $stmtActividad->execute([$input['codActividad']]);
+            $actividad = $stmtActividad->fetch(PDO::FETCH_ASSOC);
+            if ($actividad) {
+                $giroComercialVal = $actividad['DescripcionActividad'];
+            } else {
+                $giroComercialVal = $input['giro'] ?? null;
+            }
+        } else {
+            $giroComercialVal = $input['giro'] ?? null;
+        }
+
         $stmt = $pdo->prepare("\n            UPDATE tblcontribuyentesclientes SET\n                NombreDeCliente = ?,\n                NombreComercial = ?,\n                Telefono = ?,\n                CorreoElectronico = ?,\n                Direccion = ?,\n                Departamento = ?,\n                Municipio = ?,\n                Distrito = ?,\n                DUI = ?,\n                NIT = ?,\n                NRC = ?,\n                TipoDeCliente = ?,\n                Contribuyente = ?,\n                CodActividad = ?,\n                GiroComercial = ?,\n                OtroDocumento = ?,\n                PercibirIVA = ?,\n                RetenerIVA = ?,\n                RetenerRenta = ?,\n                Estado = ?,\n                Observaciones = ?,\n                UsuarioUpdate = ?,\n                FechaUpdate = NOW()\n            WHERE UUIDCliente = ?\n        ");
         
         $result = $stmt->execute([
@@ -452,7 +467,7 @@ function handlePut() {
             $tipoDeClienteVal,
             $contribuyenteVal,
             $input['codActividad'] ?? null,
-            $input['giro'] ?? null,
+            $giroComercialVal,
             $input['otroDocumento'] ?? null,
             $input['percibirIVA'] ? 1 : 0,
             $input['retenerIVA'] ? 1 : 0,

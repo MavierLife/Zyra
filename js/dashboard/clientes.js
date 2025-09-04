@@ -616,7 +616,7 @@ async function handleSaveClient() {
         tipoPersona: (() => { const v = formData.get('tipoCliente'); return v === '2' ? 2 : 1; })(),
         facturarCon: formData.get('facturarCon'),
         codActividad: formData.get('codActividadValue') || formData.get('codActividad'),
-        giro: formData.get('giroComercial'),
+        giro: formData.get('GiroComercial'),
         otroDocumento: formData.get('otroDocumento'),
         percibirIVA: formData.get('percibirIVA') === 'on' ? 1 : 0,
         retenerIVA: formData.get('retenerIVA') === 'on' ? 1 : 0,

@@ -76,8 +76,8 @@ try {
     // Iniciar transacción
     $pdo->beginTransaction();
     
-    // Obtener información del vendedor y contribuyente
-    $sqlVendedor = "SELECT UUIDContribuyente, NombreUsuario FROM tblcontribuyentesvendedores WHERE UUIDVendedor = :uuid_vendedor";
+    // Obtener información completa del vendedor y contribuyente
+    $sqlVendedor = "SELECT UUIDContribuyente, NombreUsuario, CodPuntoVenta FROM tblcontribuyentesvendedores WHERE UUIDVendedor = :uuid_vendedor";
     $stmtVendedor = $pdo->prepare($sqlVendedor);
     $stmtVendedor->bindParam(':uuid_vendedor', $uuidVendedor);
     $stmtVendedor->execute();
@@ -90,6 +90,7 @@ try {
     
     $uuidContribuyente = $vendedorData['UUIDContribuyente'];
     $nombreUsuario = $vendedorData['NombreUsuario'];
+    $codPuntoVenta = $vendedorData['CodPuntoVenta'];
     
     // Obtener información del contribuyente incluyendo AmbienteDTE
     $sqlContribuyente = "SELECT CodEstable, AmbienteDTE FROM tblcontribuyentes WHERE UUIDContribuyente = :uuid_contribuyente";
@@ -105,6 +106,52 @@ try {
     
     $codEstable = $contribuyenteData['CodEstable'];
     $ambienteDTE = $contribuyenteData['AmbienteDTE'];
+    
+    // Obtener información del cliente si existe
+    $codigoCLI = null;
+    $nombreDeCliente = 'Cliente General';
+    $codigoActividad = null;
+    $actividad = null;
+    // Nuevos campos del cliente
+    $nombreComercial = null;
+    $direccion = null;
+    $idDepartamento = null;
+    $departamento = null;
+    $idMunicipio = null;
+    $municipio = null;
+    $idDistrito = null;
+    $distrito = null;
+    $dui = null;
+    $nrc = null;
+    $nit = null;
+    
+    if (isset($data['cliente']) && $data['cliente'] && isset($data['cliente']['id'])) {
+        $sqlCliente = "SELECT UUIDCliente, NombreDeCliente, NombreComercial, Direccion, IDDepartamento, Departamento, IDMunicipio, Municipio, IDDistrito, Distrito, DUI, NRC, NIT, CodActividad, GiroComercial FROM tblcontribuyentesclientes WHERE UUIDCliente = :uuid_cliente";
+        $stmtCliente = $pdo->prepare($sqlCliente);
+        $stmtCliente->bindParam(':uuid_cliente', $data['cliente']['id']);
+        $stmtCliente->execute();
+        
+        $clienteData = $stmtCliente->fetch(PDO::FETCH_ASSOC);
+        
+        if ($clienteData) {
+            $codigoCLI = $clienteData['UUIDCliente'];
+            $nombreDeCliente = $clienteData['NombreDeCliente'];
+            $codigoActividad = $clienteData['CodActividad'];
+            $actividad = $clienteData['GiroComercial'];
+            // Asignar nuevos campos
+            $nombreComercial = $clienteData['NombreComercial'];
+            $direccion = $clienteData['Direccion'];
+            $idDepartamento = $clienteData['IDDepartamento'];
+            $departamento = $clienteData['Departamento'];
+            $idMunicipio = $clienteData['IDMunicipio'];
+            $municipio = $clienteData['Municipio'];
+            $idDistrito = $clienteData['IDDistrito'];
+            $distrito = $clienteData['Distrito'];
+            $dui = $clienteData['DUI'];
+            $nrc = $clienteData['NRC'];
+            $nit = $clienteData['NIT'];
+        }
+    }
     
     // Obtener TipoMoneda desde tbltipomoneda
     $sqlTipoMoneda = "SELECT CurrencyISO FROM tbltipomoneda WHERE CurrencyISO = 'SV' LIMIT 1";
@@ -169,13 +216,21 @@ try {
     $sqlVenta = "INSERT INTO tblnotasdeentrega (
         UUIDVenta, CodigoVEN, CodDocumento, VersionDTE, UsuarioRegistro,
         FechaFacturacion, Ambiente, TipoMoneda,
-        TipoDespacho, NombreDeCliente, 
+        UUIDNegocio, UUIDSucursal, UUIDCaja, UUIDOperador, Operador, UUIDVendedor,
+        CodEstablecimiento, CodPuntoVenta, TipoDespacho,
+        CodigoCLI, NombreDeCliente, CodigoActividad, Actividad,
+        NombreComercial, Direccion, IDDepartamento, Departamento, IDMunicipio, Municipio, IDDistrito, Distrito,
+        DUI, NRC, NIT,
         SubTotalVentas, IVAPercibido, TotalImporte,
         PagoEfectivo, Cambio, Estado
     ) VALUES (
         :uuid_venta, :codigo_ven, :cod_documento, :version_dte, :usuario_registro,
         :fecha_facturacion, :ambiente, :tipo_moneda,
-        1, 'Cliente General',
+        :uuid_negocio, :uuid_sucursal, :uuid_caja, :uuid_operador, :operador, :uuid_vendedor,
+        :cod_establecimiento, :cod_punto_venta, 1,
+        :codigo_cli, :nombre_cliente, :codigo_actividad, :actividad,
+        :nombre_comercial, :direccion, :id_departamento, :departamento, :id_municipio, :municipio, :id_distrito, :distrito,
+        :dui, :nrc, :nit,
         :subtotal, :iva, :total_importe,
         :pago_efectivo, :cambio, 1
     )";
@@ -189,6 +244,36 @@ try {
     $stmtVenta->bindParam(':fecha_facturacion', $fechaFacturacion);
     $stmtVenta->bindParam(':ambiente', $ambienteDTE);
     $stmtVenta->bindParam(':tipo_moneda', $tipoMoneda);
+    
+    // Campos adicionales según especificaciones
+    $stmtVenta->bindParam(':uuid_negocio', $uuidContribuyente);
+    $stmtVenta->bindParam(':uuid_sucursal', $codEstable);
+    $stmtVenta->bindParam(':uuid_caja', $codPuntoVenta);
+    $stmtVenta->bindParam(':uuid_operador', $uuidVendedor);
+    $stmtVenta->bindParam(':operador', $uuidVendedor);
+    $stmtVenta->bindParam(':uuid_vendedor', $uuidVendedor);
+    $stmtVenta->bindParam(':cod_establecimiento', $codEstable);
+    $stmtVenta->bindParam(':cod_punto_venta', $codPuntoVenta);
+    
+    // Información del cliente
+    $stmtVenta->bindParam(':codigo_cli', $codigoCLI);
+    $stmtVenta->bindParam(':nombre_cliente', $nombreDeCliente);
+    $stmtVenta->bindParam(':codigo_actividad', $codigoActividad);
+    $stmtVenta->bindParam(':actividad', $actividad);
+    // Nuevos campos de cliente
+    $stmtVenta->bindParam(':nombre_comercial', $nombreComercial);
+    $stmtVenta->bindParam(':direccion', $direccion);
+    $stmtVenta->bindParam(':id_departamento', $idDepartamento);
+    $stmtVenta->bindParam(':departamento', $departamento);
+    $stmtVenta->bindParam(':id_municipio', $idMunicipio);
+    $stmtVenta->bindParam(':municipio', $municipio);
+    $stmtVenta->bindParam(':id_distrito', $idDistrito);
+    $stmtVenta->bindParam(':distrito', $distrito);
+    $stmtVenta->bindParam(':dui', $dui);
+    $stmtVenta->bindParam(':nrc', $nrc);
+    $stmtVenta->bindParam(':nit', $nit);
+    
+    // Totales y pagos
     $stmtVenta->bindParam(':subtotal', $subTotal);
     $stmtVenta->bindParam(':iva', $totalIVA);
     $stmtVenta->bindParam(':total_importe', $totalImporte);
