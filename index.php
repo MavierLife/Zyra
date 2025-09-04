@@ -18,6 +18,7 @@ $pageTitle = 'Nueva venta';
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="styles/dashboard/dashboard.css">
+    <link rel="stylesheet" href="styles/dashboard/ventas.css">
     <link rel="icon" type="image/png" href="assets/logos/logo.png">
 </head>
 <body>
@@ -144,6 +145,77 @@ $pageTitle = 'Nueva venta';
         </div>
     </div>
 
+    <!-- Modal de cobro de venta -->
+    <div id="saleModal" class="modal">
+        <div class="modal-content sale-modal-content">
+            <div class="modal-header sale-modal-header">
+                <h3>Cobrar Venta</h3>
+                <span class="close-modal" onclick="closeSaleModal()">&times;</span>
+            </div>
+            
+            <div class="sale-modal-body">
+                <!-- Información del documento -->
+                <div class="document-info">
+                    <div class="document-type">
+                        <label for="documentType">Documento Tributario Electrónico - DTE</label>
+                        <select id="documentType" class="document-select">
+                            <option value="factura">FACTURA ELECTRONICA</option>
+                            <option value="credito">CREDITO FISCAL</option>
+                            <option value="nota">NOTA DE CREDITO</option>
+                        </select>
+                    </div>
+                    
+                    <div class="document-number">
+                        <div class="document-id" id="documentId">N1M001202509040836271</div>
+                        <div class="document-total" id="documentTotal">$10.00</div>
+                        <div class="document-status">VENTA POR DESPACHO</div>
+                    </div>
+                </div>
+                
+                <!-- Botones de acción -->
+                <div class="action-buttons">
+                    <button class="action-btn contact-btn" id="contactBtn">
+                        <span class="btn-icon">📞</span>
+                        Contacto
+                    </button>
+                    <button class="action-btn credit-btn" id="creditBtn">
+                        <span class="btn-icon">💳</span>
+                        Credito
+                    </button>
+                    <button class="action-btn multiple-btn" id="multipleBtn">
+                        <span class="btn-icon">📊</span>
+                        Multiple
+                    </button>
+                </div>
+                
+                <!-- Campos de pago -->
+                <div class="payment-fields">
+                    <div class="payment-row">
+                        <label for="efectivoRecibido">Efectivo Recibido:</label>
+                        <input type="number" id="efectivoRecibido" class="payment-input" value="0" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="payment-row">
+                        <label for="cambio">Cambio:</label>
+                        <input type="number" id="cambio" class="payment-input" value="0" step="0.01" readonly>
+                    </div>
+                </div>
+                
+                <!-- Botones de procesamiento -->
+                <div class="process-buttons">
+                    <button class="process-btn process-btn-primary" id="processBtn">
+                        <span class="btn-icon">⚙️</span>
+                        Procesar
+                    </button>
+                    <button class="process-btn process-btn-secondary" id="cancelBtn">
+                        <span class="btn-icon">❌</span>
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Variables globales desde PHP
         const vendedorId = '<?php echo htmlspecialchars($vendedorId, ENT_QUOTES, 'UTF-8'); ?>';
@@ -152,6 +224,7 @@ $pageTitle = 'Nueva venta';
     </script>
     <link rel="stylesheet" href="styles/dashboard/apertura_caja.css">
     <script src="js/dashboard/dashboard.js"></script>
+    <script src="js/dashboard/ventas.js"></script>
     <script src="js/dashboard/apertura_caja.js"></script>
 </body>
 </html>

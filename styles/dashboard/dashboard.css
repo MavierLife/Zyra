@@ -1189,6 +1189,8 @@ body {
 
 /* Diseño optimizado para escritorio únicamente */
 /* Sin soporte para dispositivos móviles o tablets */
+
+/* Nota: Los estilos del modal de ventas se han movido a styles/dashboard/ventas.css */
 /* Estado deshabilitado para botones de acción con tooltip (uso general) */
 .btn--disabled {
     opacity: 0.55;

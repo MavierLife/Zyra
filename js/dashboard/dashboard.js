@@ -816,7 +816,7 @@ function handleClearCart() {
 // Continuar con la venta
 function handleContinue() {
     if (cart.length > 0) {
-        showTemporaryMessage('Procesando venta - Función próximamente');
+        showSaleModal();
     }
 }
 
@@ -1082,3 +1082,5 @@ function limitDecimals(input, maxDecimals) {
         }
     }
 }
+
+// Nota: La lógica del modal de ventas se ha movido a js/dashboard/ventas.js
