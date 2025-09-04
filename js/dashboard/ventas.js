@@ -493,15 +493,36 @@ function printSaleTicket(saleId) {
  * Mostrar mensaje temporal (fallback si no existe en dashboard.js)
  */
 function showTemporaryMessage(message, type = 'info') {
-    // Verificar si la función existe globalmente
-    if (typeof window.showTemporaryMessage === 'function') {
+    // Verificar si existe una función global diferente a esta misma
+    if (typeof window.showTemporaryMessage === 'function' && window.showTemporaryMessage !== showTemporaryMessage) {
         window.showTemporaryMessage(message, type);
         return;
     }
     
-    // Fallback simple
-    console.log(`[${type.toUpperCase()}] ${message}`);
-    alert(message);
+    // Fallback simple - crear notificación visual
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Remover después de 3 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 3000);
 }
 
 // ===== FUNCIONALIDAD DE BÚSQUEDA DE CLIENTES =====
