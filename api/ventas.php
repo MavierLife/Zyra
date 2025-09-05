@@ -125,9 +125,11 @@ try {
     $dui = null;
     $nrc = null;
     $nit = null;
+    $telMovilWhatsApp = null;
+    $correoElectronico = null;
     
     if (isset($data['cliente']) && $data['cliente'] && isset($data['cliente']['id'])) {
-        $sqlCliente = "SELECT UUIDCliente, NombreDeCliente, NombreComercial, Direccion, IDDepartamento, Departamento, IDMunicipio, Municipio, IDDistrito, Distrito, DUI, NRC, NIT, CodActividad, GiroComercial FROM tblcontribuyentesclientes WHERE UUIDCliente = :uuid_cliente";
+        $sqlCliente = "SELECT UUIDCliente, NombreDeCliente, NombreComercial, Direccion, IDDepartamento, Departamento, IDMunicipio, Municipio, IDDistrito, Distrito, DUI, NRC, NIT, CodActividad, GiroComercial, Telefono, CorreoElectronico FROM tblcontribuyentesclientes WHERE UUIDCliente = :uuid_cliente";
         $stmtCliente = $pdo->prepare($sqlCliente);
         $stmtCliente->bindParam(':uuid_cliente', $data['cliente']['id']);
         $stmtCliente->execute();
@@ -151,6 +153,8 @@ try {
             $dui = $clienteData['DUI'];
             $nrc = $clienteData['NRC'];
             $nit = $clienteData['NIT'];
+            $telMovilWhatsApp = $clienteData['Telefono'];
+            $correoElectronico = $clienteData['CorreoElectronico'];
         }
     }
     
@@ -167,31 +171,23 @@ try {
     // Generar número de documento usando el código de establecimiento
     $documentNumber = generateDocumentNumber($codEstable);
     
-    // Calcular totales
-    $subTotal = 0;
-    $totalIVA = 0;
-    $totalVentaGravada = 0;
-    $totalVentaExenta = 0;
+    // Variables para totales que se calcularán después de insertar detalles
+    $totalCostoVenta = 0;
+    $totalImporteVenta = 0;
     
-    // Validar productos y calcular totales
-    foreach ($data['items'] as $item) {
-        if (!isset($item['id']) || !isset($item['quantity']) || !isset($item['currentPrice'])) {
-            throw new Exception('Datos de producto inválidos');
-        }
-        
-        $cantidad = intval($item['quantity']);
-        $precio = floatval($item['currentPrice']);
-        $subtotalItem = $cantidad * $precio;
-        
-        $subTotal += $subtotalItem;
-        
-        // Por simplicidad, asumimos que todos los productos están gravados con IVA
-        $totalVentaGravada += $subtotalItem;
-    }
+    // Campos de pago según especificaciones
+    $pagoEfectivo = 0.00; // Por el momento siempre 0.00
+    $pagoRecibido = floatval($data['efectivoRecibido']); // Monto digitado por el vendedor
+    $pagoContado = $pagoRecibido; // Mismo valor que PagoRecibido
     
-    // Calcular IVA (13% en El Salvador)
-    $totalIVA = $totalVentaGravada * 0.13;
-    $totalImporte = $subTotal + $totalIVA;
+    // Calcular cambio (se recalculará después con el total real)
+    $cambio = 0.00; // Se calculará después
+    
+    // Campos tributarios que se calcularán después
+    $totalGravadas = 0.00;
+    $totalNoSujetas = 0.00; // Por el momento siempre 0.00
+    $totalExentas = 0.00; // Por el momento siempre 0.00
+    $subTotalVenta = 0.00; // TotalNoSujetas + TotalExentas + TotalGravadas
     
     // Generar UUID independiente para la venta
     $uuidVentaIndependiente = generateUUID();
@@ -221,9 +217,9 @@ try {
         CodEstablecimiento, CodPuntoVenta, TipoDespacho,
         CodigoCLI, NombreDeCliente, CodigoActividad, Actividad,
         NombreComercial, Direccion, IDDepartamento, Departamento, IDMunicipio, Municipio, IDDistrito, Distrito,
-        DUI, NRC, NIT,
-        SubTotalVentas, IVAPercibido, TotalImporte,
-        PagoEfectivo, Cambio, Estado
+        DUI, NRC, NIT, TelMovilWhatsApp, CorreoElectronico,
+        TotalCosto, TotalImporte, PagoEfectivo, PagoRecibido, Cambio, PagoContado,
+        TotalGravadas, TotalNoSujetas, TotalExentas, SubTotal, Estado
     ) VALUES (
         :uuid_venta, :codigo_ven, :cod_documento, :version_dte, :usuario_registro,
         :fecha_facturacion, :ambiente, :tipo_moneda,
@@ -231,9 +227,9 @@ try {
         :cod_establecimiento, :cod_punto_venta, 1,
         :codigo_cli, :nombre_cliente, :codigo_actividad, :actividad,
         :nombre_comercial, :direccion, :id_departamento, :departamento, :id_municipio, :municipio, :id_distrito, :distrito,
-        :dui, :nrc, :nit,
-        :subtotal, :iva, :total_importe,
-        :pago_efectivo, :cambio, 1
+        :dui, :nrc, :nit, :tel_movil_whatsapp, :correo_electronico,
+        :total_costo, :total_importe, :pago_efectivo, :pago_recibido, :cambio, :pago_contado,
+        :total_gravadas, :total_no_sujetas, :total_exentas, :subtotal, 1
     )";
     
     $stmtVenta = $pdo->prepare($sqlVenta);
@@ -273,15 +269,20 @@ try {
     $stmtVenta->bindParam(':dui', $dui);
     $stmtVenta->bindParam(':nrc', $nrc);
     $stmtVenta->bindParam(':nit', $nit);
+    $stmtVenta->bindParam(':tel_movil_whatsapp', $telMovilWhatsApp);
+    $stmtVenta->bindParam(':correo_electronico', $correoElectronico);
     
-    // Totales y pagos
-    $stmtVenta->bindParam(':subtotal', $subTotal);
-    $stmtVenta->bindParam(':iva', $totalIVA);
-    $stmtVenta->bindParam(':total_importe', $totalImporte);
-    $stmtVenta->bindParam(':pago_efectivo', $efectivoRecibido);
-    
-    $cambio = $efectivoRecibido - $totalImporte;
+    // Totales y pagos (valores iniciales, se actualizarán después)
+    $stmtVenta->bindParam(':total_costo', $totalCostoVenta);
+    $stmtVenta->bindParam(':total_importe', $totalImporteVenta);
+    $stmtVenta->bindParam(':pago_efectivo', $pagoEfectivo);
+    $stmtVenta->bindParam(':pago_recibido', $pagoRecibido);
     $stmtVenta->bindParam(':cambio', $cambio);
+    $stmtVenta->bindParam(':pago_contado', $pagoContado);
+    $stmtVenta->bindParam(':total_gravadas', $totalGravadas);
+    $stmtVenta->bindParam(':total_no_sujetas', $totalNoSujetas);
+    $stmtVenta->bindParam(':total_exentas', $totalExentas);
+    $stmtVenta->bindParam(':subtotal', $subTotalVenta);
     
     $stmtVenta->execute();
     
@@ -425,6 +426,44 @@ try {
         $stmtUpdateInventario->execute();
     }
     
+    // Calcular totales sumando los detalles insertados
+    $sqlTotales = "SELECT SUM(TotalCosto) as TotalCosto, SUM(TotalImporte) as TotalImporte FROM tblnotasdeentregadetalle WHERE UUIDVenta = :uuid_venta";
+    $stmtTotales = $pdo->prepare($sqlTotales);
+    $stmtTotales->bindParam(':uuid_venta', $uuidVenta);
+    $stmtTotales->execute();
+    $totalesData = $stmtTotales->fetch(PDO::FETCH_ASSOC);
+    
+    $totalCostoVenta = floatval($totalesData['TotalCosto']);
+    $totalImporteVenta = floatval($totalesData['TotalImporte']);
+    
+    // Calcular TotalGravadas: TotalImporte ÷ (1 + (PorcentajeImpuesto ÷ 100))
+    $factorImpuesto = 1 + ($porcentajeImpuestoContribuyente / 100);
+    $totalGravadas = $totalImporteVenta / $factorImpuesto;
+    
+    // Calcular SubTotal: TotalNoSujetas + TotalExentas + TotalGravadas
+    $subTotalVenta = $totalNoSujetas + $totalExentas + $totalGravadas;
+    
+    // Calcular cambio: PagoRecibido - TotalImporte
+    $cambio = $pagoRecibido - $totalImporteVenta;
+    
+    // Actualizar tblnotasdeentrega con los totales calculados
+    $sqlUpdateVenta = "UPDATE tblnotasdeentrega SET 
+        TotalCosto = :total_costo,
+        TotalImporte = :total_importe,
+        Cambio = :cambio,
+        TotalGravadas = :total_gravadas,
+        SubTotal = :subtotal
+        WHERE UUIDVenta = :uuid_venta";
+    
+    $stmtUpdateVenta = $pdo->prepare($sqlUpdateVenta);
+    $stmtUpdateVenta->bindParam(':total_costo', $totalCostoVenta);
+    $stmtUpdateVenta->bindParam(':total_importe', $totalImporteVenta);
+    $stmtUpdateVenta->bindParam(':cambio', $cambio);
+    $stmtUpdateVenta->bindParam(':total_gravadas', $totalGravadas);
+    $stmtUpdateVenta->bindParam(':subtotal', $subTotalVenta);
+    $stmtUpdateVenta->bindParam(':uuid_venta', $uuidVenta);
+    $stmtUpdateVenta->execute();
+    
     // Confirmar transacción
     $pdo->commit();
     
@@ -435,7 +474,7 @@ try {
         'saleId' => $uuidVenta,
         'codigoVEN' => $codigoVEN,
         'codDocumento' => $codDocumento,
-        'total' => $totalImporte,
+        'total' => $totalImporteVenta,
         'cambio' => $cambio,
         'fechaFacturacion' => $fechaFacturacion
     ]);
