@@ -92,8 +92,8 @@ try {
     $nombreUsuario = $vendedorData['NombreUsuario'];
     $codPuntoVenta = $vendedorData['CodPuntoVenta'];
     
-    // Obtener información del contribuyente incluyendo AmbienteDTE
-    $sqlContribuyente = "SELECT CodEstable, AmbienteDTE FROM tblcontribuyentes WHERE UUIDContribuyente = :uuid_contribuyente";
+    // Obtener información del contribuyente incluyendo AmbienteDTE y PorcentajeImpuesto
+    $sqlContribuyente = "SELECT CodEstable, AmbienteDTE, PorcentajeImpuesto FROM tblcontribuyentes WHERE UUIDContribuyente = :uuid_contribuyente";
     $stmtContribuyente = $pdo->prepare($sqlContribuyente);
     $stmtContribuyente->bindParam(':uuid_contribuyente', $uuidContribuyente);
     $stmtContribuyente->execute();
@@ -106,6 +106,7 @@ try {
     
     $codEstable = $contribuyenteData['CodEstable'];
     $ambienteDTE = $contribuyenteData['AmbienteDTE'];
+    $porcentajeImpuestoContribuyente = floatval($contribuyenteData['PorcentajeImpuesto']) ?: 13.00; // Default 13% si no está definido
     
     // Obtener información del cliente si existe
     $codigoCLI = null;
@@ -293,15 +294,15 @@ try {
         CodigoBarra, Concepto, TV, UnidadDeMedida, Cantidad, UnidadesVendidas, 
         PrecioVenta, PrecioVentaSinImpuesto, PrecioNormal, PrecioSugeridoVenta, Descuento,
         VentaNoSujeta, VentaExenta, VentaGravada, VentaGravadaSinImpuesto, 
-        TotalImporte, TotalOperacion, IVAItem, PorcentajeImpuesto,
-        FechaRegistro
+        TotalImporte, TotalOperacion, IVAItem, PrecioCosto, TotalCosto, 
+        PagaImpuesto, PorcentajeImpuesto, FechaRegistro
     ) VALUES (
         :uuid_detalle, :uuid_venta, :usuario_registro, :no_item, :codigo_prod,
         :codigo_barra, :concepto, :tv, :unidad_medida, :cantidad, :unidades_vendidas,
         :precio_venta, :precio_sin_iva, :precio_normal, :precio_sugerido_venta, :descuento,
         :venta_no_sujeta, :venta_exenta, :venta_gravada, :venta_gravada_sin_iva,
-        :total_importe, :total_operacion, :iva_item, :porcentaje_impuesto,
-        NOW()
+        :total_importe, :total_operacion, :iva_item, :precio_costo, :total_costo,
+        :paga_impuesto, :porcentaje_impuesto, NOW()
     )";
     
     $stmtDetalle = $pdo->prepare($sqlDetalle);
@@ -315,7 +316,7 @@ try {
         $totalItem = $cantidad * $precioVenta;
         
         // Obtener información completa del producto desde tblcontribuyentesproductos
-        $sqlProducto = "SELECT UUIDProducto, CodigoDeBarras, Descripcion, PrecioVenta, cantidadminima, preciodescuento FROM tblcontribuyentesproductos WHERE UUIDProducto = :uuid_producto";
+        $sqlProducto = "SELECT UUIDProducto, CodigoDeBarras, Descripcion, PrecioVenta, cantidadminima, preciodescuento, CostoCompra FROM tblcontribuyentesproductos WHERE UUIDProducto = :uuid_producto";
         $stmtProducto = $pdo->prepare($sqlProducto);
         $stmtProducto->bindParam(':uuid_producto', $item['id']);
         $stmtProducto->execute();
@@ -329,6 +330,7 @@ try {
         $codigoProd = $productoData['UUIDProducto'];
         $codigoBarra = $productoData['CodigoDeBarras'];
         $concepto = $productoData['Descripcion'];
+        $costoCompra = floatval($productoData['CostoCompra']);
         
         // Determinar precio según cantidad y descuentos
         $precioBase = floatval($productoData['PrecioVenta']);
@@ -355,9 +357,14 @@ try {
         $totalOperacion = 0.00; // Por el momento siempre 0.00
         
         // Calcular totales según especificaciones tributarias
-        $porcentajeImpuesto = 13.00;
+        $porcentajeImpuesto = $porcentajeImpuestoContribuyente; // Usar el del contribuyente
         $factorImpuesto = 1 + ($porcentajeImpuesto / 100);
         $unidadesVendidas = $cantidad; // UnidadesVendidas = Cantidad
+        
+        // Campos de costo
+        $precioCosto = $costoCompra;
+        $totalCosto = $costoCompra * $unidadesVendidas;
+        $pagaImpuesto = 1; // Por el momento siempre 1
         
         // VentaGravada: PrecioVenta × UnidadesVendidas
         $ventaGravada = $precioVenta * $unidadesVendidas;
@@ -400,6 +407,9 @@ try {
         $stmtDetalle->bindParam(':total_importe', $totalImporte);
         $stmtDetalle->bindParam(':total_operacion', $totalOperacion);
         $stmtDetalle->bindParam(':iva_item', $ivaItem);
+        $stmtDetalle->bindParam(':precio_costo', $precioCosto);
+        $stmtDetalle->bindParam(':total_costo', $totalCosto);
+        $stmtDetalle->bindParam(':paga_impuesto', $pagaImpuesto);
         $stmtDetalle->bindParam(':porcentaje_impuesto', $porcentajeImpuesto);
         
         $stmtDetalle->execute();
