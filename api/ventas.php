@@ -289,13 +289,13 @@ try {
     
     // Insertar detalles de la venta
     $sqlDetalle = "INSERT INTO tblnotasdeentregadetalle (
-        UUIDDetalleVenta, UUIDVenta, UsuarioRegistro, CodigoPROD,
-        Concepto, TV, Cantidad, PrecioVenta, PrecioVentaSinImpuesto,
+        UUIDDetalleVenta, UUIDVenta, UsuarioRegistro, NoItem, CodigoPROD,
+        CodigoBarra, Concepto, TV, UnidadDeMedida, Cantidad, PrecioVenta, PrecioVentaSinImpuesto,
         VentaGravada, VentaGravadaSinImpuesto, IVAItem, TotalImporte,
         FechaRegistro
     ) VALUES (
-        :uuid_detalle, :uuid_venta, :usuario_registro, :codigo_prod,
-        :concepto, 1, :cantidad, :precio_venta, :precio_sin_iva,
+        :uuid_detalle, :uuid_venta, :usuario_registro, :no_item, :codigo_prod,
+        :codigo_barra, :concepto, :tv, :unidad_medida, :cantidad, :precio_venta, :precio_sin_iva,
         :venta_gravada, :venta_gravada_sin_iva, :iva_item, :total_item,
         NOW()
     )";
@@ -308,16 +308,40 @@ try {
         $precioVenta = floatval($item['currentPrice']);
         $totalItem = $cantidad * $precioVenta;
         
+        // Obtener información adicional del producto desde tblcontribuyentesproductos
+        $sqlProducto = "SELECT UUIDProducto, CodigoDeBarras, Descripcion FROM tblcontribuyentesproductos WHERE UUIDProducto = :uuid_producto";
+        $stmtProducto = $pdo->prepare($sqlProducto);
+        $stmtProducto->bindParam(':uuid_producto', $item['id']);
+        $stmtProducto->execute();
+        
+        $productoData = $stmtProducto->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$productoData) {
+            throw new Exception("Producto no encontrado: " . $item['id']);
+        }
+        
+        $codigoProd = $productoData['UUIDProducto'];
+        $codigoBarra = $productoData['CodigoDeBarras'];
+        $concepto = $productoData['Descripcion'];
+        
         // Calcular precio sin IVA
         $precioSinIVA = $precioVenta / 1.13;
         $ventaGravadaSinIVA = $totalItem / 1.13;
         $ivaItem = $totalItem - $ventaGravadaSinIVA;
         
+        $noItem = 1;
+        $tv = 1;
+        $unidadMedida = 99;
+        
         $stmtDetalle->bindParam(':uuid_detalle', $uuidDetalle);
         $stmtDetalle->bindParam(':uuid_venta', $uuidVenta);
         $stmtDetalle->bindParam(':usuario_registro', $nombreUsuario);
-        $stmtDetalle->bindParam(':codigo_prod', $item['id']);
-        $stmtDetalle->bindParam(':concepto', $item['nombre']);
+        $stmtDetalle->bindParam(':no_item', $noItem);
+        $stmtDetalle->bindParam(':codigo_prod', $codigoProd);
+        $stmtDetalle->bindParam(':codigo_barra', $codigoBarra);
+        $stmtDetalle->bindParam(':concepto', $concepto);
+        $stmtDetalle->bindParam(':tv', $tv);
+        $stmtDetalle->bindParam(':unidad_medida', $unidadMedida);
         $stmtDetalle->bindParam(':cantidad', $cantidad);
         $stmtDetalle->bindParam(':precio_venta', $precioVenta);
         $stmtDetalle->bindParam(':precio_sin_iva', $precioSinIVA);
