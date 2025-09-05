@@ -290,17 +290,19 @@ try {
     // Insertar detalles de la venta
     $sqlDetalle = "INSERT INTO tblnotasdeentregadetalle (
         UUIDDetalleVenta, UUIDVenta, UsuarioRegistro, NoItem, CodigoPROD,
-        CodigoBarra, Concepto, TV, UnidadDeMedida, Cantidad, PrecioVenta, PrecioVentaSinImpuesto,
-        VentaGravada, VentaGravadaSinImpuesto, IVAItem, TotalImporte,
+        CodigoBarra, Concepto, TV, UnidadDeMedida, Cantidad, UnidadesVendidas, PrecioVenta, PrecioVentaSinImpuesto,
+        VentaGravada, VentaGravadaSinImpuesto, IVAItem, TotalImporte, PorcentajeImpuesto,
         FechaRegistro
     ) VALUES (
         :uuid_detalle, :uuid_venta, :usuario_registro, :no_item, :codigo_prod,
-        :codigo_barra, :concepto, :tv, :unidad_medida, :cantidad, :precio_venta, :precio_sin_iva,
-        :venta_gravada, :venta_gravada_sin_iva, :iva_item, :total_item,
+        :codigo_barra, :concepto, :tv, :unidad_medida, :cantidad, :unidades_vendidas, :precio_venta, :precio_sin_iva,
+        :venta_gravada, :venta_gravada_sin_iva, :iva_item, :total_item, :porcentaje_impuesto,
         NOW()
     )";
     
     $stmtDetalle = $pdo->prepare($sqlDetalle);
+    
+    $noItemSecuencial = 1; // Contador secuencial para NoItem
     
     foreach ($data['items'] as $item) {
         $uuidDetalle = generateUUID();
@@ -308,8 +310,8 @@ try {
         $precioVenta = floatval($item['currentPrice']);
         $totalItem = $cantidad * $precioVenta;
         
-        // Obtener información adicional del producto desde tblcontribuyentesproductos
-        $sqlProducto = "SELECT UUIDProducto, CodigoDeBarras, Descripcion FROM tblcontribuyentesproductos WHERE UUIDProducto = :uuid_producto";
+        // Obtener información completa del producto desde tblcontribuyentesproductos
+        $sqlProducto = "SELECT UUIDProducto, CodigoDeBarras, Descripcion, PrecioVenta, cantidadminima, preciodescuento FROM tblcontribuyentesproductos WHERE UUIDProducto = :uuid_producto";
         $stmtProducto = $pdo->prepare($sqlProducto);
         $stmtProducto->bindParam(':uuid_producto', $item['id']);
         $stmtProducto->execute();
@@ -324,33 +326,55 @@ try {
         $codigoBarra = $productoData['CodigoDeBarras'];
         $concepto = $productoData['Descripcion'];
         
-        // Calcular precio sin IVA
-        $precioSinIVA = $precioVenta / 1.13;
-        $ventaGravadaSinIVA = $totalItem / 1.13;
+        // Determinar precio según cantidad y descuentos
+        $precioBase = floatval($productoData['PrecioVenta']);
+        $cantidadMinima = intval($productoData['cantidadminima']);
+        $precioDescuento = floatval($productoData['preciodescuento']);
+        
+        // Si la cantidad es mayor o igual a la cantidad mínima y hay precio de descuento
+        if ($cantidad >= $cantidadMinima && $precioDescuento > 0) {
+            $precioVenta = $precioDescuento;
+        } else {
+            $precioVenta = $precioBase;
+        }
+        
+        // Recalcular total con el precio correcto
+        $totalItem = $cantidad * $precioVenta;
+        
+        // Calcular precio sin IVA usando porcentaje de impuesto (13% para El Salvador)
+        $porcentajeImpuesto = 13.00;
+        $factorImpuesto = 1 + ($porcentajeImpuesto / 100);
+        $precioSinIVA = $precioVenta / $factorImpuesto;
+        $ventaGravadaSinIVA = $totalItem / $factorImpuesto;
         $ivaItem = $totalItem - $ventaGravadaSinIVA;
         
-        $noItem = 1;
         $tv = 1;
         $unidadMedida = 99;
+        $unidadesVendidas = $cantidad; // UnidadesVendidas = Cantidad
         
         $stmtDetalle->bindParam(':uuid_detalle', $uuidDetalle);
         $stmtDetalle->bindParam(':uuid_venta', $uuidVenta);
         $stmtDetalle->bindParam(':usuario_registro', $nombreUsuario);
-        $stmtDetalle->bindParam(':no_item', $noItem);
+        $stmtDetalle->bindParam(':no_item', $noItemSecuencial);
         $stmtDetalle->bindParam(':codigo_prod', $codigoProd);
         $stmtDetalle->bindParam(':codigo_barra', $codigoBarra);
         $stmtDetalle->bindParam(':concepto', $concepto);
         $stmtDetalle->bindParam(':tv', $tv);
         $stmtDetalle->bindParam(':unidad_medida', $unidadMedida);
         $stmtDetalle->bindParam(':cantidad', $cantidad);
+        $stmtDetalle->bindParam(':unidades_vendidas', $unidadesVendidas);
         $stmtDetalle->bindParam(':precio_venta', $precioVenta);
         $stmtDetalle->bindParam(':precio_sin_iva', $precioSinIVA);
         $stmtDetalle->bindParam(':venta_gravada', $totalItem);
         $stmtDetalle->bindParam(':venta_gravada_sin_iva', $ventaGravadaSinIVA);
         $stmtDetalle->bindParam(':iva_item', $ivaItem);
         $stmtDetalle->bindParam(':total_item', $totalItem);
+        $stmtDetalle->bindParam(':porcentaje_impuesto', $porcentajeImpuesto);
         
         $stmtDetalle->execute();
+        
+        // Incrementar contador secuencial para el siguiente item
+        $noItemSecuencial++;
         
         // Actualizar inventario (reducir existencias)
         $sqlUpdateInventario = "UPDATE tblcontribuyentesproductos SET Existencias = Existencias - :cantidad WHERE UUIDProducto = :uuid_producto";
