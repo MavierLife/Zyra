@@ -290,13 +290,17 @@ try {
     // Insertar detalles de la venta
     $sqlDetalle = "INSERT INTO tblnotasdeentregadetalle (
         UUIDDetalleVenta, UUIDVenta, UsuarioRegistro, NoItem, CodigoPROD,
-        CodigoBarra, Concepto, TV, UnidadDeMedida, Cantidad, UnidadesVendidas, PrecioVenta, PrecioVentaSinImpuesto,
-        VentaGravada, VentaGravadaSinImpuesto, IVAItem, TotalImporte, PorcentajeImpuesto,
+        CodigoBarra, Concepto, TV, UnidadDeMedida, Cantidad, UnidadesVendidas, 
+        PrecioVenta, PrecioVentaSinImpuesto, PrecioNormal, PrecioSugeridoVenta, Descuento,
+        VentaNoSujeta, VentaExenta, VentaGravada, VentaGravadaSinImpuesto, 
+        TotalImporte, TotalOperacion, IVAItem, PorcentajeImpuesto,
         FechaRegistro
     ) VALUES (
         :uuid_detalle, :uuid_venta, :usuario_registro, :no_item, :codigo_prod,
-        :codigo_barra, :concepto, :tv, :unidad_medida, :cantidad, :unidades_vendidas, :precio_venta, :precio_sin_iva,
-        :venta_gravada, :venta_gravada_sin_iva, :iva_item, :total_item, :porcentaje_impuesto,
+        :codigo_barra, :concepto, :tv, :unidad_medida, :cantidad, :unidades_vendidas,
+        :precio_venta, :precio_sin_iva, :precio_normal, :precio_sugerido_venta, :descuento,
+        :venta_no_sujeta, :venta_exenta, :venta_gravada, :venta_gravada_sin_iva,
+        :total_importe, :total_operacion, :iva_item, :porcentaje_impuesto,
         NOW()
     )";
     
@@ -331,26 +335,47 @@ try {
         $cantidadMinima = intval($productoData['cantidadminima']);
         $precioDescuento = floatval($productoData['preciodescuento']);
         
-        // Si la cantidad es mayor o igual a la cantidad mínima y hay precio de descuento
-        if ($cantidad >= $cantidadMinima && $precioDescuento > 0) {
+        // Determinar si aplica descuento por escala
+        $aplicaDescuento = ($cantidad >= $cantidadMinima && $precioDescuento > 0);
+        
+        if ($aplicaDescuento) {
             $precioVenta = $precioDescuento;
+            $precioNormal = $precioDescuento;
+            $descuento = $precioBase - $precioDescuento; // Diferencia cuando aplica escala
         } else {
             $precioVenta = $precioBase;
+            $precioNormal = $precioBase;
+            $descuento = 0.00; // No aplica escala
         }
         
-        // Recalcular total con el precio correcto
-        $totalItem = $cantidad * $precioVenta;
+        // Campos adicionales según especificaciones
+        $precioSugeridoVenta = 0.00; // Por el momento siempre 0.00
+        $ventaNoSujeta = 0.00; // Siempre 0.00 por el momento
+        $ventaExenta = 0.00; // Siempre 0.00 por el momento
+        $totalOperacion = 0.00; // Por el momento siempre 0.00
         
-        // Calcular precio sin IVA usando porcentaje de impuesto (13% para El Salvador)
+        // Calcular totales según especificaciones tributarias
         $porcentajeImpuesto = 13.00;
         $factorImpuesto = 1 + ($porcentajeImpuesto / 100);
+        $unidadesVendidas = $cantidad; // UnidadesVendidas = Cantidad
+        
+        // VentaGravada: PrecioVenta × UnidadesVendidas
+        $ventaGravada = $precioVenta * $unidadesVendidas;
+        
+        // VentaGravadaSinImpuesto: (PrecioVenta × UnidadesVendidas) ÷ (1 + (PorcentajeImpuesto / 100))
+        $ventaGravadaSinImpuesto = $ventaGravada / $factorImpuesto;
+        
+        // TotalImporte: Cantidad × PrecioVenta (ya incluye descuento automático)
+        $totalImporte = $cantidad * $precioVenta;
+        
+        // IVAItem: (VentaGravadaSinImpuesto × PorcentajeImpuesto / 100)
+        $ivaItem = ($ventaGravadaSinImpuesto * $porcentajeImpuesto) / 100;
+        
+        // PrecioVentaSinImpuesto para compatibilidad
         $precioSinIVA = $precioVenta / $factorImpuesto;
-        $ventaGravadaSinIVA = $totalItem / $factorImpuesto;
-        $ivaItem = $totalItem - $ventaGravadaSinIVA;
         
         $tv = 1;
         $unidadMedida = 99;
-        $unidadesVendidas = $cantidad; // UnidadesVendidas = Cantidad
         
         $stmtDetalle->bindParam(':uuid_detalle', $uuidDetalle);
         $stmtDetalle->bindParam(':uuid_venta', $uuidVenta);
@@ -365,10 +390,16 @@ try {
         $stmtDetalle->bindParam(':unidades_vendidas', $unidadesVendidas);
         $stmtDetalle->bindParam(':precio_venta', $precioVenta);
         $stmtDetalle->bindParam(':precio_sin_iva', $precioSinIVA);
-        $stmtDetalle->bindParam(':venta_gravada', $totalItem);
-        $stmtDetalle->bindParam(':venta_gravada_sin_iva', $ventaGravadaSinIVA);
+        $stmtDetalle->bindParam(':precio_normal', $precioNormal);
+        $stmtDetalle->bindParam(':precio_sugerido_venta', $precioSugeridoVenta);
+        $stmtDetalle->bindParam(':descuento', $descuento);
+        $stmtDetalle->bindParam(':venta_no_sujeta', $ventaNoSujeta);
+        $stmtDetalle->bindParam(':venta_exenta', $ventaExenta);
+        $stmtDetalle->bindParam(':venta_gravada', $ventaGravada);
+        $stmtDetalle->bindParam(':venta_gravada_sin_iva', $ventaGravadaSinImpuesto);
+        $stmtDetalle->bindParam(':total_importe', $totalImporte);
+        $stmtDetalle->bindParam(':total_operacion', $totalOperacion);
         $stmtDetalle->bindParam(':iva_item', $ivaItem);
-        $stmtDetalle->bindParam(':total_item', $totalItem);
         $stmtDetalle->bindParam(':porcentaje_impuesto', $porcentajeImpuesto);
         
         $stmtDetalle->execute();
